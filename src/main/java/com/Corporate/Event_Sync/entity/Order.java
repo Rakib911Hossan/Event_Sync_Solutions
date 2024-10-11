@@ -26,7 +26,7 @@ public class Order {
     private MenuItem menuItem;
 
     private String orderDate;
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private Status status; // Ordered, Prepared, Served
 
     // Getters and Setters
