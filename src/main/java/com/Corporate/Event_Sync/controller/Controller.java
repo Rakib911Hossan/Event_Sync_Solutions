@@ -24,7 +24,7 @@ public class Controller implements Initializable {
 
     @Bean
     String title(){
-        return "CRUD11113";
+        return "CRUD";
     }
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
