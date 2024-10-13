@@ -4,12 +4,12 @@ import com.Corporate.Event_Sync.entity.User;
 import com.Corporate.Event_Sync.repository.UserRepository;
 import com.Corporate.Event_Sync.utils.Role;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.NoArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-
+@NoArgsConstructor
 @Service
 @AllArgsConstructor
 public class UserService {
