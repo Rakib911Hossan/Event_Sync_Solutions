@@ -1,7 +1,8 @@
-CREATE TABLE IF NOT EXISTS menu_items (
-                                            item_id SERIAL PRIMARY KEY,
-                                            item_name VARCHAR(255) NOT NULL,
-                                            description TEXT,
-                                            category VARCHAR(50),
-                                            available_date DATE
-);
+-- -- Create 'menu_items' table
+-- CREATE TABLE IF NOT EXISTS menu_items (
+--                                           item_id SERIAL PRIMARY KEY, -- Ensure the correct column name
+--                                           item_name VARCHAR(255) NOT NULL,
+--                                           description TEXT,
+--                                           category VARCHAR(50) NOT NULL, -- Assuming you will handle categories as strings or add an enum
+--                                           available_date VARCHAR(255)
+-- );

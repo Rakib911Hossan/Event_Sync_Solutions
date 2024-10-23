@@ -1,17 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.Corporate.Event_Sync.controller.Controller"
-            prefHeight="400.0" prefWidth="600.0">
+<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.Corporate.Event_Sync.controller.MainController">
     <children>
-        <Label fx:id="example" layoutX="200" layoutY="50"/>
+        <VBox fx:id="userDashboard" spacing="10.0" layoutX="50.0" layoutY="50.0">
+            <Label text="User Dashboard" style="-fx-font-size: 24px; -fx-font-weight: bold;" />
+        </VBox>
     </children>
-
 </AnchorPane>
