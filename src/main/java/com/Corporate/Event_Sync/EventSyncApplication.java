@@ -20,11 +20,12 @@ public class EventSyncApplication extends Application {
 	public void start(Stage stage) throws Exception {
 
 		context=SpringApplication.run(EventSyncApplication.class);
-		FXMLLoader fxml=new FXMLLoader(getClass().getResource
-				("/com.Corporate.Event_Sync/main.fxml"));
-		fxml.setControllerFactory(context::getBean);
-		Scene scene=new Scene(fxml.load());
-		String title=context.getBean("title",String.class);
+		FXMLLoader fxmlLoader=new FXMLLoader(getClass().getResource
+				("/com.Corporate.Event_Sync/login.fxml"));
+		fxmlLoader.setControllerFactory(context::getBean);
+		Scene scene = new Scene(fxmlLoader.load());
+
+		String title = context.getBean("title", String.class);
 		stage.setTitle(title);
 		stage.setScene(scene);
 		stage.show();
