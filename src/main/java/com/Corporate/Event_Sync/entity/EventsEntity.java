@@ -8,7 +8,7 @@ import java.time.LocalDate;
 
 @Entity
 @Data
-@Table(name = "event", schema = "event_management")
+@Table(name = "event", schema = "public")
 public class EventsEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;

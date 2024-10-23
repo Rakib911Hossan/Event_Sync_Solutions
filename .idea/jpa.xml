@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="JpaBuddyIdeaProjectConfig">
+    <option name="reLastEntityCreationPackage" value="src/main/java/com/Corporate/Event_Sync" />
+    <option name="reverseEngineeringLastDbConnectionId" value="baa887a6-b868-448c-89d2-7e6cf1d258df__EVENT_MANAGEMENT_PUBLIC" />
+  </component>
+  <component name="PersistenceUnitSettings">
+    <persistence-units>
+      <persistence-unit name="Default">
+        <packages>
+          <package value="com.Corporate.Event_Sync" />
+        </packages>
+      </persistence-unit>
+    </persistence-units>
+  </component>
+</project>

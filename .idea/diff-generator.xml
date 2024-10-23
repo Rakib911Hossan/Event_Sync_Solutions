@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DiffGenerationConfig">
+    <option name="sourceDbValue" value="baa887a6-b868-448c-89d2-7e6cf1d258df__EVENT_MANAGEMENT_PUBLIC" />
+    <option name="sourceDiffType" value="DB" />
+    <option name="targetDbValue" value="baa887a6-b868-448c-89d2-7e6cf1d258df" />
+  </component>
+</project>

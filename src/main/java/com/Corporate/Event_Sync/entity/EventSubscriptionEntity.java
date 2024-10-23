@@ -15,7 +15,7 @@ import java.time.ZonedDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Table(name = "event_subscriber", schema = "event_management")
+@Table(name = "event_subscriber", schema = "public")
 public class EventSubscriptionEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
