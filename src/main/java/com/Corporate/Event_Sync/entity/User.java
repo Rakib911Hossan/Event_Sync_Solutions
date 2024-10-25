@@ -1,7 +1,6 @@
 package com.Corporate.Event_Sync.entity;
 
 import com.Corporate.Event_Sync.utils.Role;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,7 +24,7 @@ public class User extends GenericEntity<Integer>{
     private Role role; // Enum for roles like ADMIN, USER
 
     private String password;
-@JsonIgnore
+//@JsonIgnore
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Order> orders; // One user can have multiple orders
 

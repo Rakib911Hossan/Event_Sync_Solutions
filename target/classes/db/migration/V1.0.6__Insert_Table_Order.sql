@@ -1,0 +1,2 @@
+-- INSERT INTO orders (order_id, user_id, order_date, status)
+-- VALUES (3, 1, NOW(), 'ORDERED'), (5, 1, NOW(), 'SERVED');
