@@ -37,7 +37,7 @@ public class RegisterController {
     private PasswordField passwordField;
 
     @FXML
-    private ComboBox<String> roleComboBox; // Change to String to match FXML
+    private ComboBox<String> roleComboBox;
 
     @FXML
     private TextField officeIdField;
@@ -47,7 +47,6 @@ public class RegisterController {
 
     @FXML
     public void initialize() {
-        // Populate the role combo box with string values
         roleComboBox.setItems(FXCollections.observableArrayList("ADMIN", "USER"));
     }
 
@@ -57,40 +56,50 @@ public class RegisterController {
         String email = emailField.getText();
         String department = departmentField.getText();
         String password = passwordField.getText();
-        String selectedRole = roleComboBox.getValue(); // Get the selected role as String
+        String selectedRole = roleComboBox.getValue();
         Integer officeId = officeIdField.getText().isEmpty() ? null : Integer.parseInt(officeIdField.getText());
 
-        // Check for empty fields
         if (name.isEmpty() || email.isEmpty() || department.isEmpty() || password.isEmpty() || selectedRole == null || officeId == null) {
             messageLabel.setText("All fields are required.");
             return;
         }
 
-        // Create a new User object
         User user = new User();
         user.setName(name);
         user.setEmail(email);
         user.setDepartment(department);
         user.setPassword(password);
-        user.setRole(Role.valueOf(selectedRole)); // Convert string to Role enum
+        user.setRole(Role.valueOf(selectedRole));
         user.setOfficeId(officeId);
 
+        // Register the user and capture the feedback message
+        String registrationMessage = userService.registerUser(user);
+        messageLabel.setText(registrationMessage);
+
+        // If registration is successful, switch to login screen
+        if ("Registration successful!".equals(registrationMessage)) {
+            switchToLogin(); // Call without parameters
+        }
+    }
+
+    @FXML
+    public void switchToLogin() {
         try {
-            // Register the user
-            userService.registerUser(user);
-            messageLabel.setText("Registration successful! Redirecting to login...");
             Stage stage = (Stage) nameField.getScene().getWindow();
-            switchToLogin(stage);
-        } catch (Exception e) {
-            messageLabel.setText("Registration failed: " + e.getMessage());
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com.Corporate.Event_Sync/login.fxml"));
+            fxmlLoader.setControllerFactory(EventSyncApplication.context::getBean);
+            Scene loginScene = new Scene(fxmlLoader.load());
+            stage.setScene(loginScene);
+        } catch (IOException e) {
+            messageLabel.setText("Failed to switch to login: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
-    private void switchToLogin(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com.Corporate.Event_Sync/login.fxml"));
-        fxmlLoader.setControllerFactory(EventSyncApplication.context::getBean);
-        Scene loginScene = new Scene(fxmlLoader.load());
-        stage.setScene(loginScene);
+    @FXML
+    public void handleExit() {
+        Stage stage = (Stage) nameField.getScene().getWindow();
+        stage.close(); // Close the current stage
     }
+
 }

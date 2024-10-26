@@ -30,11 +30,17 @@ public class UserService {
     // For password hashing
 //
 //    // Register new user
-    public User registerUser(User user) {
+    public String registerUser(User user) {
         // Encode the password before saving
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setIsActive(true);  // Active status
-        return userRepository.save(user);
+        user.setIsActive(true);  // Set active status
+
+        try {
+            userRepository.save(user);
+            return "Registration successful!"; // Success message
+        } catch (Exception e) {
+            return "Registration failed: " + e.getMessage(); // Failure message
+        }
     }
 
     // Find user by email
