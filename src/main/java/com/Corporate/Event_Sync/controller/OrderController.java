@@ -20,7 +20,7 @@ public class OrderController {
     // Create a new order
     @PostMapping("/createOrders")
     public ResponseEntity<Order> createOrder(@RequestBody OrderDTO orderDTO) {
-        Order order = orderService.createOrder(Math.toIntExact(orderDTO.getUserId()),orderDTO.getStatus());
+        Order order = orderService.createOrder(Math.toIntExact(orderDTO.getUserId()), Math.toIntExact(orderDTO.getMenuItemId()),orderDTO.getStatus());
         return new ResponseEntity<>(order, HttpStatus.CREATED);
     }
 

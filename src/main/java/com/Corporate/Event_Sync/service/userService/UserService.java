@@ -1,6 +1,7 @@
 package com.Corporate.Event_Sync.service.userService;
 
 import com.Corporate.Event_Sync.dto.UserDTO;
+import com.Corporate.Event_Sync.dto.mapper.UserMapper;
 import com.Corporate.Event_Sync.entity.Order;
 import com.Corporate.Event_Sync.entity.User;
 import com.Corporate.Event_Sync.exceptions.NotFoundException;
@@ -19,7 +20,7 @@ public class UserService {
 
     private UserRepository userRepository;
     private PasswordEncoder passwordEncoder;
-
+    private UserMapper userMapper;
     /*   public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }*/
@@ -67,7 +68,6 @@ public class UserService {
         userDTO.setEmail(user.getEmail());
         userDTO.setDepartment(user.getDepartment());
         userDTO.setRole(user.getRole());
-        userDTO.setOrders(orders); // No need to cast, directly set the orders list
         userDTO.setIsActive(user.getIsActive());
         userDTO.setOfficeId(user.getOfficeId());
 
@@ -103,6 +103,13 @@ public class UserService {
         } else {
             throw new NotFoundException("User not found");
         }
+    }
+
+    public UserDTO getUserByIdUserDto(Integer userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("User with ID " + userId + " not found"));
+
+        return userMapper.convertToUserDTO(user); // Use the mapper to convert User to UserDTO
     }
 
 

@@ -3,7 +3,7 @@
 CREATE TABLE IF NOT EXISTS orders (
                                       id INT4 PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
                                       user_id Int4 NOT NULL, -- Foreign key referencing user table
---                                       menu_item_id INT NOT NULL, -- Foreign key referencing "menu_items" table
+                                      menu_item_id Int4 NOT NULL, -- Foreign key referencing "menu_items" table
                                       order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                                       status VARCHAR(50) NOT NULL CHECK (status IN ('ORDERED','PREPARED','SERVED'))
 --                                       FOREIGN KEY (user_id) REFERENCES "user" (useId) ON DELETE CASCADE -- Foreign key reference
@@ -14,7 +14,10 @@ ALTER TABLE orders
     ADD CONSTRAINT orders_fk_user
         FOREIGN KEY (user_id)
             REFERENCES "user" (id) on delete cascade ;
-
+ALTER TABLE orders
+    ADD CONSTRAINT orders_fk_menu_items
+        FOREIGN KEY (menu_item_id)
+            REFERENCES menu_items (id) on delete cascade ;
 
 -- CREATE TABLE IF NOT EXISTS orders (
 

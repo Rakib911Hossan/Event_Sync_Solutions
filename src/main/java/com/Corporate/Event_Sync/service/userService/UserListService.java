@@ -1,6 +1,7 @@
-package com.Corporate.Event_Sync.service;
+package com.Corporate.Event_Sync.service.userService;
 
 import com.Corporate.Event_Sync.dto.ActiveUserDTO;
+import com.Corporate.Event_Sync.dto.mapper.UserMapper;
 import com.Corporate.Event_Sync.entity.User;
 import com.Corporate.Event_Sync.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -14,23 +15,16 @@ import java.util.stream.Collectors;
 public class UserListService {
 
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
+    // Fetch all active users
     public List<ActiveUserDTO> getActiveUsers() {
         List<User> activeUsers = userRepository.findByIsActive(true);
 
         return activeUsers.stream()
-                .map(this::mapUserToActiveUserDTO)
+                .map(userMapper::mapUserToActiveUserDTO)  // Corrected mapping syntax
                 .collect(Collectors.toList());
     }
 
-    // Helper method to map User to ActiveUserDTO
-    private ActiveUserDTO mapUserToActiveUserDTO(User user) {
-        return new ActiveUserDTO(
-                user.getId(),
-                user.getName(),
-                user.getDepartment(),
-                user.getOfficeId(),
-                user.getOrders()
-        );
-    }
+
 }

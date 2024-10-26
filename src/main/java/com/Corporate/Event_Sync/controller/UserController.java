@@ -1,17 +1,12 @@
 package com.Corporate.Event_Sync.controller;
 
-import com.Corporate.Event_Sync.dto.ActiveUserDTO;
 import com.Corporate.Event_Sync.dto.UserDTO;
 import com.Corporate.Event_Sync.entity.User;
-import com.Corporate.Event_Sync.service.UserListService;
 import com.Corporate.Event_Sync.service.userService.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Optional;
 
 @AllArgsConstructor
 @RestController
@@ -22,33 +17,42 @@ public class UserController {
 
     // Register a new user
     @PostMapping("/register")
-    public ResponseEntity<String> registerUser(@RequestBody User user) {
-        userService.registerUser(user);
-        return new ResponseEntity<>("User registered successfully!", HttpStatus.CREATED);
+    public ResponseEntity<User> registerUser(@RequestBody User user) {
+        User registeredUser = userService.registerUser(user);
+        return ResponseEntity.status(HttpStatus.CREATED).body(registeredUser);
     }
 
-    // Login user
+    // Authenticate user (login)
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestParam String email, @RequestParam String password) {
-        // Authenticate the user
+    public ResponseEntity<String> authenticate(@RequestParam String email, @RequestParam String password) {
         boolean isAuthenticated = userService.authenticate(email, password);
-
         if (isAuthenticated) {
-            // Retrieve user data after successful authentication
-            UserDTO userDTO = userService.findByEmail(email);
-            return ResponseEntity.ok(userDTO); // Return user data
+            return ResponseEntity.ok("User authenticated successfully.");
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials.");
         }
+    }
 
-        // If authentication fails
-        return new ResponseEntity<>("Invalid email or password", HttpStatus.UNAUTHORIZED);
+    // Find user by email
+    // Get a user by email
+    @GetMapping("/email/{email}")
+    public ResponseEntity<UserDTO> getUserByEmail(@PathVariable String email) {
+        UserDTO userDTO = userService.findByEmail(email);
+        return ResponseEntity.ok(userDTO);
     }
 
     // Get user by ID
     @GetMapping("/{id}")
     public ResponseEntity<UserDTO> getUserById(@PathVariable Integer id) {
-        Optional<User> user = userService.getUserById(id);
-        return user.map(value -> ResponseEntity.ok(userService.findByEmail(value.getEmail())))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        UserDTO userDTO = userService.getUserByIdUserDto(id); // Ensure this method returns UserDTO
+        return ResponseEntity.ok(userDTO);
+    }
+
+    // Get user by ID and map to ActiveUserDTO
+    @GetMapping("/{id}/dto")
+    public ResponseEntity<UserDTO> getUserByIdUserDto(@PathVariable Integer id) {
+        UserDTO userDTO = userService.getUserByIdUserDto(id);
+        return ResponseEntity.ok(userDTO);
     }
 
     // Deactivate user account
@@ -56,41 +60,20 @@ public class UserController {
     public ResponseEntity<String> deactivateUser(@PathVariable Integer id) {
         try {
             userService.deactivateUser(id);
-            return ResponseEntity.ok("User account deactivated successfully");
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+            return ResponseEntity.ok("User account deactivated.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
         }
     }
 
-    // Activate user account (only for admin)
+    // Activate user account
     @PutMapping("/{id}/activate")
     public ResponseEntity<String> activateUser(@PathVariable Integer id) {
         try {
-            // Here, you should check if the requester has admin privileges
-            // For simplicity, let's assume this method exists
-            if (isAdmin()) {
-                userService.activateUser(id); // This method should be implemented in UserService
-                return ResponseEntity.ok("User account activated successfully");
-            } else {
-                return new ResponseEntity<>("Unauthorized: Only admin can activate users", HttpStatus.FORBIDDEN);
-            }
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+            userService.activateUser(id);
+            return ResponseEntity.ok("User account activated.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
         }
-    }
-
-    // Example method to check if the requester is an admin (implementation needed)
-    private boolean isAdmin() {
-        // Implement logic to check if the current user is an admin
-        return true; // Placeholder for demonstration
-    }
-
-    private final UserListService userListService;
-
-    // Endpoint to get the list of active users
-    @GetMapping("/active")
-    public ResponseEntity<List<ActiveUserDTO>> getActiveUsers() {
-        List<ActiveUserDTO> activeUsers = userListService.getActiveUsers();
-        return ResponseEntity.ok(activeUsers);
     }
 }
