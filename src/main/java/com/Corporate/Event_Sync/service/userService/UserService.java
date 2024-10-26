@@ -1,14 +1,16 @@
-package com.Corporate.Event_Sync.service;
+package com.Corporate.Event_Sync.service.userService;
 
 import com.Corporate.Event_Sync.dto.UserDTO;
+import com.Corporate.Event_Sync.dto.mapper.UserMapper;
+import com.Corporate.Event_Sync.entity.Order;
 import com.Corporate.Event_Sync.entity.User;
 import com.Corporate.Event_Sync.exceptions.NotFoundException;
 import com.Corporate.Event_Sync.repository.UserRepository;
-import com.Corporate.Event_Sync.utils.Role;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 //@NoArgsConstructor
 @AllArgsConstructor
@@ -18,6 +20,7 @@ public class UserService {
 
     private UserRepository userRepository;
     private PasswordEncoder passwordEncoder;
+    private UserMapper userMapper;
     /*   public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }*/
@@ -46,6 +49,7 @@ public class UserService {
         // Compare the raw password with the hashed password stored in the User entity
         return passwordEncoder.matches(rawPassword, user.getPassword());
     }
+
     public UserDTO findByEmail(String email) {
         User user = userRepository.findByEmail(email);
 
@@ -53,14 +57,17 @@ public class UserService {
         if (user == null) {
             throw new NotFoundException("User with email " + email + " not found");
         }
-        // Convert User to UserDTO
+
+        // Force initialization of orders
+        List<Order> orders = user.getOrders(); // This forces lazy loading of the orders collection
+
+        // Now convert User to UserDTO
         UserDTO userDTO = new UserDTO();
-        userDTO.setId(Math.toIntExact(user.getId()));
+        userDTO.setId(user.getId());
         userDTO.setName(user.getName());
         userDTO.setEmail(user.getEmail());
         userDTO.setDepartment(user.getDepartment());
-        userDTO.setRole(Role.valueOf(String.valueOf(user.getRole())));
-        userDTO.getOrders();
+        userDTO.setRole(user.getRole());
         userDTO.setIsActive(user.getIsActive());
         userDTO.setOfficeId(user.getOfficeId());
 
@@ -70,12 +77,11 @@ public class UserService {
 
 
 
-
-
     // Get user by ID
     public Optional<User> getUserById(Integer id) {
         return userRepository.findById(id);
     }
+
     // Deactivate user account
     public void deactivateUser(Integer id) {
         Optional<User> user = getUserById(id);
@@ -87,6 +93,26 @@ public class UserService {
             throw new RuntimeException("User not found");
         }
     }
+    // Activate user account
+    public void activateUser(Integer id) {
+        Optional<User> user = getUserById(id);
+        if (user.isPresent()) {
+            User foundUser = user.get();
+            foundUser.setIsActive(true);
+            userRepository.save(foundUser);
+        } else {
+            throw new NotFoundException("User not found");
+        }
+    }
+
+    public UserDTO getUserByIdUserDto(Integer userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("User with ID " + userId + " not found"));
+
+        return userMapper.convertToUserDTO(user); // Use the mapper to convert User to UserDTO
+    }
+
+
 //    public UserDTO getUserWithOrdersById(Integer id) {
 //        UserDTO userDTO = userRepository.findUserWithOrdersById(id);
 //        if (userDTO == null) {
@@ -94,10 +120,5 @@ public class UserService {
 //        }
 //        return userDTO;
 //    }
-
-
-
-
-
 
 }

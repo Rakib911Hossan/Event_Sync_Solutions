@@ -24,12 +24,12 @@ public class Order extends GenericEntity<Integer>{
 
     @Enumerated(EnumType.STRING)
     private Status status; // Enum for status like ORDERED, PREPARED, SERVED
-//    private LocalDateTime orderDate; // Changed to LocalDateTime for consistency with the TIMESTAMP SQL type
 
-//    @ManyToOne
-//    @JoinColumn(name = "menu_item_id", nullable = false)
-//    private MenuItem menuItem;
-//
+
+    @ManyToOne
+    @JoinColumn(name = "menu_item_id", nullable = false)
+    private MenuItem menuItem;
+
 
     // Getters and Setters
 }

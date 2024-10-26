@@ -2,86 +2,78 @@ package com.Corporate.Event_Sync.controller;
 
 import com.Corporate.Event_Sync.dto.UserDTO;
 import com.Corporate.Event_Sync.entity.User;
-import com.Corporate.Event_Sync.service.UserService;
+import com.Corporate.Event_Sync.service.userService.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
 @AllArgsConstructor
-//@NoArgsConstructor
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
 
-    private UserService userService;
+    private final UserService userService;
 
     // Register a new user
     @PostMapping("/register")
-    public ResponseEntity<String> registerUser(@RequestBody User user) {
-        userService.registerUser(user);
-        return new ResponseEntity<>("User registered successfully!", HttpStatus.CREATED);
+    public ResponseEntity<User> registerUser(@RequestBody User user) {
+        User registeredUser = userService.registerUser(user);
+        return ResponseEntity.status(HttpStatus.CREATED).body(registeredUser);
     }
 
-    // Login user
+    // Authenticate user (login)
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestParam String email, @RequestParam String password) {
-        // Authenticate the user
+    public ResponseEntity<String> authenticate(@RequestParam String email, @RequestParam String password) {
         boolean isAuthenticated = userService.authenticate(email, password);
-
         if (isAuthenticated) {
-            // Retrieve user data after successful authentication
-            UserDTO userDTO = userService.findByEmail(email);
-
-            // Return the user data without the password
-            return ResponseEntity.ok(userDTO);
+            return ResponseEntity.ok("User authenticated successfully.");
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials.");
         }
-
-        // If authentication fails
-        return new ResponseEntity<>("Invalid email or password", HttpStatus.UNAUTHORIZED);
     }
 
-
-
+    // Find user by email
+    // Get a user by email
+    @GetMapping("/email/{email}")
+    public ResponseEntity<UserDTO> getUserByEmail(@PathVariable String email) {
+        UserDTO userDTO = userService.findByEmail(email);
+        return ResponseEntity.ok(userDTO);
+    }
 
     // Get user by ID
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Integer id) {
-        Optional<User> user = userService.getUserById(id);
-        return user.map(ResponseEntity::ok)
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    public ResponseEntity<UserDTO> getUserById(@PathVariable Integer id) {
+        UserDTO userDTO = userService.getUserByIdUserDto(id); // Ensure this method returns UserDTO
+        return ResponseEntity.ok(userDTO);
     }
 
-    // Update user role
-//    @PutMapping("/{id}/role")
-//    public ResponseEntity<String> updateUserRole(@PathVariable Integer id, @RequestParam Role role) {
-//        try {
-//            userService.updateUserRole(id, role);
-//            return ResponseEntity.ok("User role updated successfully");
-//        } catch (Exception e) {
-//            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-//        }
-//    }
+    // Get user by ID and map to ActiveUserDTO
+    @GetMapping("/{id}/dto")
+    public ResponseEntity<UserDTO> getUserByIdUserDto(@PathVariable Integer id) {
+        UserDTO userDTO = userService.getUserByIdUserDto(id);
+        return ResponseEntity.ok(userDTO);
+    }
 
     // Deactivate user account
     @PutMapping("/{id}/deactivate")
     public ResponseEntity<String> deactivateUser(@PathVariable Integer id) {
         try {
             userService.deactivateUser(id);
-            return ResponseEntity.ok("User account deactivated successfully");
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+            return ResponseEntity.ok("User account deactivated.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
         }
     }
 
-//
-//    @GetMapping("/{id}/orders")
-//    public ResponseEntity<UserDTO> getUserWithOrders(@PathVariable Integer id) {
-//        UserDTO userDTO = userService.getUserWithOrdersById(id);
-//        return ResponseEntity.ok(userDTO);
-//    }
-//
-
-
+    // Activate user account
+    @PutMapping("/{id}/activate")
+    public ResponseEntity<String> activateUser(@PathVariable Integer id) {
+        try {
+            userService.activateUser(id);
+            return ResponseEntity.ok("User account activated.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
+        }
+    }
 }
