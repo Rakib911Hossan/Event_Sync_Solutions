@@ -1,5 +1,6 @@
 package com.Corporate.Event_Sync.controller;
 
+import com.Corporate.Event_Sync.dto.ActiveUserDTO;
 import com.Corporate.Event_Sync.dto.UserDTO;
 import com.Corporate.Event_Sync.entity.User;
 import com.Corporate.Event_Sync.service.userService.UserService;
@@ -44,26 +45,22 @@ public class UserController {
     // Get user by ID
     @GetMapping("/{id}")
     public ResponseEntity<UserDTO> getUserById(@PathVariable Integer id) {
-        UserDTO userDTO = userService.getUserByIdUserDto(id); // Ensure this method returns UserDTO
+        UserDTO userDTO = userService.getUserById(id); // Ensure this method returns UserDTO
         return ResponseEntity.ok(userDTO);
     }
 
     // Get user by ID and map to ActiveUserDTO
     @GetMapping("/{id}/dto")
-    public ResponseEntity<UserDTO> getUserByIdUserDto(@PathVariable Integer id) {
-        UserDTO userDTO = userService.getUserByIdUserDto(id);
-        return ResponseEntity.ok(userDTO);
+    public ResponseEntity<ActiveUserDTO> getUserByIdUserDto(@PathVariable Integer id) {
+        ActiveUserDTO activeUserDTO = userService.getUserByIdUserDto(id);
+        return ResponseEntity.ok(activeUserDTO);
     }
 
     // Deactivate user account
     @PutMapping("/{id}/deactivate")
-    public ResponseEntity<String> deactivateUser(@PathVariable Integer id) {
-        try {
-            userService.deactivateUser(id);
-            return ResponseEntity.ok("User account deactivated.");
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
-        }
+    public ResponseEntity<Void> deactivateUser(@PathVariable Integer id) {
+        userService.deactivateUser(id);
+        return ResponseEntity.noContent().build();
     }
 
     // Activate user account

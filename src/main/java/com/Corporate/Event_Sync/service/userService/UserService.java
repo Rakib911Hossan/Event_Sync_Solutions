@@ -1,17 +1,19 @@
 package com.Corporate.Event_Sync.service.userService;
 
+import com.Corporate.Event_Sync.dto.ActiveUserDTO;
 import com.Corporate.Event_Sync.dto.UserDTO;
 import com.Corporate.Event_Sync.dto.mapper.UserMapper;
 import com.Corporate.Event_Sync.entity.Order;
 import com.Corporate.Event_Sync.entity.User;
+import com.Corporate.Event_Sync.exceptions.ConflictException;
 import com.Corporate.Event_Sync.exceptions.NotFoundException;
+import com.Corporate.Event_Sync.repository.OrderRepository;
 import com.Corporate.Event_Sync.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 //@NoArgsConstructor
 @AllArgsConstructor
 @Service
@@ -21,6 +23,7 @@ public class UserService {
     private UserRepository userRepository;
     private PasswordEncoder passwordEncoder;
     private UserMapper userMapper;
+    private OrderRepository orderRepository;
     /*   public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }*/
@@ -74,43 +77,58 @@ public class UserService {
         return userDTO;
     }
 
-
-
-
     // Get user by ID
-    public Optional<User> getUserById(Integer id) {
-        return userRepository.findById(id);
+    public UserDTO getUserById(Integer userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("User with ID " + userId + " not found"));
+        return userMapper.convertToUserDTO(user);
     }
 
     // Deactivate user account
     public void deactivateUser(Integer id) {
-        Optional<User> user = getUserById(id);
-        if (user.isPresent()) {
-            User foundUser = user.get();
-            foundUser.setIsActive(false);
-            userRepository.save(foundUser);
-        } else {
-            throw new RuntimeException("User not found");
-        }
-    }
-    // Activate user account
-    public void activateUser(Integer id) {
-        Optional<User> user = getUserById(id);
-        if (user.isPresent()) {
-            User foundUser = user.get();
-            foundUser.setIsActive(true);
-            userRepository.save(foundUser);
-        } else {
-            throw new NotFoundException("User not found");
-        }
+        User foundUser = userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("User not found"));
+
+        // Deactivate user
+        foundUser.setIsActive(false);
+        userRepository.save(foundUser);
+
+        // Delete orders for inactive users
+        orderRepository.deleteOrdersByInactiveUsers();
     }
 
-    public UserDTO getUserByIdUserDto(Integer userId) {
+    // Activate user account
+    // Get user by ID
+    public User fetchUserById(Integer userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("User with ID " + userId + " not found"));
+    }
+
+    // Activate user account
+    public void activateUser(Integer id) {
+        // Fetch the user by ID and throw NotFoundException if not found
+        User foundUser = fetchUserById(id);
+
+        // Set user status to active
+        foundUser.setIsActive(true);
+
+        // Save the updated user
+        userRepository.save(foundUser);
+    }
+
+
+    public ActiveUserDTO getUserByIdUserDto(Integer userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User with ID " + userId + " not found"));
 
-        return userMapper.convertToUserDTO(user); // Use the mapper to convert User to UserDTO
+        // Check if the user is already active
+        if (Boolean.TRUE.equals(user.getIsActive())) {
+            throw new ConflictException("User with ID " + userId + " is already activated.");
+        }
+
+        return userMapper.mapUserToActiveUserDTO(user); // Convert User to ActiveUserDTO
     }
+
 
 
 //    public UserDTO getUserWithOrdersById(Integer id) {

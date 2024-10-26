@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.*?>
+<?import javafx.collections.FXCollections?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import java.lang.String?>
+<AnchorPane prefHeight="540.0" prefWidth="677.0" style="-fx-background-color: #e8f0fe;"
+            xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/22"
+            fx:controller="com.Corporate.Event_Sync.controller.RegisterController">
+    <children>
+        <VBox alignment="CENTER" prefWidth="50.0" prefHeight="50.0" maxWidth="400.0" maxHeight="500.0" spacing="15.0"
+              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+              AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0">
+            <Label style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" text="Register" />
+
+            <VBox alignment="CENTER_LEFT" spacing="12.0" maxWidth="360.0" prefWidth="340.0"
+                  style="-fx-background-radius: 25; -fx-background-color: white; -fx-padding: 20px;">
+                <HBox alignment="CENTER_LEFT" spacing="10.0">
+                    <Label style="-fx-font-size: 14px; -fx-text-fill: #34495e;" text="Name:" />
+                    <JFXTextField fx:id="nameField" prefHeight="28.0" prefWidth="225.0"
+                                  promptText="Enter Name"
+                                  style="-fx-background-color: #fdfdff; -fx-border-color: #b0c4de; -fx-border-radius: 5px; -fx-padding: 5px;" />
+                </HBox>
+
+                <HBox alignment="CENTER_LEFT" spacing="10.0">
+                    <Label style="-fx-font-size: 14px; -fx-text-fill: #34495e;" text="Email:" />
+                    <JFXTextField fx:id="emailField" prefHeight="28.0" prefWidth="225.0"
+                                  promptText="Enter Email"
+                                  style="-fx-background-color: #fdfdff; -fx-border-color: #b0c4de; -fx-border-radius: 5px; -fx-padding: 5px;" />
+                </HBox>
+
+                <HBox alignment="CENTER_LEFT" spacing="10.0">
+                    <Label style="-fx-font-size: 14px; -fx-text-fill: #34495e;" text="Department:" />
+                    <JFXTextField fx:id="departmentField" prefHeight="28.0" prefWidth="225.0"
+                                  promptText="Enter Department"
+                                  style="-fx-background-color: #fdfdff; -fx-border-color: #b0c4de; -fx-border-radius: 5px; -fx-padding: 5px;" />
+                </HBox>
+
+                <HBox alignment="CENTER_LEFT" spacing="10.0">
+                    <Label style="-fx-font-size: 14px; -fx-text-fill: #34495e;" text="Password:" />
+                    <JFXPasswordField fx:id="passwordField" prefHeight="28.0" prefWidth="198.0"
+                                      promptText="Enter Password"
+                                      style="-fx-background-color: #fdfdff; -fx-border-color: #b0c4de; -fx-border-radius: 5px; -fx-padding: 5px;" />
+                </HBox>
+
+                <!-- ComboBox for Role -->
+                <HBox alignment="CENTER_LEFT" spacing="10.0">
+                    <Label style="-fx-font-size: 14px; -fx-text-fill: #34495e;" text="Role:" />
+                    <JFXComboBox fx:id="roleComboBox" prefHeight="28.0" prefWidth="225.0"
+                                 promptText="Select Role"
+                                 style="-fx-background-color: #fdfdff; -fx-border-color: #b0c4de; -fx-border-radius: 5px;">
+                        <items>
+                            <FXCollections fx:factory="observableArrayList">
+                                <String fx:value="ADMIN"/>
+                                <String fx:value="USER"/>
+                            </FXCollections>
+                        </items>
+                    </JFXComboBox>
+                </HBox>
+
+                <!-- TextField for Office ID -->
+                <HBox alignment="CENTER_LEFT" spacing="10.0">
+                    <Label style="-fx-font-size: 14px; -fx-text-fill: #34495e;" text="Office ID:" />
+                    <JFXTextField fx:id="officeIdField" prefHeight="28.0" prefWidth="225.0"
+                                  promptText="Enter Office ID"
+                                  style="-fx-background-color: #fdfdff; -fx-border-color: #b0c4de; -fx-border-radius: 5px; -fx-padding: 5px;" />
+                </HBox>
+            </VBox>
+
+            <JFXButton onAction="#handleRegister" prefWidth="120.0" text="Register"
+                       style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5px; -fx-cursor: hand;" />
+            <Label fx:id="messageLabel" style="-fx-font-size: 12px;" textFill="#e74c3c" />
+        </VBox>
+    </children>
+</AnchorPane>

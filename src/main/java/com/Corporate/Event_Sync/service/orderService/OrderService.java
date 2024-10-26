@@ -3,6 +3,8 @@ package com.Corporate.Event_Sync.service.orderService;
 import com.Corporate.Event_Sync.entity.MenuItem;
 import com.Corporate.Event_Sync.entity.Order;
 import com.Corporate.Event_Sync.entity.User;
+import com.Corporate.Event_Sync.exceptions.ConflictException;
+import com.Corporate.Event_Sync.exceptions.IllegalStateException;
 import com.Corporate.Event_Sync.exceptions.NotFoundException;
 import com.Corporate.Event_Sync.repository.MenuItemRepository;
 import com.Corporate.Event_Sync.repository.OrderRepository;
@@ -29,6 +31,10 @@ public class OrderService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User not found"));
 
+        // Check if the user is active
+        if (!Boolean.TRUE.equals(user.getIsActive())) {
+            throw new IllegalStateException("Order cannot be created. User is inactive.");
+        }
         // Fetch the menu item from the repository
         MenuItem menuItem = menuItemRepository.findById(menuItemId)
                 .orElseThrow(() -> new NotFoundException("Menu item not found"));
@@ -44,6 +50,30 @@ public class OrderService {
         return orderRepository.save(order);
     }
 
+    public Order updateOrderById(Long orderId, Integer userId, Status status) {
+        // Find the order by ID or throw an exception if not found
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new NotFoundException("Order with ID " + orderId + " not found"));
+        // If a userId is provided, update the user for the order
+        if (userId != null) {
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new NotFoundException("User with ID " + userId + " not found"));
+
+            // Check if the user is active; if not, throw an exception
+            if (!Boolean.TRUE.equals(user.getIsActive())) {
+                throw new ConflictException("Cannot assign order to a deactivated user with ID " + userId);
+            }
+            order.setUser(user);
+        }
+        // If a status is provided, update the status for the order
+        if (status != null) {
+            order.setStatus(status);
+        }
+        // Save and return the updated order
+        return orderRepository.save(order);
+    }
+
+
     //    // Get all orders for a specific user
 //    public List<Order> getOrdersByUserId(Integer userId) {
 //        return orderRepository.findByUserId(userId);
@@ -51,10 +81,7 @@ public class OrderService {
     public Map<String, Object> getOrderDetailsById(Long id) {
         return orderRepository.findOrderDetailsByOrderId(id);
     }
-    // Get all orders
-    public List<Order> getAllOrders() {
-        return orderRepository.findAll();
-    }
+
 
     // Get order by ID
     public Optional<Order> getOrderById(Long orderId) {
@@ -69,5 +96,6 @@ public class OrderService {
     public List<Order> getOrdersByUserName(String userName) {
         return orderRepository.findOrdersByUserName(userName);
     }
+
 
 }

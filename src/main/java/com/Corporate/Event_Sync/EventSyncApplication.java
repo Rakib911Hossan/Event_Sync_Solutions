@@ -18,10 +18,10 @@ public class EventSyncApplication extends Application {
 
 	@Override
 	public void start(Stage stage) throws Exception {
+		context = SpringApplication.run(EventSyncApplication.class);
 
-		context=SpringApplication.run(EventSyncApplication.class);
-		FXMLLoader fxmlLoader=new FXMLLoader(getClass().getResource
-				("/com.Corporate.Event_Sync/login.fxml"));
+		// Load the Register FXML initially
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com.Corporate.Event_Sync/register.fxml"));
 		fxmlLoader.setControllerFactory(context::getBean);
 		Scene scene = new Scene(fxmlLoader.load());
 
@@ -29,7 +29,7 @@ public class EventSyncApplication extends Application {
 		stage.setTitle(title);
 		stage.setScene(scene);
 		stage.show();
-
 	}
+
 
 }

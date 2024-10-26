@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @Table(name = "orders")
 public class Order extends GenericEntity<Integer>{
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "user_id",referencedColumnName = "id", nullable = false) // Foreign key to User
     private User user;
 
@@ -26,7 +26,7 @@ public class Order extends GenericEntity<Integer>{
     private Status status; // Enum for status like ORDERED, PREPARED, SERVED
 
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "menu_item_id", nullable = false)
     private MenuItem menuItem;
 
