@@ -1,6 +1,5 @@
 package com.Corporate.Event_Sync.entity;
 
-import com.Corporate.Event_Sync.utils.Category;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -20,13 +19,11 @@ public class MenuItem extends GenericEntity<Integer>{
     private String itemName;
     private String description;
 
-    @Enumerated(EnumType.STRING)
-    private Category category;//  BREAKFAST,LUNCH,SNACKS,DINNER etc.
+
+    private String category;//  BREAKFAST,LUNCH,SNACKS,DINNER etc.
 
     private String availableTime;
 
-//    @OneToMany(mappedBy = "menuItem", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    private Set<LunchSchedule> lunchSchedules;
     @JsonIgnore
     @OneToMany(mappedBy = "menuItem", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Order> orders;

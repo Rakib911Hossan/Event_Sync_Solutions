@@ -28,6 +28,9 @@ public class User extends GenericEntity<Integer>{
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Order> orders; // One user can have multiple orders
 
+//    @JsonIgnore
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<DefaultWeekDays> defaultWeekDays;
 
 //    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 //    private Set<LunchSchedule> lunchSchedules;

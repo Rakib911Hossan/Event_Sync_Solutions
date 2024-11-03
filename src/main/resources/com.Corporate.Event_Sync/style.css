@@ -1,0 +1,68 @@
+/* 3D Button Style */
+.button {
+    -fx-background-color: #6a11cb;
+    -fx-text-fill: white;
+    -fx-padding: 7;
+    -fx-background-radius: 5;
+    -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.5), 10, 0.0, 0, 0);
+}
+
+.button:hover {
+    -fx-background-color: #5b10a2; /* Darker shade on hover */
+}
+
+
+.button:pressed {
+    -fx-background-color: linear-gradient(#ff4500, #ff6347);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.85), 6, 0.5, 0, 2);
+    -fx-translate-y: 2;
+}
+.table-view {
+    -fx-background-color: rgba(255, 255, 255, 0.5); /* Change this to your desired color */
+}
+
+/* Optional: Set header background color */
+.table-view .column-header {
+    -fx-background-color: rgba(255, 255, 255, 0.7); /* Change this for header background */
+}
+
+/* Optional: Set alternate row colors */
+.table-view .table-row-cell {
+    -fx-background-color: rgba(240, 240, 240, 0.5); /* Change this for row background */
+}
+
+.table-view .table-row-cell:filled:hover {
+    -fx-background-color: rgba(200, 200, 255, 0.5); /* Change this for hover effect */
+}
+/* Label styling */
+.label {
+    -fx-background-color: rgba(0, 0, 0, 0.3); /* Background color */
+    -fx-text-fill: white; /* Text color */
+    -fx-font-size: 14px; /* Font size */
+    -fx-font-weight: bold; /* Bold text */
+    -fx-padding: 5px; /* Padding around text */
+    -fx-background-radius: 5; /* Rounded corners */
+}
+
+/* ComboBox styling */
+.combo-box {
+    -fx-background-color: rgba(255, 255, 255, 0.3); /* Background color */
+    -fx-text-fill: white; /* Text color */
+    -fx-padding: 5px; /* Padding */
+    -fx-background-radius: 5; /* Rounded corners */
+    -fx-pref-width: 150; /* Preferred width */
+}
+
+/* DatePicker styling */
+.date-picker {
+    -fx-background-color: rgba(255, 255, 255, 0.3); /* Background color */
+    -fx-text-fill: white; /* Text color */
+    -fx-padding: 5px; /* Padding */
+    -fx-background-radius: 5; /* Rounded corners */
+    -fx-pref-width: 150; /* Preferred width */
+}
+
+/* ComboBox and DatePicker hover effect */
+.combo-box:hover, .date-picker:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.5); /* Lighter on hover */
+}

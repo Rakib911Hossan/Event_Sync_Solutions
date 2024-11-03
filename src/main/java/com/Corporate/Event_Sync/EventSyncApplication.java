@@ -11,8 +11,8 @@ import org.springframework.context.ConfigurableApplicationContext;
 @SpringBootApplication
 public class EventSyncApplication extends Application {
 	public static ConfigurableApplicationContext context;
-	public static void main(String[] args) {
 
+	public static void main(String[] args) {
 		Application.launch(EventSyncApplication.class, args);
 	}
 
@@ -25,11 +25,12 @@ public class EventSyncApplication extends Application {
 		fxmlLoader.setControllerFactory(context::getBean);
 		Scene scene = new Scene(fxmlLoader.load());
 
+		// Apply the CSS file to the scene
+		scene.getStylesheets().add(getClass().getResource("/com.Corporate.Event_Sync/style.css").toExternalForm());
+
 		String title = context.getBean("title", String.class);
 		stage.setTitle(title);
 		stage.setScene(scene);
 		stage.show();
 	}
-
-
 }

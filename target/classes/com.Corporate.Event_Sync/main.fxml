@@ -4,41 +4,68 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.Corporate.Event_Sync.controller.MainController" style="-fx-background-color: #e0f7fa;" prefWidth="600.0" prefHeight="400.0">
+<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.Corporate.Event_Sync.controller.MainController"
+            style="-fx-background-color: linear-gradient(to bottom, #333333, #1a1a1a);" prefWidth="600.0" prefHeight="400.0">
     <children>
+        <!-- Centered User Dashboard Area -->
         <VBox fx:id="userDashboard" spacing="20.0" alignment="CENTER"
-              AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0"
+              AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="150.0"
               AnchorPane.topAnchor="50.0" AnchorPane.bottomAnchor="50.0">
-            <Label text="User Dashboard" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #00796b;" />
+            <Label text="User Dashboard" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #4caf50;" />
 
-            <!-- User details container -->
-            <VBox spacing="15.0" alignment="CENTER_LEFT" style="-fx-background-color: #ffffff; -fx-padding: 20px; -fx-border-color: #ccc; -fx-border-radius: 5px;">
-
+            <!-- User Details Container -->
+            <VBox spacing="15.0" alignment="CENTER_LEFT"
+                  style="-fx-background-color: #ffffff; -fx-padding: 20px; -fx-border-color: #cccccc; -fx-border-radius: 10px; -fx-effect: dropshadow(gaussian, rgba(200,200,200,0.5), 10, 0.3, 0, 5);">
                 <HBox spacing="15.0" alignment="CENTER_LEFT">
-                    <Label text="Name:" style="-fx-font-size: 16px; -fx-text-fill: #455a64;" />
-                    <Label style="-fx-font-size: 16px; -fx-text-fill: #607d8b;" fx:id="nameLabel"/>
+                    <Label text="Name:" style="-fx-font-size: 16px; -fx-text-fill: #606c76;" />
+                    <Label style="-fx-font-size: 16px; -fx-text-fill: #333333;" fx:id="nameLabel"/>
                 </HBox>
-
                 <HBox spacing="15.0" alignment="CENTER_LEFT">
-                    <Label text="Department:" style="-fx-font-size: 16px; -fx-text-fill: #455a64;" />
-                    <Label style="-fx-font-size: 16px; -fx-text-fill: #607d8b;" fx:id="departmentLabel"/>
+                    <Label text="Department:" style="-fx-font-size: 16px; -fx-text-fill: #606c76;" />
+                    <Label style="-fx-font-size: 16px; -fx-text-fill: #333333;" fx:id="departmentLabel"/>
                 </HBox>
-
                 <HBox spacing="15.0" alignment="CENTER_LEFT">
-                    <Label text="Email:" style="-fx-font-size: 16px; -fx-text-fill: #455a64;" />
-                    <Label style="-fx-font-size: 16px; -fx-text-fill: #607d8b;" fx:id="emailLabel"/>
+                    <Label text="Email:" style="-fx-font-size: 16px; -fx-text-fill: #606c76;" />
+                    <Label style="-fx-font-size: 16px; -fx-text-fill: #333333;" fx:id="emailLabel"/>
                 </HBox>
-
                 <HBox spacing="15.0" alignment="CENTER_LEFT">
-                    <Label text="Office ID:" style="-fx-font-size: 16px; -fx-text-fill: #455a64;" />
-                    <Label style="-fx-font-size: 16px; -fx-text-fill: #607d8b;" fx:id="officeIdLabel"/>
+                    <Label text="Office ID:" style="-fx-font-size: 16px; -fx-text-fill: #606c76;" />
+                    <Label style="-fx-font-size: 16px; -fx-text-fill: #333333;" fx:id="officeIdLabel"/>
                 </HBox>
-
                 <HBox spacing="15.0" alignment="CENTER_LEFT">
-                    <Label text="Active:" style="-fx-font-size: 16px; -fx-text-fill: #455a64;" />
-                    <Label style="-fx-font-size: 16px; -fx-text-fill: #607d8b;" fx:id="activeLabel"/>
+                    <Label text="Active:" style="-fx-font-size: 16px; -fx-text-fill: #606c76;" />
+                    <Label style="-fx-font-size: 16px; -fx-text-fill: #333333;" fx:id="activeLabel"/>
                 </HBox>
             </VBox>
         </VBox>
+
+        <!-- Right Side Buttons -->
+        <VBox spacing="15.0" alignment="TOP_CENTER"
+              AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0" AnchorPane.bottomAnchor="20.0">
+            <!-- Logout Button -->
+            <Button text="Logout" onAction="#handleLogout"
+                    style="-fx-background-color: linear-gradient(to right, #e57373, #ef5350); -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10px; -fx-cursor: hand;" />
+
+            <!-- Home Button -->
+            <Button text="Home" onAction="#handleHome"
+                    style="-fx-background-color: linear-gradient(to right, #4caf50, #81c784); -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10px; -fx-cursor: hand;" />
+
+            <!-- User Details Button -->
+            <Button text="User Details" onAction="#handleUserDetails"
+                    style="-fx-background-color: linear-gradient(to right, #64b5f6, #90caf9); -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10px; -fx-cursor: hand;" />
+
+            <!-- Create Order Button -->
+            <Button text="Create Order" onAction="#switchToCreateOrder"
+                    style="-fx-background-color: linear-gradient(to right, #4caf50, #81c784); -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10px; -fx-cursor: hand;" />
+
+            <!-- Your Orders Button -->
+            <Button text="Your Orders" onAction="#handleYourOrders"
+                    style="-fx-background-color: linear-gradient(to right, #64b5f6, #90caf9); -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10px; -fx-cursor: hand;" />
+        </VBox>
+
+        <!-- Exit Button -->
+        <Button text="Exit" onAction="#handleExit"
+                style="-fx-background-color: linear-gradient(to right, #e57373, #ef5350); -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10px; -fx-cursor: hand;"
+                AnchorPane.leftAnchor="10.0" AnchorPane.bottomAnchor="10.0" />
     </children>
 </AnchorPane>

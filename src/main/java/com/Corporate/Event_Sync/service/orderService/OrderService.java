@@ -1,17 +1,18 @@
 package com.Corporate.Event_Sync.service.orderService;
 
+import com.Corporate.Event_Sync.dto.OrderDTO;
+import com.Corporate.Event_Sync.dto.mapper.OrderMapper;
 import com.Corporate.Event_Sync.entity.MenuItem;
 import com.Corporate.Event_Sync.entity.Order;
-import com.Corporate.Event_Sync.entity.User;
-import com.Corporate.Event_Sync.exceptions.ConflictException;
-import com.Corporate.Event_Sync.exceptions.IllegalStateException;
 import com.Corporate.Event_Sync.exceptions.NotFoundException;
 import com.Corporate.Event_Sync.repository.MenuItemRepository;
 import com.Corporate.Event_Sync.repository.OrderRepository;
 import com.Corporate.Event_Sync.repository.UserRepository;
-import com.Corporate.Event_Sync.utils.Status;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,58 +21,48 @@ import java.util.Optional;
 @AllArgsConstructor
 @Service
 public class OrderService {
-
+    private static final Logger log = LoggerFactory.getLogger(OrderService.class);
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
     private final MenuItemRepository menuItemRepository;
 
+    private final OrderMapper orderMapper;
 
-    public Order createOrder(Integer userId, Integer menuItemId, Status status) {
-        // Fetch the user from the repository
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("User not found"));
-
-        // Check if the user is active
-        if (!Boolean.TRUE.equals(user.getIsActive())) {
-            throw new IllegalStateException("Order cannot be created. User is inactive.");
-        }
-        // Fetch the menu item from the repository
-        MenuItem menuItem = menuItemRepository.findById(menuItemId)
-                .orElseThrow(() -> new NotFoundException("Menu item not found"));
-
-        // Create a new order
-        Order order = new Order();
-        order.setUser(user);  // Set the user
-        order.setMenuItem(menuItem); // Set the menu item
-        order.setOrderDate(LocalDateTime.now()); // Set current date and time
-        order.setStatus(status); // Set status from user input
-
-        // Persist the order
-        return orderRepository.save(order);
+    // Get all orders for a specific user
+    public List<OrderDTO> getOrdersByUserId(Integer userId) {
+        List<Order> orders = orderRepository.findByUserId(userId);
+        return orderMapper.toDTOList(orders);
     }
-
-    public Order updateOrderById(Long orderId, Integer userId, Status status) {
-        // Find the order by ID or throw an exception if not found
-        Order order = orderRepository.findById(orderId)
+    public void createOrder(Integer userId, Integer menuItemId, String status, LocalDateTime orderDate) {
+        // You can add any necessary checks here (e.g., user existence, menu item existence, user active status)
+        // Save the order using the native query
+        orderRepository.saveOrder(userId, menuItemId, status, orderDate);
+    }
+    @Transactional
+    public OrderDTO updateOrderById(Integer orderId, Integer menuItemId, String status, LocalDateTime orderDate) {
+        Order order = orderRepository.findById(Long.valueOf(orderId))
                 .orElseThrow(() -> new NotFoundException("Order with ID " + orderId + " not found"));
-        // If a userId is provided, update the user for the order
-        if (userId != null) {
-            User user = userRepository.findById(userId)
-                    .orElseThrow(() -> new NotFoundException("User with ID " + userId + " not found"));
 
-            // Check if the user is active; if not, throw an exception
-            if (!Boolean.TRUE.equals(user.getIsActive())) {
-                throw new ConflictException("Cannot assign order to a deactivated user with ID " + userId);
+            if (menuItemId != null) {
+                MenuItem menuItem = menuItemRepository.findById((int) menuItemId.longValue())
+                        .orElseThrow(() -> new NotFoundException("Menu item with ID " + menuItemId + " not found"));
+                order.setMenuItem(menuItem);
             }
-            order.setUser(user);
-        }
-        // If a status is provided, update the status for the order
         if (status != null) {
             order.setStatus(status);
         }
-        // Save and return the updated order
-        return orderRepository.save(order);
+        if (orderDate != null) {
+            order.setOrderDate(orderDate);
+        }
+        Order updatedOrder = orderRepository.save(order);
+        return orderMapper.toDTO(updatedOrder);
     }
+
+
+
+
+
+
 
 
     //    // Get all orders for a specific user
@@ -97,5 +88,8 @@ public class OrderService {
         return orderRepository.findOrdersByUserName(userName);
     }
 
-
+    @Transactional
+    public void deleteOrdersByUserId(Integer userId) {
+        orderRepository.deleteByUserId(userId);
+    }
 }

@@ -6,75 +6,48 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.paint.Color?>
-<?import javafx.scene.paint.LinearGradient?>
-<?import javafx.scene.paint.Stop?>
 
-<AnchorPane prefHeight="490.0" prefWidth="677.0" style="-fx-background-color: #e8f0fe;"
+<AnchorPane prefHeight="490.0" prefWidth="677.0" style="-fx-background-color: linear-gradient(to bottom, #333333, #1a1a1a);"
             xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/22"
             fx:controller="com.Corporate.Event_Sync.controller.LoginController">
     <children>
-        <!-- Outer VBox for the centered login area -->
+        <!-- Outer VBox for centered login area -->
         <VBox alignment="CENTER" prefWidth="50.0" prefHeight="50.0" maxWidth="400.0" maxHeight="400.0" spacing="15.0"
               AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
               AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0">
-            <Label style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" text="User Login" />
+            <Label style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #ffffff;" text="User Login" />
 
             <!-- Inner VBox with a larger white background area -->
             <VBox alignment="CENTER_LEFT" spacing="12.0" maxWidth="360.0" prefWidth="340.0"
-                  style="-fx-background-radius: 25; -fx-background-color: white; -fx-padding: 20px;">
+                  style="-fx-background-radius: 25; -fx-background-color: white; -fx-padding: 20px; -fx-effect: dropshadow(gaussian, rgba(200,200,200,0.5), 10, 0.3, 0, 5);">
+
+                <!-- Email Field -->
                 <HBox alignment="CENTER_LEFT" spacing="10.0">
-                    <Label style="-fx-font-size: 14px; -fx-text-fill: #34495e;" text="Email:" />
-                    <JFXTextField fx:id="emailField" prefHeight="28.0" prefWidth="225.0"
+                    <Label style="-fx-font-size: 14px; -fx-text-fill: #606c76;" text="Email" />
+                    <JFXTextField fx:id="emailField" prefHeight="40.0" prefWidth="230.0"
                                   promptText="Enter Email"
-                                  style="-fx-background-color: #fdfdff; -fx-border-color: #b0c4de; -fx-border-radius: 5px; -fx-padding: 5px;">
-                        <focusColor>
-                            <!-- Color Gradient 1 -->
-                            <LinearGradient endX="1.0" endY="1.0">
-                                <stops>
-                                    <Stop>
-                                        <color>
-                                            <Color red="0.9" green="0.4" blue="0.3" />
-                                        </color>
-                                    </Stop>
-                                    <Stop offset="1.0">
-                                        <color>
-                                            <Color red="0.7" green="0.1" blue="0.4" />
-                                        </color>
-                                    </Stop>
-                                </stops>
-                            </LinearGradient>
-                        </focusColor>
-                    </JFXTextField>
+                                  style="-fx-background-color: #fdfdff; -fx-border-color: #b0c4de; -fx-border-radius: 5px;" />
                 </HBox>
+
+                <!-- Password Field -->
                 <HBox alignment="CENTER_LEFT" spacing="10.0">
-                    <Label style="-fx-font-size: 14px; -fx-text-fill: #34495e;" text="Password:" />
-                    <JFXPasswordField fx:id="passwordField" prefHeight="28.0" prefWidth="198.0"
+                    <Label style="-fx-font-size: 14px; -fx-text-fill: #606c76;" text="Password" />
+                    <JFXPasswordField fx:id="passwordField" prefHeight="40.0" prefWidth="230.0"
                                       promptText="Enter Password"
-                                      style="-fx-background-color: #fdfdff; -fx-border-color: #b0c4de; -fx-border-radius: 5px; -fx-padding: 5px;">
-                        <focusColor>
-                            <!-- Color Gradient 2 -->
-                            <LinearGradient endX="1.0" endY="1.0">
-                                <stops>
-                                    <Stop>
-                                        <color>
-                                            <Color red="0.2" green="0.7" blue="0.8" />
-                                        </color>
-                                    </Stop>
-                                    <Stop offset="1.0">
-                                        <color>
-                                            <Color red="0.1" green="0.5" blue="0.9" />
-                                        </color>
-                                    </Stop>
-                                </stops>
-                            </LinearGradient>
-                        </focusColor>
-                    </JFXPasswordField>
+                                      style="-fx-background-color: #fdfdff; -fx-border-color: #b0c4de; -fx-border-radius: 5px;" />
                 </HBox>
             </VBox>
-            <JFXButton onAction="#handleLogin" prefWidth="120.0" text="Login"
-                       style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5px; -fx-cursor: hand;" />
-            <Label fx:id="messageLabel" style="-fx-font-size: 12px;" textFill="#e74c3c" />
+
+            <!-- Login Button -->
+            <JFXButton onAction="#handleLogin" text="Login" prefWidth="130.0"
+                       style="-fx-background-color: linear-gradient(to right, #4caf50, #81c784); -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 15px; -fx-cursor: hand;" />
+
+            <!-- Register Button -->
+            <JFXButton onAction="#goToRegister" text="Register" prefWidth="130.0"
+                       style="-fx-background-color: linear-gradient(to right, #64b5f6, #90caf9); -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 15px; -fx-cursor: hand;" />
+
+            <!-- Error Message Label -->
+            <Label fx:id="messageLabel" style="-fx-font-size: 12px; -fx-text-fill: #e74c3c; -fx-font-weight: bold;" />
         </VBox>
     </children>
 </AnchorPane>

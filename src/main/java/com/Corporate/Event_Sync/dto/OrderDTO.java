@@ -1,14 +1,16 @@
 package com.Corporate.Event_Sync.dto;
 
-import com.Corporate.Event_Sync.utils.Status;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+
+import java.time.LocalDateTime;
+
 @Data
 @AllArgsConstructor
 public class OrderDTO {
-    private Long userId;
-    private Long menuItemId;
-    private Long orderId;
-    private String orderDate;
-    private Status status;
+    private Integer orderId;
+    private Integer userId;
+    private Integer menuItemId;
+    private LocalDateTime orderDate;
+    private String status;
 }

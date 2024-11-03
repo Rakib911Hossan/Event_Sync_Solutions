@@ -1,5 +1,6 @@
 package com.Corporate.Event_Sync.controller;
 
+import com.Corporate.Event_Sync.dto.MenuItemDto;
 import com.Corporate.Event_Sync.entity.MenuItem;
 import com.Corporate.Event_Sync.service.menuItemService.MenuItemListService;
 import com.Corporate.Event_Sync.service.menuItemService.MenuItemService;
@@ -42,8 +43,14 @@ public class MenuItemController {
     }
 
     @GetMapping
-    public ResponseEntity<List<MenuItem>> getAllMenuItems() {
-        List<MenuItem> menuItems = menuItemListService.getAllMenuItems();
+    public List<MenuItemDto> getAllMenuItems() {
+        return menuItemListService.getAllMenuItems(); // Call service to get the list of MenuItemDto
+    }
+
+
+    @GetMapping("/category/{category}")
+    public ResponseEntity<List<MenuItemDto>> getMenuItemsByCategory(@PathVariable String category) {
+        List<MenuItemDto> menuItems = menuItemService.getMenuItemsByCategory(category);
         return ResponseEntity.ok(menuItems);
     }
 }

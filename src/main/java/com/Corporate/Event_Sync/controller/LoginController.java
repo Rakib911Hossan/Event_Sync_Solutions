@@ -44,14 +44,34 @@ public class LoginController {
             if (userService.authenticate(email, password)) {
                 UserDTO userDTO = userService.findByEmail(email);
                 messageLabel.setText("Login successful! Welcome, " + userDTO.getName());
-                emailField.clear();  // Clear the email field
-                passwordField.clear(); // Clear the password field
+                emailField.clear();
+                passwordField.clear();
                 loadMainApplicationWindow(userDTO);
             } else {
                 messageLabel.setText("Invalid email or password");
             }
-        } catch (NotFoundException e) {
+        } catch (NotFoundException | IllegalStateException e) {
             messageLabel.setText(e.getMessage());
+        } catch (Exception e) {
+            messageLabel.setText("An unexpected error occurred. Please try again.");
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void goToRegister() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com.Corporate.Event_Sync/register.fxml"));
+            loader.setControllerFactory(context::getBean);
+            Parent root = loader.load();
+            Scene registerScene = new Scene(root);
+            Stage currentStage = (Stage) emailField.getScene().getWindow();
+            currentStage.setScene(registerScene);
+            currentStage.setTitle("Register");
+            currentStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            messageLabel.setText("Failed to load the registration page.");
         }
     }
 

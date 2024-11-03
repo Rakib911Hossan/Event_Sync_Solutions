@@ -4,6 +4,9 @@ import com.Corporate.Event_Sync.EventSyncApplication;
 import com.Corporate.Event_Sync.entity.User;
 import com.Corporate.Event_Sync.service.userService.UserService;
 import com.Corporate.Event_Sync.utils.Role;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,10 +16,13 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Controller
 public class RegisterController {
@@ -46,8 +52,19 @@ public class RegisterController {
     private Label messageLabel;
 
     @FXML
+    private Label dateTimeLabel;
+
+    @FXML
     public void initialize() {
         roleComboBox.setItems(FXCollections.observableArrayList("ADMIN", "USER"));
+
+        Timeline clock = new Timeline(new KeyFrame(Duration.ZERO, e -> {
+            LocalDateTime now = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+            dateTimeLabel.setText(now.format(formatter));
+        }), new KeyFrame(Duration.seconds(1)));
+        clock.setCycleCount(Animation.INDEFINITE);
+        clock.play();
     }
 
     @FXML
@@ -68,7 +85,7 @@ public class RegisterController {
         user.setName(name);
         user.setEmail(email);
         user.setDepartment(department);
-        user.setPassword(password);
+        user.setPassword(hashPassword(password)); // Ensure to hash the password before storing
         user.setRole(Role.valueOf(selectedRole));
         user.setOfficeId(officeId);
 
@@ -76,10 +93,14 @@ public class RegisterController {
         String registrationMessage = userService.registerUser(user);
         messageLabel.setText(registrationMessage);
 
-        // If registration is successful, switch to login screen
         if ("Registration successful!".equals(registrationMessage)) {
-            switchToLogin(); // Call without parameters
+            switchToLogin();
         }
+    }
+
+    private String hashPassword(String password) {
+        // Implement your password hashing logic here
+        return password; // Replace with hashed password
     }
 
     @FXML
@@ -99,7 +120,6 @@ public class RegisterController {
     @FXML
     public void handleExit() {
         Stage stage = (Stage) nameField.getScene().getWindow();
-        stage.close(); // Close the current stage
+        stage.close();
     }
-
 }
