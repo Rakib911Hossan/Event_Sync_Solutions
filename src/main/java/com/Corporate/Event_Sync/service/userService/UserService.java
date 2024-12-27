@@ -13,6 +13,7 @@ import com.Corporate.Event_Sync.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 //@NoArgsConstructor
@@ -43,6 +44,30 @@ public class UserService {
             return "Registration failed: " + e.getMessage(); // Failure message
         }
     }
+
+    @Transactional // To ensure the update query executes in a transaction
+    public UserDTO updateUser(UserDTO userDTO) {
+        // Retrieve the existing user by ID
+        User existingUser = userRepository.findById(userDTO.getId())
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + userDTO.getId()));
+
+        // Set fields only if the corresponding value in userDTO is not null
+        String name = userDTO.getName() != null ? userDTO.getName() : existingUser.getName();
+        String phone = userDTO.getPhone() != null ? userDTO.getPhone() : existingUser.getPhone();
+        String email = userDTO.getEmail() != null ? userDTO.getEmail() : existingUser.getEmail();
+        String address = userDTO.getAddress() != null ? userDTO.getAddress() : existingUser.getAddress();
+        String department = userDTO.getDepartment() != null ? userDTO.getDepartment() : existingUser.getDepartment();
+        String role = userDTO.getRole() != null ? userDTO.getRole() : existingUser.getRole();
+        Boolean isActive = userDTO.getIsActive() != null ? userDTO.getIsActive() : existingUser.getIsActive();
+        Integer officeId = userDTO.getOfficeId() != null ? userDTO.getOfficeId() : existingUser.getOfficeId();
+        String userPic = userDTO.getUserPic() != null ? userDTO.getUserPic() : existingUser.getUserPic();
+        // Perform the update query
+        userRepository.updateUserById(userDTO.getId(), name,phone, email,address, department, role, isActive, officeId, userPic);
+
+        // Return the updated UserDTO with the values used in the update
+        return new UserDTO(userDTO.getId(), name,phone, email,address, department, role, isActive, officeId, userPic);
+    }
+
 
     // Find user by email
 //    public Optional<User> findByEmail(String email) {
@@ -77,11 +102,14 @@ public class UserService {
         UserDTO userDTO = new UserDTO();
         userDTO.setId(user.getId());
         userDTO.setName(user.getName());
+        userDTO.setPhone(user.getPhone());
         userDTO.setEmail(user.getEmail());
+        userDTO.setAddress(user.getAddress());
         userDTO.setDepartment(user.getDepartment());
         userDTO.setRole(user.getRole());
         userDTO.setIsActive(user.getIsActive());
         userDTO.setOfficeId(user.getOfficeId());
+        userDTO.setUserPic(user.getUserPic());
 
         return userDTO;
     }
@@ -129,6 +157,9 @@ public class UserService {
     }
 
 
+    public void deleteUserById(Integer userId) {
+        userRepository.deleteById(userId);
+    }
 
 //    public UserDTO getUserWithOrdersById(Integer id) {
 //        UserDTO userDTO = userRepository.findUserWithOrdersById(id);

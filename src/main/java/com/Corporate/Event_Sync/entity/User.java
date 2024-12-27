@@ -1,6 +1,5 @@
 package com.Corporate.Event_Sync.entity;
 
-import com.Corporate.Event_Sync.utils.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,17 +16,20 @@ import java.util.List;
 public class User extends GenericEntity<Integer>{
 
     private String name;
+    private String phone;
     private String email;
+    private String address;
+
     private String department;
 
-    @Enumerated(EnumType.STRING)
-    private Role role; // Enum for roles like ADMIN, USER
+
+    private String role; // Enum for roles like ADMIN, USER
 
     private String password;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Order> orders; // One user can have multiple orders
-
+    private String userPic;
 //    @JsonIgnore
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<DefaultWeekDays> defaultWeekDays;

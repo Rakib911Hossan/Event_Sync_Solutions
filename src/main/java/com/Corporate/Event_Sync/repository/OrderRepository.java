@@ -56,6 +56,5 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     @Query("DELETE FROM Order o WHERE o.user.id = :userId")
     void deleteByUserId(@Param("userId") Integer userId);
 
-
 }
 

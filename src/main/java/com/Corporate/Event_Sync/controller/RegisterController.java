@@ -3,59 +3,61 @@ package com.Corporate.Event_Sync.controller;
 import com.Corporate.Event_Sync.EventSyncApplication;
 import com.Corporate.Event_Sync.entity.User;
 import com.Corporate.Event_Sync.service.userService.UserService;
-import com.Corporate.Event_Sync.utils.Role;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-@Controller
+@Component
 public class RegisterController {
 
     @Autowired
     private UserService userService;
 
     @FXML
+    private Button home;
+    @FXML
     private TextField nameField;
-
+    @FXML
+    private TextField phoneField;
     @FXML
     private TextField emailField;
-
     @FXML
-    private TextField departmentField;
+    private TextField addressField;
 
     @FXML
     private PasswordField passwordField;
-
     @FXML
     private ComboBox<String> roleComboBox;
-
+    @FXML
+    private ComboBox<String> departmentCombobox;
     @FXML
     private TextField officeIdField;
 
     @FXML
-    private Label messageLabel;
-
-    @FXML
     private Label dateTimeLabel;
+
+    @Autowired
+    private ApplicationContext applicationContext;
 
     @FXML
     public void initialize() {
+        departmentCombobox.setItems(FXCollections.observableArrayList("HR", "ADMINISTRATION", "ACCOUNTS", "IT", "MARKETING"));
         roleComboBox.setItems(FXCollections.observableArrayList("ADMIN", "USER"));
 
         Timeline clock = new Timeline(new KeyFrame(Duration.ZERO, e -> {
@@ -70,31 +72,49 @@ public class RegisterController {
     @FXML
     public void handleRegister() {
         String name = nameField.getText();
+        String phone = phoneField.getText();
         String email = emailField.getText();
-        String department = departmentField.getText();
+        String address = addressField.getText();
+        String department = departmentCombobox.getValue();
         String password = passwordField.getText();
         String selectedRole = roleComboBox.getValue();
-        Integer officeId = officeIdField.getText().isEmpty() ? null : Integer.parseInt(officeIdField.getText());
+        String officeIdText = officeIdField.getText(); // Get officeId as a String
 
-        if (name.isEmpty() || email.isEmpty() || department.isEmpty() || password.isEmpty() || selectedRole == null || officeId == null) {
-            messageLabel.setText("All fields are required.");
+        // Validate that all required fields are filled in
+        if (name.isEmpty() || email.isEmpty() || department.isEmpty() || password.isEmpty() || selectedRole == null || officeIdText.isEmpty()) {
+            showErrorDialog("All fields are required.");
+            return;
+        }
+
+        Integer officeId = null;
+
+        // Validate that officeId is a valid integer
+        try {
+            officeId = Integer.valueOf(officeIdText); // Try to parse officeId as Integer
+        } catch (NumberFormatException e) {
+            showErrorDialog("Office ID must be a valid number.");
             return;
         }
 
         User user = new User();
         user.setName(name);
+        user.setPhone(phone);
         user.setEmail(email);
+        user.setAddress(address);
         user.setDepartment(department);
         user.setPassword(hashPassword(password)); // Ensure to hash the password before storing
-        user.setRole(Role.valueOf(selectedRole));
-        user.setOfficeId(officeId);
+        user.setRole(selectedRole);
+        user.setOfficeId(Integer.valueOf(officeIdText));
 
         // Register the user and capture the feedback message
         String registrationMessage = userService.registerUser(user);
-        messageLabel.setText(registrationMessage);
+
 
         if ("Registration successful!".equals(registrationMessage)) {
+            showSuccessDialog("Registration Successful!");
             switchToLogin();
+        } else {
+            showErrorDialog("Registration failed: All fields are required");
         }
     }
 
@@ -112,9 +132,59 @@ public class RegisterController {
             Scene loginScene = new Scene(fxmlLoader.load());
             stage.setScene(loginScene);
         } catch (IOException e) {
-            messageLabel.setText("Failed to switch to login: " + e.getMessage());
+            showErrorDialog("Failed to switch to login: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    @FXML
+    private void handleHome() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com.Corporate.Event_Sync/main.fxml"));
+            loader.setControllerFactory(applicationContext::getBean);
+            Parent dashboardRoot = loader.load();
+            Scene dashboardScene = new Scene(dashboardRoot);
+
+            // Load and apply the CSS file to the new scene
+            String css = getClass().getResource("/com.Corporate.Event_Sync/style.css").toExternalForm();
+            dashboardScene.getStylesheets().add(css);
+
+            // Set the new scene to the current stage
+            Stage currentStage = (Stage) home.getScene().getWindow();
+            currentStage.setScene(dashboardScene);
+        } catch (IOException e) {
+            showErrorDialog("Failed to switch to home: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void showSuccessDialog(String message) {
+        showDialog(message, "#4CAF50");
+    }
+
+    private void showErrorDialog(String message) {
+        showDialog(message, "#E74C3C");
+    }
+
+    private void showDialog(String message, String color) {
+        Stage dialogStage = new Stage();
+        dialogStage.initOwner(nameField.getScene().getWindow());
+        dialogStage.setTitle("Message");
+
+        // Dialog content
+        Label messageLabel = new Label(message);
+        messageLabel.setStyle("-fx-text-fill: #ffffff; -fx-font-size: 16px; -fx-padding: 20px;");
+        Button okButton = new Button("OK");
+        okButton.setStyle("-fx-background-color: " + color + "; -fx-text-fill: white; -fx-padding: 10px 20px; -fx-font-size: 14px;");
+        okButton.setOnAction(event -> dialogStage.close());
+
+        VBox dialogLayout = new VBox(10, messageLabel, okButton);
+        dialogLayout.setStyle("-fx-background-color: #2C3E50; -fx-padding: 20px; -fx-border-radius: 10px; -fx-background-radius: 10px;");
+        dialogLayout.setAlignment(javafx.geometry.Pos.CENTER);
+
+        Scene dialogScene = new Scene(dialogLayout);
+        dialogStage.setScene(dialogScene);
+        dialogStage.show();
     }
 
     @FXML

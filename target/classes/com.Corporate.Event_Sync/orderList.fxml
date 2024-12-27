@@ -10,38 +10,31 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="600.0" prefWidth="934.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.Corporate.Event_Sync.controller.OrderListController">
+<AnchorPane prefHeight="630.0" prefWidth="1080.0" style="-fx-background-color: #2b2d42;" styleClass="main-background" stylesheets="@style.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.Corporate.Event_Sync.controller.OrderListController">
     <children>
-        <TableView fx:id="orderTable" layoutX="313.0" layoutY="91.0" prefHeight="441.0" prefWidth="596.0">
+        <TableView fx:id="orderTable" layoutX="391.0" layoutY="121.0" prefHeight="441.0" prefWidth="624.0">
             <columns>
-                <TableColumn fx:id="orderIdColumn" text="Order ID" />
-                <TableColumn fx:id="menuItemIdColumn" prefWidth="111.0" text="Menu Item ID" />
-                <TableColumn fx:id="statusColumn" prefWidth="107.0" text="Status" />
-                <TableColumn fx:id="orderDateColumn" prefWidth="192.0" text="Order Date" />
-                <TableColumn fx:id="deleteOrderColumn" prefWidth="104.0" text="Delete Order" /> <!-- New Update Column -->
+                <TableColumn fx:id="orderIdColumn" prefWidth="100.0" text="Order ID" />
+                <TableColumn fx:id="menuItemIdColumn" prefWidth="125.0" text="Menu Item" />
+                <TableColumn fx:id="statusColumn" prefWidth="116.0" text="Status" />
+                <TableColumn fx:id="orderDateColumn" prefWidth="180.0" text="Order Date" />
+                <TableColumn fx:id="deleteOrderColumn" prefWidth="91.0" text="Delete " /> <!-- New Update Column -->
             </columns>
         </TableView>
 
-        <Label layoutX="536.0" layoutY="40.0" prefHeight="37.0" prefWidth="188.0" text="Order List">
-            <font>
-                <Font name="System Bold" size="25.0" />
-            </font>
-        </Label>
-
         <!-- Update Fields -->
-        <Label layoutX="35.0" layoutY="200.0" text="Order ID:" />
-        <ComboBox fx:id="orderIdComboBox" layoutX="124.0" layoutY="196.0" prefHeight="24.0" prefWidth="143.0" /> <!-- For selecting order ID -->
+        <Label layoutX="57.0" layoutY="232.0" text="Order ID:" />
+        <ComboBox fx:id="orderIdComboBox" layoutX="213.0" layoutY="234.0" prefHeight="30.0" prefWidth="117.0" promptText="Order Id" /> <!-- For selecting order ID -->
 
-        <Label layoutX="34.0" layoutY="232.0" text="Menu Item ID:" />
-        <ComboBox fx:id="menuItemComboBox" layoutX="175.0" layoutY="230.0" prefHeight="24.0" prefWidth="92.0" /> <!-- For entering new menu item ID -->
+        <Label layoutX="56.0" layoutY="278.0" text="Menu Item ID:" />
+        <ComboBox fx:id="menuItemComboBox" layoutX="214.0" layoutY="280.0" prefHeight="30.0" prefWidth="117.0" promptText="Items" /> <!-- For entering new menu item ID -->
 
-        <Label layoutX="34.0" layoutY="264.0" text="Order Date:" />
-        <DatePicker fx:id="orderDatePicker" layoutX="124.0" layoutY="260.0" prefHeight="24.0" prefWidth="143.0" /> <!-- For entering new order date -->
+        <Label layoutX="56.0" layoutY="326.0" text="Order Date:" />
+        <DatePicker fx:id="orderDatePicker" layoutX="201.0" layoutY="325.0" prefHeight="32.0" prefWidth="128.0" /> <!-- For entering new order date -->
 
-        <Label layoutX="34.0" layoutY="296.0" text="Status:" />
-        <ComboBox fx:id="statusComboBox" layoutX="124.0" layoutY="292.0" prefHeight="24.0" prefWidth="143.0">
+        <Label layoutX="56.0" layoutY="374.0" text="Status:" />
+        <ComboBox fx:id="statusComboBox" layoutX="202.0" layoutY="376.0" prefHeight="30.0" prefWidth="128.0" promptText="Status">
             <items>
                 <FXCollections fx:factory="observableArrayList">
                     <String fx:value="ORDERED" />
@@ -53,14 +46,13 @@
 
         <!-- Buttons -->
         <ButtonBar prefHeight="40.0" prefWidth="200.0" />
-        <Button layoutX="34.0" layoutY="91.0" mnemonicParsing="false" text="Home" />
-        <Button layoutX="34.0" layoutY="501.0" mnemonicParsing="false" text="Exit" />
-      <Label layoutX="75.0" layoutY="144.0" prefHeight="37.0" prefWidth="200.0" text="Update Order">
-         <font>
-            <Font name="System Bold" size="18.0" />
-         </font>
-      </Label>
-      <Button layoutX="100.0" layoutY="360.0" mnemonicParsing="false" text="Update Order" />
+<!--        <Button layoutX="34.0" layoutY="91.0" mnemonicParsing="false" text="Home" onAction="#goToHome" />-->
+        <Button layoutX="45.0" layoutY="534.0" mnemonicParsing="false" text="Exit" />
+        <Button fx:id="updateOrderButton" layoutX="121.0" layoutY="442.0" mnemonicParsing="false" onAction="#updateOrder" prefHeight="28.0" prefWidth="128.0" text="Update Order" />
+      <Button fx:id="homeDashboard" layoutX="973.0" layoutY="40.0" mnemonicParsing="false" onAction="#navigateToHome" text="Home" />
+        <Button fx:id="createOrderButton" layoutX="45.0" layoutY="65.0" mnemonicParsing="false" onAction="#navigateToCreateOrder" prefHeight="24.0" prefWidth="71.0" text="Back" />
+      <Label layoutX="610.0" layoutY="57.0" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #4caf50;" text="Order List" />
+      <Label layoutX="87.0" layoutY="163.0" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #4caf50;" text="Update Order" />
 
     </children>
 </AnchorPane>

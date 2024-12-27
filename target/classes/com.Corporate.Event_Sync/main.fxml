@@ -1,71 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.Corporate.Event_Sync.controller.MainController"
-            style="-fx-background-color: linear-gradient(to bottom, #333333, #1a1a1a);" prefWidth="600.0" prefHeight="400.0">
+<AnchorPane prefHeight="590.0" prefWidth="1000.0" style="-fx-background-color: #2b2d42;" stylesheets="@style.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.Corporate.Event_Sync.controller.MainController">
+
+
     <children>
-        <!-- Centered User Dashboard Area -->
-        <VBox fx:id="userDashboard" spacing="20.0" alignment="CENTER"
-              AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="150.0"
-              AnchorPane.topAnchor="50.0" AnchorPane.bottomAnchor="50.0">
-            <Label text="User Dashboard" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #4caf50;" />
+        <!-- Center Container -->
+        <Label fx:id="dateTimeLabel" styleClass="dateTimeLabel" text="Date and Time" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+        <VBox alignment="CENTER" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <!-- Dashboard Label -->
+            <Label fx:id="dashboardLabel" styleClass="label" text="Event Sync Solutions" />
 
-            <!-- User Details Container -->
-            <VBox spacing="15.0" alignment="CENTER_LEFT"
-                  style="-fx-background-color: #ffffff; -fx-padding: 20px; -fx-border-color: #cccccc; -fx-border-radius: 10px; -fx-effect: dropshadow(gaussian, rgba(200,200,200,0.5), 10, 0.3, 0, 5);">
-                <HBox spacing="15.0" alignment="CENTER_LEFT">
-                    <Label text="Name:" style="-fx-font-size: 16px; -fx-text-fill: #606c76;" />
-                    <Label style="-fx-font-size: 16px; -fx-text-fill: #333333;" fx:id="nameLabel"/>
-                </HBox>
-                <HBox spacing="15.0" alignment="CENTER_LEFT">
-                    <Label text="Department:" style="-fx-font-size: 16px; -fx-text-fill: #606c76;" />
-                    <Label style="-fx-font-size: 16px; -fx-text-fill: #333333;" fx:id="departmentLabel"/>
-                </HBox>
-                <HBox spacing="15.0" alignment="CENTER_LEFT">
-                    <Label text="Email:" style="-fx-font-size: 16px; -fx-text-fill: #606c76;" />
-                    <Label style="-fx-font-size: 16px; -fx-text-fill: #333333;" fx:id="emailLabel"/>
-                </HBox>
-                <HBox spacing="15.0" alignment="CENTER_LEFT">
-                    <Label text="Office ID:" style="-fx-font-size: 16px; -fx-text-fill: #606c76;" />
-                    <Label style="-fx-font-size: 16px; -fx-text-fill: #333333;" fx:id="officeIdLabel"/>
-                </HBox>
-                <HBox spacing="15.0" alignment="CENTER_LEFT">
-                    <Label text="Active:" style="-fx-font-size: 16px; -fx-text-fill: #606c76;" />
-                    <Label style="-fx-font-size: 16px; -fx-text-fill: #333333;" fx:id="activeLabel"/>
-                </HBox>
+            <!-- Buttons Section -->
+            <VBox alignment="CENTER" spacing="15.0">
+                <!-- Register Button -->
+                <Button fx:id="register" onAction="#switchToRegister" styleClass="button" text="Register" />
+                <!-- About Button -->
+                <Button fx:id="about" onAction="#toAbout" styleClass="button" text="About" />
             </VBox>
+
+            <!-- Message Label -->
+            <Label fx:id="messageLabel" style="-fx-font-size: 12px; -fx-font-weight: bold;" />
         </VBox>
 
-        <!-- Right Side Buttons -->
-        <VBox spacing="15.0" alignment="TOP_CENTER"
-              AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0" AnchorPane.bottomAnchor="20.0">
-            <!-- Logout Button -->
-            <Button text="Logout" onAction="#handleLogout"
-                    style="-fx-background-color: linear-gradient(to right, #e57373, #ef5350); -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10px; -fx-cursor: hand;" />
+        <!-- Log In Button - Top Right -->
+        <Button fx:id="logIn" layoutX="867.0" layoutY="39.0" onAction="#switchToLogin" styleClass="button" text="Log In" AnchorPane.rightAnchor="42.0" AnchorPane.topAnchor="39.0" />
 
-            <!-- Home Button -->
-            <Button text="Home" onAction="#handleHome"
-                    style="-fx-background-color: linear-gradient(to right, #4caf50, #81c784); -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10px; -fx-cursor: hand;" />
-
-            <!-- User Details Button -->
-            <Button text="User Details" onAction="#handleUserDetails"
-                    style="-fx-background-color: linear-gradient(to right, #64b5f6, #90caf9); -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10px; -fx-cursor: hand;" />
-
-            <!-- Create Order Button -->
-            <Button text="Create Order" onAction="#switchToCreateOrder"
-                    style="-fx-background-color: linear-gradient(to right, #4caf50, #81c784); -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10px; -fx-cursor: hand;" />
-
-            <!-- Your Orders Button -->
-            <Button text="Your Orders" onAction="#handleYourOrders"
-                    style="-fx-background-color: linear-gradient(to right, #64b5f6, #90caf9); -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10px; -fx-cursor: hand;" />
-        </VBox>
-
-        <!-- Exit Button -->
-        <Button text="Exit" onAction="#handleExit"
-                style="-fx-background-color: linear-gradient(to right, #e57373, #ef5350); -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10px; -fx-cursor: hand;"
-                AnchorPane.leftAnchor="10.0" AnchorPane.bottomAnchor="10.0" />
+           <!-- Exit Button - Bottom Left -->
+        <Button layoutX="40.0" layoutY="510.0" onAction="#handleExit" styleClass="button" text="Exit" AnchorPane.bottomAnchor="39.0" AnchorPane.leftAnchor="40.0" />
     </children>
 </AnchorPane>

@@ -6,8 +6,6 @@ CREATE TABLE IF NOT EXISTS orders (
                                       menu_item_id Int4 NOT NULL, -- Foreign key referencing "menu_items" table
                                       order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
                                       status VARCHAR(50) NOT NULL CHECK (status IN ('ORDERED','PREPARED','SERVED'))
---                                       FOREIGN KEY (user_id) REFERENCES "user" (useId) ON DELETE CASCADE -- Foreign key reference
---                                       FOREIGN KEY (menu_item_id) REFERENCES menu_items (item_id) ON DELETE CASCADE -- Foreign key reference
 );
 
 ALTER TABLE orders

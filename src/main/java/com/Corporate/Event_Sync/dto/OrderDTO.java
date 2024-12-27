@@ -11,6 +11,8 @@ public class OrderDTO {
     private Integer orderId;
     private Integer userId;
     private Integer menuItemId;
+    private Integer price;
     private LocalDateTime orderDate;
     private String status;
+    private String department;
 }

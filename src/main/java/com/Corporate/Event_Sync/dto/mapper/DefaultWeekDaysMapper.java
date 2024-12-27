@@ -15,7 +15,11 @@ public class DefaultWeekDaysMapper {
                 menuItem.getItemName(),
                 menuItem.getDescription(),
                 menuItem.getCategory(),
-                menuItem.getAvailableTime()
+                menuItem.getAvailableTime(),
+                menuItem.getItemPic(),
+                menuItem.getPrice()
         );
     }
+
+
 }

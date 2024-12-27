@@ -21,16 +21,20 @@ public class EventSyncApplication extends Application {
 		context = SpringApplication.run(EventSyncApplication.class);
 
 		// Load the Register FXML initially
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com.Corporate.Event_Sync/register.fxml"));
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com.Corporate.Event_Sync/main.fxml"));
 		fxmlLoader.setControllerFactory(context::getBean);
 		Scene scene = new Scene(fxmlLoader.load());
 
 		// Apply the CSS file to the scene
 		scene.getStylesheets().add(getClass().getResource("/com.Corporate.Event_Sync/style.css").toExternalForm());
+		scene.getStylesheets().add("/com.Corporate.Event_Sync/style1.css");
+		scene.getStylesheets().add("/com.Corporate.Event_Sync/style2.css");
+
 
 		String title = context.getBean("title", String.class);
 		stage.setTitle(title);
 		stage.setScene(scene);
 		stage.show();
 	}
+
 }

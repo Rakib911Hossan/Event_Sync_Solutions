@@ -26,7 +26,9 @@ public class MenuItemListService {
                     (String) item[1],  // item_name
                     (String) item[2],  // description
                     (String) item[3],  // category
-                    (String) item[4]   // available_time
+                    (String) item[4] ,  // available_time
+                     (String) item[5],
+                     (Integer) item[6]
             );
             menuItems.add(menuItemDto);
         }

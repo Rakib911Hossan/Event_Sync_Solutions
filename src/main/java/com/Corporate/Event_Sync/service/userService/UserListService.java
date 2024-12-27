@@ -1,6 +1,6 @@
 package com.Corporate.Event_Sync.service.userService;
 
-import com.Corporate.Event_Sync.dto.ActiveUserDTO;
+import com.Corporate.Event_Sync.dto.UserDTO;
 import com.Corporate.Event_Sync.dto.mapper.UserMapper;
 import com.Corporate.Event_Sync.entity.User;
 import com.Corporate.Event_Sync.repository.UserRepository;
@@ -18,12 +18,17 @@ public class UserListService {
     private final UserMapper userMapper;
 
     // Fetch all active users
-    public List<ActiveUserDTO> getActiveUsers() {
+    public List<UserDTO> getActiveUsers() {
         List<User> activeUsers = userRepository.findByIsActive(true);
-
         return activeUsers.stream()
-                .map(userMapper::mapUserToActiveUserDTO)  // Corrected mapping syntax
+                .map(userMapper::convertToUserDTO)  // Adjusted for UserDTO usage
                 .collect(Collectors.toList());
+    }
+    public UserDTO getUserById(Integer id) {
+        return getActiveUsers().stream()
+                .filter(user -> user.getId().equals(id))
+                .findFirst()
+                .orElse(null);
     }
 
 

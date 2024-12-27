@@ -17,7 +17,8 @@ public class MenuItemService {
     private final MenuItemRepository menuItemRepository;
     private final MenuItemMapper menuItemMapper;
 
-    public MenuItem createMenuItem(MenuItem menuItem) {
+    public MenuItem createMenuItem(MenuItemDto menuItemDto) {
+        MenuItem menuItem = menuItemMapper.mapToEntity(menuItemDto);
         return menuItemRepository.save(menuItem);
     }
 
@@ -30,6 +31,8 @@ public class MenuItemService {
         existingMenuItem.setDescription(menuItem.getDescription());
         existingMenuItem.setCategory(menuItem.getCategory());
         existingMenuItem.setAvailableTime(menuItem.getAvailableTime());
+        existingMenuItem.setItemPic(menuItem.getItemPic());
+        existingMenuItem.setPrice(menuItem.getPrice());
         return menuItemRepository.save(existingMenuItem);
     }
 

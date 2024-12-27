@@ -5,10 +5,10 @@ import com.Corporate.Event_Sync.service.defaultWeekDaysService.DefaultWeekDaysSe
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/defaultWeekDays")
@@ -32,5 +32,22 @@ public class DefaultWeekDaysController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while creating DefaultWeekDays.");
         }
+    }
+    @DeleteMapping("/delete/{userId}/{days}")
+    public ResponseEntity<String> deleteWeekDay(@PathVariable Integer userId, @PathVariable String days) {
+        try {
+            // Call the service method to delete the week day
+            defaultWeekDaysService.deleteWeekDay(userId, days);
+            // Return a success message
+            return ResponseEntity.ok("Week day deleted successfully for user: " + userId + " on day: " + days);
+        } catch (IllegalArgumentException e) {
+            // Return an error message if the week day does not exist
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/{userId}")
+    public List<DefaultWeekDaysDto> getWeekDaysByUserId(@PathVariable Integer userId) {
+        return defaultWeekDaysService.getDaysByUserId(userId);
     }
 }

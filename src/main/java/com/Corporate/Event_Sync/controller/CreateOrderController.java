@@ -1,5 +1,6 @@
 package com.Corporate.Event_Sync.controller;
 
+import com.Corporate.Event_Sync.EventSyncApplication;
 import com.Corporate.Event_Sync.dto.MenuItemDto;
 import com.Corporate.Event_Sync.entity.Order;
 import com.Corporate.Event_Sync.service.menuItemService.MenuItemListService;
@@ -10,11 +11,15 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.stage.Modality;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +33,7 @@ import java.time.LocalTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component
 @NoArgsConstructor
@@ -42,7 +48,7 @@ public class CreateOrderController {
     private OrderService orderService;
 
     private Stage primaryStage;
-    private MainController mainController;
+    private HomeController homeController;
 
     public void setOrderService(OrderService orderService) {
         this.orderService = orderService;
@@ -52,9 +58,11 @@ public class CreateOrderController {
         this.primaryStage = primaryStage;
     }
 
-    public void setMainController(MainController mainController) {
-        this.mainController = mainController;
+    public void setHomeController(HomeController homeController) {
+        this.homeController = homeController;
     }
+    @FXML
+    private AnchorPane orderDashboard;
 
     @FXML
     private ComboBox<Integer> menuItemComboBox;
@@ -68,7 +76,8 @@ public class CreateOrderController {
     @FXML
     private Label messageLabel;
 
-
+    @FXML
+    private TableColumn<MenuItemDto, Void> previewImageColumn;
 
     @FXML
     private TableView<MenuItemDto> menuItemTable;
@@ -89,62 +98,102 @@ public class CreateOrderController {
     private TableColumn<MenuItemDto, String> timeColumn;
 
     @FXML
+    private TableColumn<MenuItemDto, Integer> priceColumn;
+
+    @FXML
+    private TableColumn<MenuItemDto, String> picColumn;
+
+    @FXML
     private TableColumn<Order, Void> deleteOrderColumn;
 
     @FXML
     public void initialize() {
-        // Initialize table columns for MenuItemDto
+        // Initialize other columns
         idColumn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().getId()));
         nameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getItemName()));
         descriptionColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDescription()));
         categoryColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCategory()));
         timeColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getAvailableTime()));
+        priceColumn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().getPrice()));
+
+        // For picColumn, display the image from URL
+        previewImageColumn.setCellFactory(new Callback<TableColumn<MenuItemDto, Void>, TableCell<MenuItemDto, Void>>() {
+            @Override
+            public TableCell<MenuItemDto, Void> call(TableColumn<MenuItemDto, Void> param) {
+                return new TableCell<MenuItemDto, Void>() {
+                    private final Button previewButton = new Button("Preview");
+
+                    {
+                        previewButton.setOnAction(event -> {
+                            MenuItemDto menuItemDto = getTableView().getItems().get(getIndex());
+                            String imagePath = menuItemDto.getItemPic();
+                            if (imagePath != null && !imagePath.isEmpty()) {
+                                showLargerImage(new Image("file:" + imagePath)); // Show the preview image
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void updateItem(Void item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                        } else {
+                            setGraphic(previewButton);
+                        }
+                    }
+                };
+            }
+        });
 
         loadMenuItems();
-        statusComboBox.setItems(FXCollections.observableArrayList("ORDERED", "PREPARED", "SERVED"));
-         // Initially hide the button
     }
 
     private void loadMenuItems() {
         try {
             List<MenuItemDto> menuItems = Optional.ofNullable(menuItemListService.getAllMenuItems())
                     .orElse(Collections.emptyList());
-
-            if (!menuItems.isEmpty()) {
-                // Populate the TableView with MenuItemDto items
-                menuItemTable.setItems(FXCollections.observableArrayList(menuItems));
-
-                // Populate menuItemComboBox with the IDs of menuItems
-                List<Integer> menuItemIds = menuItems.stream().map(MenuItemDto::getId).toList();
-                menuItemComboBox.setItems(FXCollections.observableArrayList(menuItemIds));
-            } else {
-                showAlert(Alert.AlertType.INFORMATION, "No Items", "No menu items available.");
-            }
+            menuItemTable.setItems(FXCollections.observableArrayList(menuItems));
+            List<Integer> menuItemIds = menuItems.stream()
+                    .map(MenuItemDto::getId) // Get order IDs
+                    .collect(Collectors.toList()).reversed();
+            menuItemComboBox.setItems(FXCollections.observableArrayList(menuItemIds));
         } catch (Exception e) {
             e.printStackTrace();
-            // Clear any data in case of failure
-            menuItemTable.getItems().clear();
-            menuItemComboBox.getItems().clear();
-            showAlert(Alert.AlertType.ERROR, "Loading Error", "Failed to load menu items. Please try again later.");
+            showErrorDialog("Failed to load menu items. Please try again later.");
         }
     }
 
-    private void showAlert(Alert.AlertType alertType, String title, String message) {
-        Alert alert = new Alert(alertType);
-        alert.setTitle(title);
-        alert.setContentText(message);
-        alert.getButtonTypes().setAll(ButtonType.OK); // Show only OK button
-        alert.showAndWait();
+
+    private void showLargerImage(Image image) {
+        Stage imageStage = new Stage();
+        imageStage.setTitle("Image Preview");
+
+        // Create an ImageView to display the image in larger size
+        ImageView largerImageView = new ImageView(image);
+        largerImageView.setFitWidth(600);  // Set width of the image
+        largerImageView.setFitHeight(450); // Set height of the image
+
+        // Optionally, add the ImageView to a layout container like StackPane
+        StackPane root = new StackPane();
+        root.getChildren().add(largerImageView);
+
+        // Create a Scene for the new Stage
+        Scene scene = new Scene(root, 650, 500);
+        imageStage.setScene(scene);
+
+        // Show the new Stage
+        imageStage.show();
     }
 
     @FXML
     private void handleCreateOrder() {
         try {
-            Integer userId = mainController.getUserId();
+            Integer userId = homeController.getUserId();
             Integer menuItemId = menuItemComboBox.getValue(); // Get the selected ID
 
             if (menuItemId == null) {
-                showAlert(Alert.AlertType.WARNING, "Selection Error", "Please select a menu item ID.");
+                showErrorDialog( "Selection Error "+" Please select a menu item ID.");
                 return;
             }
 
@@ -152,20 +201,20 @@ public class CreateOrderController {
             LocalDateTime orderDateTime = getOrderDateTime();
 
             if (orderDateTime == null) {
-                showAlert(Alert.AlertType.WARNING, "Date Error", "Please select a valid date.");
+                showErrorDialog("Date Error "+" Please select a valid date.");
                 return;
             }
 
             orderService.createOrder(userId, menuItemId, status, orderDateTime);
 
             // Show success message with an OK button
-            showAlert(Alert.AlertType.INFORMATION, "Success", "Order created successfully!");
+            showSuccessDialog("Order created successfully!");
             // Show the button after successful order creation
 
         } catch (NumberFormatException e) {
-            showAlert(Alert.AlertType.ERROR, "User ID Error", "Invalid User ID.");
+            showErrorDialog("Invalid User ID.");
         } catch (Exception e) {
-            showAlert(Alert.AlertType.ERROR, "Order Error", "Error creating order: " + e.getMessage());
+            showErrorDialog( "Error creating order: ");
         }
     }
 
@@ -180,67 +229,91 @@ public class CreateOrderController {
         return null;
     }
 
+
+
     @FXML
-    private void navigateToDashboard() {
+    private void navigateToHome() {
         try {
             // Create a new stage for the dashboard and close the current one
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com.Corporate.Event_Sync/main.fxml"));
-            Parent dashboardRoot = loader.load();
-            Scene dashboardScene = new Scene(dashboardRoot);
-
-            // Close the current stage (this is optional based on your design)
             Stage currentStage = (Stage) menuItemTable.getScene().getWindow();
-            currentStage.close(); // Close current stage
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com.Corporate.Event_Sync/home.fxml"));
+            loader.setControllerFactory(EventSyncApplication.context::getBean);
+            // Load the main scene
+            Scene homeScene = new Scene(loader.load());
+            // Get the HomeController instance and pass the updated user data
+            HomeController homeController = loader.getController();
+            if (homeController != null && homeController.getLoggedInUser() != null) {
+                homeController.setLoggedInUser(homeController.getLoggedInUser());
+            }
+            currentStage.setScene(homeScene);
 
-            Stage newStage = new Stage(); // Create new stage for the new scene
-            newStage.setScene(dashboardScene);
-            newStage.show();
         } catch (Exception e) {
             e.printStackTrace();
             messageLabel.setText("Error loading dashboard.");
         }
     }
-
+ // Injected OrderService
     @FXML
     private void switchTohandleOrderList() {
         try {
-            // Load the FXML for the OrderList
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com.Corporate.Event_Sync/orderList.fxml"));
-            loader.setControllerFactory(applicationContext::getBean);
-            Parent root = loader.load();
-            // Get the controller from the loaded FXML
-            OrderListController orderListController = loader.getController();
+            Stage currentStage = (Stage) orderDashboard.getScene().getWindow();
 
-            // Pass the current instance of CreateOrderController to OrderListController
+            // Load the OrderList FXML
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com.Corporate.Event_Sync/orderList.fxml"));
+            loader.setControllerFactory(EventSyncApplication.context::getBean);
+            Scene orderListScene = new Scene(loader.load());
+
+            // Set OrderListController properties
+            OrderListController orderListController = loader.getController();
             orderListController.setOrderService(orderService);
+            orderListController.setPrimaryStage(currentStage);
             orderListController.setCreateOrderController(this);
 
-            // Create a new stage for the OrderList
-            Stage stage = new Stage();
-            stage.setTitle("Order List");
-            stage.setScene(new Scene(root));
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.showAndWait();
+            // Set new scene and show
+            currentStage.setScene(orderListScene);
+
         } catch (IOException e) {
             e.printStackTrace();
-            messageLabel.setText("Error loading order list: " + e.getMessage());
-        } catch (Exception e) {
-            e.printStackTrace();
-            messageLabel.setText("An unexpected error occurred.");
+            showErrorDialog("Error loading order list: " + e.getMessage());
         }
     }
 
-
-
-
     public Integer getUserId() {
-        return mainController.getUserId();
+        return homeController.getUserId();
     }
 
 
     @FXML
     private void handleExit() {
         Platform.exit(); // Exits the application
+    }
+    private void showSuccessDialog(String message) {
+        showDialog(message, "#4CAF50");
+    }
+
+    private void showErrorDialog(String message) {
+        showDialog(message, "#E74C3C");
+    }
+
+    private void showDialog(String message, String color) {
+        Stage dialogStage = new Stage();
+        dialogStage.initOwner(orderDatePicker.getScene().getWindow());
+        dialogStage.setTitle("Message");
+
+        // Dialog content
+        Label messageLabel = new Label(message);
+        messageLabel.setStyle("-fx-text-fill: #ffffff; -fx-font-size: 16px; -fx-padding: 20px;");
+        Button okButton = new Button("OK");
+        okButton.setStyle("-fx-background-color: " + color + "; -fx-text-fill: white; -fx-padding: 10px 20px; -fx-font-size: 14px;");
+        okButton.setOnAction(event -> dialogStage.close());
+
+        VBox dialogLayout = new VBox(10, messageLabel, okButton);
+        dialogLayout.setStyle("-fx-background-color: #2C3E50; -fx-padding: 20px; -fx-border-radius: 10px; -fx-background-radius: 10px;");
+        dialogLayout.setAlignment(javafx.geometry.Pos.CENTER);
+
+        Scene dialogScene = new Scene(dialogLayout);
+        dialogStage.setScene(dialogScene);
+        dialogStage.show();
     }
 }
 

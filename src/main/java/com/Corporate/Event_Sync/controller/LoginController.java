@@ -35,6 +35,8 @@ public class LoginController {
     @Autowired
     private ApplicationContext context;
 
+
+
     @FXML
     public void handleLogin() {
         String email = emailField.getText();
@@ -43,7 +45,17 @@ public class LoginController {
         try {
             if (userService.authenticate(email, password)) {
                 UserDTO userDTO = userService.findByEmail(email);
-                messageLabel.setText("Login successful! Welcome, " + userDTO.getName());
+
+                // Create a welcome message that excludes null values
+                String welcomeMessage = "Login successful! Welcome, " + userDTO.getName();
+                if (userDTO.getPhone() != null) {
+                    welcomeMessage += "\nPhone: " + userDTO.getPhone();
+                }
+                if (userDTO.getAddress() != null) {
+                    welcomeMessage += "\nAddress: " + userDTO.getAddress();
+                }
+                messageLabel.setText(welcomeMessage);
+
                 emailField.clear();
                 passwordField.clear();
                 loadMainApplicationWindow(userDTO);
@@ -58,6 +70,7 @@ public class LoginController {
         }
     }
 
+
     @FXML
     public void goToRegister() {
         try {
@@ -67,7 +80,7 @@ public class LoginController {
             Scene registerScene = new Scene(root);
             Stage currentStage = (Stage) emailField.getScene().getWindow();
             currentStage.setScene(registerScene);
-            currentStage.setTitle("Register");
+//            currentStage.setTitle("Register");
             currentStage.show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -77,15 +90,15 @@ public class LoginController {
 
     private void loadMainApplicationWindow(UserDTO userDTO) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com.Corporate.Event_Sync/main.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com.Corporate.Event_Sync/home.fxml"));
             loader.setControllerFactory(context::getBean);
             Parent root = loader.load();
-            MainController mainController = loader.getController();
-            mainController.setLoggedInUser(userDTO);
+            HomeController homeController = loader.getController();
+            homeController.setLoggedInUser(userDTO);
             Scene mainScene = new Scene(root);
             Stage currentStage = (Stage) emailField.getScene().getWindow();
             currentStage.setScene(mainScene);
-            currentStage.setTitle("Main Application");
+//            currentStage.setTitle("Main Application");
             currentStage.show();
         } catch (IOException e) {
             e.printStackTrace();

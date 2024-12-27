@@ -1,0 +1,255 @@
+/* General Application Styling */
+.anchor-pane {
+    -fx-background-color: linear-gradient(to bottom right, #ffd8b1, #ff9e80, #ff7043, #ff3d00);
+    -fx-padding: 10px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 8, 0.7, 3, 3);
+}
+
+/* Label Styling */
+.label {
+    -fx-text-fill: linear-gradient(to bottom right, #4e342e, #d7ccc8);
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-padding: 5px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.7), 4, 0.4, 1, 1);
+}
+
+/* Input Field Styling */
+.input-field, .text-field, .password-field {
+    -fx-background-color: rgba(255, 243, 224, 0.95);
+    -fx-border-color: linear-gradient(to bottom, #ff7043, #bf360c);
+    -fx-border-width: 2px;
+    -fx-border-radius: 8px;
+    -fx-padding: 4px;
+    -fx-font-size: 14px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 6, 0.3, 2, 2);
+}
+
+.text-field:focused, .password-field:focused {
+    -fx-border-color: #ff7043;
+    -fx-background-color: rgba(255, 255, 240, 1);
+    -fx-effect: dropshadow(gaussian, rgba(255, 112, 67, 0.6), 8, 0.5, 1, 1);
+}
+
+/* Button Styling */
+.button {
+    -fx-background-color: linear-gradient(to bottom right, #ffcc80, #ffab40, #ff9100);
+    -fx-text-fill: #4e342e;
+    -fx-padding: 5px 10px;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-effect: dropshadow(gaussian, rgba(255, 204, 128, 0.4), 8, 0.4, 2, 2);
+    -fx-transition: all 0.3s ease-in-out;
+}
+
+.button:hover {
+    -fx-background-color: linear-gradient(to bottom right, #ffb74d, #ff9800, #e65100);
+    -fx-effect: dropshadow(gaussian, rgba(255, 152, 0, 0.7), 10, 0.6, 2, 2);
+    -fx-transform: scale(1.03);
+}
+
+.button:pressed {
+    -fx-background-color: #d84315;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.9), 4, 0.7, 1, 1);
+    -fx-translate-y: 2;
+}
+
+/* ComboBox Styling */
+.combo-box {
+    -fx-background-color: rgba(255, 243, 224, 0.95);
+    -fx-border-color: linear-gradient(to bottom, #ff7043, #bf360c);
+    -fx-border-radius: 8px;
+    -fx-padding: 2px;
+    -fx-font-size: 12px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 6, 0.3, 2, 2);
+}
+
+.combo-box:hover, .combo-box:focused {
+    -fx-border-color: #ff7043;
+}
+
+/* TableView Styling */
+.table-view {
+    -fx-background-color: rgba(255, 255, 240, 0.9);
+    -fx-border-radius: 10px;
+    -fx-padding: 8px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 8, 0.5, 2, 2);
+}
+
+.table-view .column-header {
+    -fx-background-color: linear-gradient(to bottom, #ff7043, #e64a19);
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-padding: 5px;
+}
+
+.table-view .table-row-cell:filled:hover {
+    -fx-background-color: rgba(255, 138, 101, 0.4);
+    -fx-transform: scale(1.02);
+}
+
+/* DatePicker Styling */
+.date-picker {
+    -fx-background-color: rgba(255, 255, 240, 0.95);
+    -fx-border-color: linear-gradient(to bottom, #ff7043, #bf360c);
+    -fx-border-radius: 8px;
+    -fx-padding: 2px;
+    -fx-font-size: 12px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 6, 0.3, 2, 2);
+}
+
+.date-picker:focused {
+    -fx-border-color: #ff7043;
+}
+
+/* Dialog Styling */
+.dialog-layout {
+    -fx-background-color: linear-gradient(to bottom, #ffe0b2, #ffcc80);
+    -fx-padding: 20px;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.7), 10, 0.6, 3, 3);
+}
+
+.dialog-label {
+    -fx-text-fill: linear-gradient(to bottom right, #4e342e, #d7ccc8);
+    -fx-font-size: 16px;
+    -fx-padding: 15px;
+}
+
+.dialog-button {
+    -fx-background-color: linear-gradient(to bottom right, #ffee58, #fbc02d);
+    -fx-text-fill: #4e342e;
+    -fx-padding: 4px 8px;
+    -fx-font-size: 14px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 6, 0.4, 2, 2);
+}
+
+.dialog-button:hover {
+    -fx-background-color: linear-gradient(to bottom right, #fdd835, #fbc02d);
+    -fx-transform: scale(1.03);
+}
+/* General Background */
+.anchor-pane {
+    -fx-background-color: #2b2d42; /* Deep modern dark background */
+    -fx-padding: 10px;
+}
+
+/* Label Styling */
+.label {
+    -fx-text-fill: #edf2f4; /* Crisp white text */
+    -fx-font-size: 16px;
+    -fx-font-weight: 600;
+    -fx-padding: 5px;
+}
+
+/* Input Field Styling */
+.text-field, .password-field {
+    -fx-background-color: #4a4e69; /* Deep muted purple for inputs */
+    -fx-text-fill: #edf2f4; /* Crisp white text */
+    -fx-border-color: #8d99ae; /* Cool steel border */
+    -fx-border-width: 2px;
+    -fx-border-radius: 6px;
+    -fx-padding: 6px;
+    -fx-font-size: 14px;
+}
+
+
+/* Button Styling */
+.button {
+    -fx-background-color: #ef233c; /* Bold deep red buttons */
+    -fx-text-fill: #edf2f4; /* Crisp white text */
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-padding: 8px 12px;
+    -fx-cursor: hand;
+}
+
+.button:hover {
+    -fx-background-color: #d90429; /* Slightly darker red for hover */
+}
+
+.button:pressed {
+    -fx-background-color: #9c1420; /* Deepest red for pressed */
+    -fx-translate-y: 2px;
+}
+
+/* ComboBox Styling */
+.combo-box {
+    -fx-background-color: #4a4e69; /* Matches input field background */
+    -fx-border-color: #8d99ae; /* Steel border */
+    -fx-border-width: 2px;
+    -fx-border-radius: 6px;
+    -fx-padding: 6px;
+    -fx-text-fill: #edf2f4;
+}
+
+.combo-box:hover, .combo-box:focused {
+    -fx-border-color: #ef233c; /* Deep red focus */
+}
+
+/* TableView Styling */
+.table-view {
+    -fx-background-color: #2b2d42; /* Deep modern dark */
+    -fx-border-color: #8d99ae; /* Steel border */
+    -fx-border-radius: 6px;
+}
+
+.table-view .column-header {
+    -fx-background-color: #4a4e69; /* Matches input field background */
+    -fx-text-fill: #edf2f4; /* White text */
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.table-view .table-row-cell:filled:hover {
+    -fx-background-color: #3b3e54; /* Slightly darker row highlight */
+}
+
+/* DatePicker Styling */
+.date-picker {
+    -fx-background-color: #4a4e69; /* Deep muted purple */
+    -fx-border-color: #8d99ae; /* Steel border */
+    -fx-border-width: 2px;
+    -fx-border-radius: 6px;
+    -fx-padding: 6px;
+    -fx-text-fill: #edf2f4;
+}
+
+.date-picker:focused {
+    -fx-border-color: #ef233c; /* Deep red focus */
+}
+
+/* Dialog Styling */
+.dialog-layout {
+    -fx-background-color: #2b2d42; /* Deep dark background */
+    -fx-border-color: #8d99ae; /* Steel border */
+    -fx-border-radius: 8px;
+    -fx-padding: 20px;
+}
+
+.dialog-label {
+    -fx-text-fill: #edf2f4; /* Crisp white text */
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-padding: 10px;
+}
+
+.dialog-button {
+    -fx-background-color: #ef233c; /* Bold red for buttons */
+    -fx-text-fill: #edf2f4; /* Crisp white text */
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-padding: 8px;
+}
+
+.dialog-button:hover {
+    -fx-background-color: #d90429; /* Slightly darker red hover */
+}

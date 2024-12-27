@@ -15,9 +15,11 @@ public class OrderMapper {
         return new OrderDTO(
                 order.getId(),              // orderId
                 order.getUser().getId(),     // userId
-                order.getMenuItem().getId(),       // menuItemId
+                order.getMenuItem().getId(),
+                order.getMenuItem().getPrice(),// menuItemId
                 order.getOrderDate(),        // orderDate
-                order.getStatus()            // status
+                order.getStatus(),
+                order.getUser().getDepartment()// status
         );
     }
     private List<OrderDTO> convertOrdersToDTO(List<Order> orders) {
@@ -25,9 +27,11 @@ public class OrderMapper {
                 .map(order -> new OrderDTO(
                         order.getId(),
                         order.getUser().getId(),
-                        order.getMenuItem().getId(), // Ensure this method is available in MenuItem
+                        order.getMenuItem().getId(),
+                        order.getMenuItem().getPrice(),// Ensure this method is available in MenuItem
                         order.getOrderDate(),
-                        order.getStatus()))
+                        order.getStatus(),
+                        order.getUser().getDepartment()))
                 .toList();
     }
     // Convert a list of Order entities to a list of OrderDTOs

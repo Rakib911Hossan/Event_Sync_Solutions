@@ -1,105 +1,75 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.*?>
-<?import javafx.collections.FXCollections?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
 <?import java.lang.String?>
+<?import javafx.collections.FXCollections?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="600.0" prefWidth="720.0" style="-fx-background-color: linear-gradient(to bottom, #333333, #1a1a1a);"
-            xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/22"
-            fx:controller="com.Corporate.Event_Sync.controller.RegisterController">
+<AnchorPane prefHeight="593.0" prefWidth="978.0" style="-fx-background-color: linear-gradient(to bottom right, #0f0c29, #301b3f, #421e65, #5c2a91, #c75bff);" stylesheets="@style.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.Corporate.Event_Sync.controller.RegisterController">
     <children>
-
         <!-- Date and Time Label -->
-        <Label fx:id="dateTimeLabel" text="Date and Time"
-               style="-fx-font-size: 14px; -fx-text-fill: #ffffff; -fx-font-weight: bold;"
-               AnchorPane.topAnchor="10.0" AnchorPane.leftAnchor="10.0"/>
+        <Label fx:id="dateTimeLabel" styleClass="dateTimeLabel" text="Date and Time" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
 
-        <VBox alignment="CENTER" maxWidth="400.0" maxHeight="520.0" spacing="15.0"
-              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-              AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0">
-            <!-- Title Label -->
-            <Label style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #ffffff;" text="Register" />
+        <!-- Main Title -->
+        <Label layoutX="433.0" layoutY="29.0" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: white;" text="Register" AnchorPane.leftAnchor="433.0" AnchorPane.topAnchor="29.0" />
 
-            <!-- Main Form Container -->
-            <VBox alignment="CENTER_LEFT" spacing="15.0" maxWidth="400.0" prefWidth="400.0"
-                  style="-fx-background-radius: 20; -fx-background-color: #ffffff; -fx-padding: 25px; -fx-effect: dropshadow(gaussian, rgba(200,200,200,0.5), 10, 0.3, 0, 5);">
+        <!-- Name -->
+        <Label layoutX="356.0" layoutY="79.0" style="-fx-text-fill: white;" text="Name *" AnchorPane.leftAnchor="356.0" AnchorPane.topAnchor="79.0" />
+        <TextField fx:id="nameField" layoutX="456.0" layoutY="85.0" prefHeight="26.0" prefWidth="180.0" promptText="Enter your name" styleClass="input-field" AnchorPane.leftAnchor="456.0" AnchorPane.topAnchor="85.0" />
 
-                <!-- Name Field -->
-                <HBox alignment="CENTER_LEFT" spacing="10.0">
-                    <Label style="-fx-font-size: 14px; -fx-text-fill: #606c76;" text="Name" />
-                    <JFXTextField fx:id="nameField" prefHeight="40.0" prefWidth="230.0"
-                                  promptText="Enter your name"
-                                  styleClass="input-field" />
-                </HBox>
+        <!-- Phone -->
+        <Label layoutX="356.0" layoutY="129.0" style="-fx-text-fill: white;" text="Phone" AnchorPane.leftAnchor="356.0" AnchorPane.topAnchor="129.0" />
+        <TextField fx:id="phoneField" layoutX="456.0" layoutY="129.0" prefHeight="26.0" prefWidth="180.0" promptText="Enter your phone" styleClass="input-field" AnchorPane.leftAnchor="456.0" AnchorPane.topAnchor="129.0" />
 
-                <!-- Email Field -->
-                <HBox alignment="CENTER_LEFT" spacing="10.0">
-                    <Label style="-fx-font-size: 14px; -fx-text-fill: #606c76;" text="Email" />
-                    <JFXTextField fx:id="emailField" prefHeight="40.0" prefWidth="230.0"
-                                  promptText="Enter your email"
-                                  styleClass="input-field" />
-                </HBox>
+        <!-- Email -->
+        <Label layoutX="356.0" layoutY="179.0" style="-fx-text-fill: white;" text="Email *" AnchorPane.leftAnchor="356.0" AnchorPane.topAnchor="179.0" />
+        <TextField fx:id="emailField" layoutX="456.0" layoutY="179.0" prefHeight="26.0" prefWidth="180.0" promptText="Enter your email" styleClass="input-field" AnchorPane.leftAnchor="456.0" AnchorPane.topAnchor="179.0" />
 
-                <!-- Department Field -->
-                <HBox alignment="CENTER_LEFT" spacing="10.0">
-                    <Label style="-fx-font-size: 14px; -fx-text-fill: #606c76;" text="Department" />
-                    <JFXTextField fx:id="departmentField" prefHeight="40.0" prefWidth="230.0"
-                                  promptText="Enter department"
-                                  styleClass="input-field" />
-                </HBox>
+        <!-- Address -->
+        <Label layoutX="356.0" layoutY="229.0" style="-fx-text-fill: white;" text="Address" AnchorPane.leftAnchor="356.0" AnchorPane.topAnchor="229.0" />
+        <TextField fx:id="addressField" layoutX="456.0" layoutY="229.0" prefHeight="26.0" prefWidth="180.0" promptText="Enter your address" styleClass="input-field" AnchorPane.leftAnchor="456.0" AnchorPane.topAnchor="229.0" />
 
-                <!-- Password Field -->
-                <HBox alignment="CENTER_LEFT" spacing="10.0">
-                    <Label style="-fx-font-size: 14px; -fx-text-fill: #606c76;" text="Password" />
-                    <JFXPasswordField fx:id="passwordField" prefHeight="40.0" prefWidth="200.0"
-                                      promptText="Enter password"
-                                      styleClass="input-field" />
-                </HBox>
+        <!-- Password -->
+        <Label layoutX="356.0" layoutY="279.0" style="-fx-text-fill: white;" text="Password *" AnchorPane.leftAnchor="356.0" AnchorPane.topAnchor="279.0" />
+        <PasswordField fx:id="passwordField" layoutX="473.0" layoutY="284.0" prefHeight="22.0" prefWidth="163.0" promptText="Enter password" styleClass="input-field" AnchorPane.leftAnchor="473.0" AnchorPane.topAnchor="284.0" />
 
-                <!-- Role ComboBox -->
-                <HBox alignment="CENTER_LEFT" spacing="10.0">
-                    <Label style="-fx-font-size: 14px; -fx-text-fill: #606c76;" text="Role" />
-                    <JFXComboBox fx:id="roleComboBox" prefHeight="40.0" prefWidth="230.0"
-                                 promptText="Select role"
-                                 styleClass="input-field">
-                        <items>
-                            <FXCollections fx:factory="observableArrayList">
-                                <String fx:value="ADMIN"/>
-                                <String fx:value="USER"/>
-                            </FXCollections>
-                        </items>
-                    </JFXComboBox>
-                </HBox>
+        <!-- Role -->
+        <Label layoutX="356.0" layoutY="329.0" style="-fx-text-fill: white;" text="Role *" AnchorPane.leftAnchor="356.0" AnchorPane.topAnchor="329.0" />
+        <ComboBox fx:id="roleComboBox" layoutX="473.0" layoutY="331.0" prefHeight="26.0" prefWidth="163.0" promptText="Select role" styleClass="input-field" AnchorPane.leftAnchor="473.0" AnchorPane.topAnchor="331.0">
+            <items>
+                <FXCollections fx:factory="observableArrayList">
+                    <String fx:value="ADMIN" />
+                    <String fx:value="USER" />
+                </FXCollections>
+            </items>
+        </ComboBox>
 
-                <!-- Office ID Field -->
-                <HBox alignment="CENTER_LEFT" spacing="10.0">
-                    <Label style="-fx-font-size: 14px; -fx-text-fill: #606c76;" text="Office ID" />
-                    <JFXTextField fx:id="officeIdField" prefHeight="40.0" prefWidth="230.0"
-                                  promptText="Enter office ID"
-                                  styleClass="input-field" />
-                </HBox>
-            </VBox>
+        <!-- Department -->
+        <Label layoutX="356.0" layoutY="379.0" style="-fx-text-fill: white;" text="Department *" AnchorPane.leftAnchor="356.0" AnchorPane.topAnchor="379.0" />
+        <ComboBox fx:id="departmentCombobox" layoutX="503.0" layoutY="378.0" prefHeight="26.0" prefWidth="133.0" promptText="Select department" styleClass="input-field" AnchorPane.leftAnchor="503.0" AnchorPane.topAnchor="378.0">
+            <items>
+                <FXCollections fx:factory="observableArrayList">
+                    <String fx:value="HR" />
+                    <String fx:value="ADMINISTRATION" />
+                    <String fx:value="ACCOUNTS" />
+                    <String fx:value="IT" />
+                    <String fx:value="MARKETING" />
+                </FXCollections>
+            </items>
+        </ComboBox>
 
-            <!-- Register Button -->
-            <JFXButton fx:id="registerButton" onAction="#handleRegister" text="Register" prefWidth="130.0"
-                       style="-fx-background-color: linear-gradient(to right, #4caf50, #81c784); -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 15px; -fx-cursor: hand;"
-            />
+        <!-- Office ID -->
+        <Label layoutX="356.0" layoutY="429.0" style="-fx-text-fill: white;" text="Office ID *" AnchorPane.leftAnchor="356.0" AnchorPane.topAnchor="429.0" />
+        <TextField fx:id="officeIdField" layoutX="476.0" layoutY="426.0" prefHeight="26.0" prefWidth="163.0" promptText="Enter office ID" styleClass="input-field" AnchorPane.leftAnchor="476.0" AnchorPane.topAnchor="426.0" />
 
-            <!-- Message Label -->
-            <Label fx:id="messageLabel" style="-fx-font-size: 12px; -fx-text-fill: #ff6b6b; -fx-font-weight: bold;" />
-
-        </VBox>
-
-        <!-- Floating Login Button -->
-        <JFXButton fx:id="loginButton" text="Login" onAction="#switchToLogin" prefWidth="70.0"
-                   style="-fx-background-color: linear-gradient(to right, #64b5f6, #90caf9); -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10px; -fx-cursor: hand;"
-                   AnchorPane.topAnchor="10.0" AnchorPane.rightAnchor="10.0"/>
-
-        <!-- Floating Exit Button -->
-        <JFXButton fx:id="exitButton" text="Exit" onAction="#handleExit" prefWidth="70.0"
-                   style="-fx-background-color: linear-gradient(to right, #e57373, #ef5350); -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10px; -fx-cursor: hand;"
-                   AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0"/>
+        <!-- Buttons -->
+        <Button fx:id="registerButton" layoutX="460.0" layoutY="471.0" onAction="#handleRegister" prefHeight="26.0" prefWidth="90.0" styleClass="button" text="Register" AnchorPane.leftAnchor="460.0" AnchorPane.topAnchor="471.0" />
+        <Button fx:id="home" layoutX="470.0" layoutY="520.0" onAction="#handleHome" prefHeight="10.0" prefWidth="67.0" styleClass="button" text="Home" AnchorPane.leftAnchor="470.0" AnchorPane.topAnchor="520.0" />
+        <Button fx:id="loginButton" layoutX="876.0" layoutY="37.0" onAction="#switchToLogin" prefHeight="30.0" prefWidth="67.0" styleClass="button" text="Login" AnchorPane.rightAnchor="54.0" AnchorPane.topAnchor="37.0" />
+        <Button fx:id="exitButton" layoutX="53.0" layoutY="520.0" onAction="#handleExit" prefHeight="28.0" prefWidth="57.0" styleClass="button" text="Exit" AnchorPane.bottomAnchor="45.0" AnchorPane.leftAnchor="53.0" />
     </children>
 </AnchorPane>

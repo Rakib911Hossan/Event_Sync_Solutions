@@ -22,4 +22,11 @@ public interface DefaultWeekDaysRepository extends JpaRepository<DefaultWeekDays
 
 
     List<DefaultWeekDays> findByUserId(Integer userId);
+
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM DefaultWeekDays d WHERE d.user.id = :userId AND d.days LIKE %:days%")
+    int deleteByUserIdAndDays(@Param("userId") Integer userId, @Param("days") String days);
+
+
 }

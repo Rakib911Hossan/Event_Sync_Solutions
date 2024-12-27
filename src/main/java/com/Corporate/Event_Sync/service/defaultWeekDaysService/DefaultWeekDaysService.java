@@ -1,5 +1,6 @@
 package com.Corporate.Event_Sync.service.defaultWeekDaysService;
 
+import com.Corporate.Event_Sync.dto.DefaultWeekDaysDto;
 import com.Corporate.Event_Sync.dto.MenuItemDto;
 import com.Corporate.Event_Sync.dto.mapper.DefaultWeekDaysMapper;
 import com.Corporate.Event_Sync.entity.DefaultWeekDays;
@@ -13,8 +14,11 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
@@ -63,4 +67,43 @@ public class DefaultWeekDaysService {
             }
         }
     }
+
+    public void deleteWeekDay(Integer userId, String dayToRemove) {
+        // Fetch the user's default week days
+        List<DefaultWeekDays> defaultWeekDaysList = defaultWeekDaysRepository.findByUserId(userId);
+
+        for (DefaultWeekDays defaultWeekDay : defaultWeekDaysList) {
+            // Split the 'days' string into an array of days
+            String[] daysArray = defaultWeekDay.getDays().split(",");
+
+            // Convert the array to a list to manipulate it
+            List<String> daysList = new ArrayList<>(Arrays.asList(daysArray));
+
+            // Remove the target day from the list (if it exists)
+            if (daysList.contains(dayToRemove)) {
+                daysList.remove(dayToRemove);
+
+                // Rebuild the days string from the updated list
+                String updatedDays = String.join(",", daysList);
+
+                // Update the 'days' field with the new string and save it back to the database
+                defaultWeekDay.setDays(updatedDays);
+                defaultWeekDaysRepository.save(defaultWeekDay);
+            }
+        }
+    }
+
+    public List<DefaultWeekDaysDto> getDaysByUserId(Integer userId) {
+        List<DefaultWeekDays> weekDaysList = defaultWeekDaysRepository.findByUserId(userId);
+        return weekDaysList.stream()
+                .map(weekDay -> new DefaultWeekDaysDto(
+                        weekDay.getId(),
+                        weekDay.getUser().getId(),
+                        weekDay.getDays(),
+                        weekDay.isWeekDays()
+                ))
+                .collect(Collectors.toList());
+    }
+
+
 }

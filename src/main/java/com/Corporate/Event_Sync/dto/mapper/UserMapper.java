@@ -17,6 +17,7 @@ public class UserMapper {
                 user.getDepartment(),
                 user.getOfficeId(),
                 user.getOrders()
+
         );
     }
 
@@ -24,11 +25,14 @@ public class UserMapper {
         return new UserDTO(
                 user.getId(),
                 user.getName(),
-                user.getEmail(),  // Fixed here
+                user.getPhone(),
+                user.getEmail(),
+                user.getAddress(),// Fixed here
                 user.getDepartment(),
                 user.getRole(),
                 user.getIsActive(),
-                user.getOfficeId()
+                user.getOfficeId(),
+                user.getUserPic()
         );
     }
 }
