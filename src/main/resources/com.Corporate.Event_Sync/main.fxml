@@ -1,12 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.Corporate.Event_Sync.controller.MainController">
+<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.Corporate.Event_Sync.controller.MainController" style="-fx-background-color: #e0f7fa;" prefWidth="600.0" prefHeight="400.0">
     <children>
-        <VBox fx:id="userDashboard" spacing="10.0" layoutX="50.0" layoutY="50.0">
-            <Label text="User Dashboard" style="-fx-font-size: 24px; -fx-font-weight: bold;" />
+        <VBox fx:id="userDashboard" spacing="20.0" alignment="CENTER"
+              AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0"
+              AnchorPane.topAnchor="50.0" AnchorPane.bottomAnchor="50.0">
+            <Label text="User Dashboard" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #00796b;" />
+
+            <!-- User details container -->
+            <VBox spacing="15.0" alignment="CENTER_LEFT" style="-fx-background-color: #ffffff; -fx-padding: 20px; -fx-border-color: #ccc; -fx-border-radius: 5px;">
+
+                <HBox spacing="15.0" alignment="CENTER_LEFT">
+                    <Label text="Name:" style="-fx-font-size: 16px; -fx-text-fill: #455a64;" />
+                    <Label style="-fx-font-size: 16px; -fx-text-fill: #607d8b;" fx:id="nameLabel"/>
+                </HBox>
+
+                <HBox spacing="15.0" alignment="CENTER_LEFT">
+                    <Label text="Department:" style="-fx-font-size: 16px; -fx-text-fill: #455a64;" />
+                    <Label style="-fx-font-size: 16px; -fx-text-fill: #607d8b;" fx:id="departmentLabel"/>
+                </HBox>
+
+                <HBox spacing="15.0" alignment="CENTER_LEFT">
+                    <Label text="Email:" style="-fx-font-size: 16px; -fx-text-fill: #455a64;" />
+                    <Label style="-fx-font-size: 16px; -fx-text-fill: #607d8b;" fx:id="emailLabel"/>
+                </HBox>
+
+                <HBox spacing="15.0" alignment="CENTER_LEFT">
+                    <Label text="Office ID:" style="-fx-font-size: 16px; -fx-text-fill: #455a64;" />
+                    <Label style="-fx-font-size: 16px; -fx-text-fill: #607d8b;" fx:id="officeIdLabel"/>
+                </HBox>
+
+                <HBox spacing="15.0" alignment="CENTER_LEFT">
+                    <Label text="Active:" style="-fx-font-size: 16px; -fx-text-fill: #455a64;" />
+                    <Label style="-fx-font-size: 16px; -fx-text-fill: #607d8b;" fx:id="activeLabel"/>
+                </HBox>
+            </VBox>
         </VBox>
     </children>
 </AnchorPane>
