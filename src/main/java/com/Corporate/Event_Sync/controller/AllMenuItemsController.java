@@ -268,7 +268,6 @@ public class AllMenuItemsController {
             String priceText = priceTextField.getText();
             Integer price = Math.toIntExact(priceText.isEmpty() ? 0L : Long.parseLong(priceText)); // Default to 0 if empty
 
-
             // Set itemImage to null if the field is empty
             if (itemImage == null || itemImage.trim().isEmpty()) {
                 itemImage = null; // Ensures null value is passed if no image selected

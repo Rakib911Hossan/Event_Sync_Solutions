@@ -1,4 +1,17 @@
+--
+-- -- Create 'user' table
+-- CREATE TABLE IF NOT EXISTS "user" (
+--                                       id BIGINT PRIMARY KEY,
+--                                       name VARCHAR(255) NOT NULL,
+--                                       email VARCHAR(255) NOT NULL UNIQUE,
+--                                       department VARCHAR(255),
+--                                       role VARCHAR(50) NOT NULL CHECK (role IN ('ADMIN', 'USER')), -- Enum values
+--                                       password VARCHAR(255) NOT NULL, -- Consider hashing this
+--                                       is_active BOOLEAN DEFAULT TRUE,
+--                                       office_id INT -- Foreign key reference might be needed here
+-- );
 
+-- Create sequence for 'user_id'
 -- Create 'user' table
 CREATE TABLE IF NOT EXISTS "user" (
                                       id INT4 PRIMARY KEY GENERATED ALWAYS AS IDENTITY, -- Use IDENTITY for auto-incrementing

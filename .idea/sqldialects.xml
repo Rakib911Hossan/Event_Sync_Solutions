@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project version="4">
-  <component name="SqlDialectMappings">
-    <file url="file://$PROJECT_DIR$/src/main/resources/db/migration/V1.0.1__Create_Table_User.sql" dialect="H2" />
-    <file url="file://$PROJECT_DIR$/src/main/resources/db/migration/V1.0.2__Create_Table_MenuItem.sql" dialect="H2" />
-    <file url="file://$PROJECT_DIR$/src/main/resources/db/migration/V1.0.3__Create_Table_Order.sql" dialect="PostgreSQL" />
-    <file url="file://$PROJECT_DIR$/src/main/resources/db/migration/V1.0.4__Create_Table_DefaultWeekDays.sql" dialect="H2" />
-  </component>
-</project>

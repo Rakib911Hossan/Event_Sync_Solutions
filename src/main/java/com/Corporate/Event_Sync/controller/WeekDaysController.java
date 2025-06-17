@@ -20,7 +20,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -94,20 +93,23 @@ public class WeekDaysController {
 
     @FXML
     private void initialize() {
-        // Set up TableView columns
+        // Set user details
         List<String> daysList = extractDays(
                 defaultWeekDaysService.getDaysByUserId(homeController.getLoggedInUser().getId())
         );
         String formattedDays = formatDaysInPairs(daysList);
+
         nameLabel.setText(homeController.getLoggedInUser().getName());
         phoneLabel.setText(homeController.getLoggedInUser().getPhone());
         departmentLabel.setText(homeController.getLoggedInUser().getDepartment());
         officeIdLabel.setText(String.valueOf(homeController.getLoggedInUser().getOfficeId()));
-        weekDaysLabel.setText(String.valueOf(formattedDays));
+        weekDaysLabel.setText(formattedDays);
+
+        // Table column setup
         daysColumn.setCellValueFactory(new PropertyValueFactory<>("days"));
         weekDaysColumn.setCellValueFactory(new PropertyValueFactory<>("isWeekDays"));
 
-        // Configure the weekDaysColumn to show Yes/No buttons with color change
+        // Days column styling
         daysColumn.setCellFactory(column -> new TableCell<>() {
             @Override
             protected void updateItem(String item, boolean empty) {
@@ -117,12 +119,12 @@ public class WeekDaysController {
                     setGraphic(null);
                 } else {
                     setText(item);
-                    setStyle("-fx-alignment: CENTER;"); // Center-aligns the text
+                    setStyle("-fx-alignment: CENTER;");
                 }
             }
         });
 
-
+        // WeekDays column with Yes/No buttons
         weekDaysColumn.setCellFactory(column -> new TableCell<>() {
             private final Button yesButton = new Button("Yes");
             private final Button noButton = new Button("No");
@@ -132,17 +134,39 @@ public class WeekDaysController {
                     DefaultWeekDaysDto weekDay = getTableView().getItems().get(getIndex());
                     weekDay.setWeekDays(true);
 
-                    yesButton.setStyle("-fx-background-color: green; -fx-text-fill: white;");
-                    noButton.setStyle("-fx-background-color: lightgray; -fx-text-fill: black;");
+                    if (!selectedWeekDays.contains(weekDay.getDays())) {
+                        selectedWeekDays.add(weekDay.getDays());
+                    }
+
+                    updateButtonStyles(weekDay);
+                    refreshLabel();
+                    weekDaysTable.refresh();
                 });
 
                 noButton.setOnAction(event -> {
                     DefaultWeekDaysDto weekDay = getTableView().getItems().get(getIndex());
                     weekDay.setWeekDays(false);
 
-                    noButton.setStyle("-fx-background-color: red; -fx-text-fill: white;");
-                    yesButton.setStyle("-fx-background-color: lightgray; -fx-text-fill: black;");
+                    selectedWeekDays.remove(weekDay.getDays());
+
+                    updateButtonStyles(weekDay);
+                    refreshLabel();
+                    weekDaysTable.refresh();
                 });
+            }
+
+            private void updateButtonStyles(DefaultWeekDaysDto weekDay) {
+                yesButton.setStyle(weekDay.isWeekDays()
+                        ? "-fx-background-color: green; -fx-text-fill: white;"
+                        : "-fx-background-color: lightgray; -fx-text-fill: black;");
+                noButton.setStyle(!weekDay.isWeekDays()
+                        ? "-fx-background-color: red; -fx-text-fill: white;"
+                        : "-fx-background-color: lightgray; -fx-text-fill: black;");
+            }
+
+            private void refreshLabel() {
+                String selectedDaysText = formatDaysInPairs(selectedWeekDays);
+                weekDaysLabel.setText(selectedDaysText);
             }
 
             @Override
@@ -153,107 +177,17 @@ public class WeekDaysController {
                     setText(null);
                 } else {
                     DefaultWeekDaysDto weekDay = getTableView().getItems().get(getIndex());
-                    yesButton.setStyle(weekDay.isWeekDays()
-                            ? "-fx-background-color: green; -fx-text-fill: white;"
-                            : "-fx-background-color: lightgray; -fx-text-fill: black;");
-                    noButton.setStyle(!weekDay.isWeekDays()
-                            ? "-fx-background-color: red; -fx-text-fill: white;"
-                            : "-fx-background-color: lightgray; -fx-text-fill: black;");
+                    updateButtonStyles(weekDay);
 
                     HBox buttonBox = new HBox(5, yesButton, noButton);
                     buttonBox.setAlignment(Pos.CENTER);
                     setGraphic(buttonBox);
-                    setStyle("-fx-alignment: CENTER;"); // Center-aligns the entire cell content
+                    setStyle("-fx-alignment: CENTER;");
                 }
             }
         });
 
-// Initialize data for the TableView
-        weekDaysList = FXCollections.observableArrayList(
-                new DefaultWeekDaysDto(1, 1, "Monday", false),
-                new DefaultWeekDaysDto(2, 1, "Tuesday", false),
-                new DefaultWeekDaysDto(3, 1, "Wednesday", false),
-                new DefaultWeekDaysDto(4, 1, "Thursday", false),
-                new DefaultWeekDaysDto(5, 1, "Friday", false),
-                new DefaultWeekDaysDto(6, 1, "Saturday", false),
-                new DefaultWeekDaysDto(7, 1, "Sunday", false)
-        );
-
-        weekDaysTable.setItems(weekDaysList);
-
-        weekDaysColumn.setCellFactory(new Callback<>() {
-            @Override
-            public TableCell<DefaultWeekDaysDto, String> call(TableColumn<DefaultWeekDaysDto, String> param) {
-                return new TableCell<>() {
-                    private final Button yesButton = new Button("Yes");
-                    private final Button noButton = new Button("No");
-
-                    {
-                        // Style buttons and add click behavior
-                        yesButton.setOnAction(event -> {
-                            DefaultWeekDaysDto weekDay = getTableView().getItems().get(getIndex());
-
-                            weekDay.setWeekDays(true);
-                            yesButton.setStyle("-fx-background-color: green; -fx-text-fill: white;");
-                            noButton.setStyle("-fx-background-color: lightgray; -fx-text-fill: black;");
-
-                            if (!selectedWeekDays.contains(weekDay.getDays())) {
-                                selectedWeekDays.add(weekDay.getDays());
-                            }
-
-                            weekDaysTable.refresh();
-
-                            // Format and update the weekDaysLabel with the count and selected days
-                            String selectedDaysText = formatDaysInPairs(selectedWeekDays);
-                            weekDaysLabel.setText(selectedDaysText);
-                        });
-
-                        noButton.setOnAction(event -> {
-                            DefaultWeekDaysDto weekDay = getTableView().getItems().get(getIndex());
-
-                            weekDay.setWeekDays(false);
-                            noButton.setStyle("-fx-background-color: red; -fx-text-fill: white;");
-                            yesButton.setStyle("-fx-background-color: lightgray; -fx-text-fill: black;");
-
-                            selectedWeekDays.remove(weekDay.getDays());
-
-                            weekDaysTable.refresh();
-
-                            // Format and update the weekDaysLabel with the count and selected days
-                            String selectedDaysText = formatDaysInPairs(selectedWeekDays);
-                            weekDaysLabel.setText(selectedDaysText);
-                        });
-                    }
-
-                    @Override
-                    protected void updateItem(String item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (empty) {
-                            setGraphic(null);
-                            setText(null); // Clear any text if the cell is empty
-                        } else {
-                            DefaultWeekDaysDto weekDay = getTableView().getItems().get(getIndex());
-
-                            // Set styles based on the current selection state
-                            yesButton.setStyle(weekDay.isWeekDays()
-                                    ? "-fx-background-color: green; -fx-text-fill: white;"
-                                    : "-fx-background-color: lightgray; -fx-text-fill: black;");
-                            noButton.setStyle(!weekDay.isWeekDays()
-                                    ? "-fx-background-color: red; -fx-text-fill: white;"
-                                    : "-fx-background-color: lightgray; -fx-text-fill: black;");
-
-                            HBox buttonBox = new HBox(5, yesButton, noButton); // Adds spacing between buttons
-                            buttonBox.setAlignment(Pos.CENTER); // Center-aligns buttons within the HBox
-                            setGraphic(buttonBox);
-                            setStyle("-fx-alignment: CENTER;"); // Center-aligns the entire cell content
-                        }
-                    }
-
-                };
-            }
-        });
-
-        // Initialize data for the TableView
+        // Initialize the days (if not already populated)
         weekDaysList = FXCollections.observableArrayList(
                 new DefaultWeekDaysDto(1, 1, "Monday", false),
                 new DefaultWeekDaysDto(2, 1, "Tuesday", false),
@@ -266,6 +200,7 @@ public class WeekDaysController {
 
         weekDaysTable.setItems(weekDaysList);
     }
+
     private List<String> extractDays(List<DefaultWeekDaysDto> weekDaysDtos) {
         return weekDaysDtos.stream()
                 .map(DefaultWeekDaysDto::getDays)

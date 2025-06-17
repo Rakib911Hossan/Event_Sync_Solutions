@@ -159,11 +159,11 @@ public class ReportController {
         });
     }
 
-    // Update method that uses the selected order ID
-    @FXML
-    private void updateOrder() {
-
-    }
+//    // Update method that uses the selected order ID
+//    @FXML
+//    private void updateOrder() {
+//
+//    }
 
     @FXML
     private void navigateToHome() {
