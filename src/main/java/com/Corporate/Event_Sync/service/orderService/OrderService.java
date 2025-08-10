@@ -32,10 +32,12 @@ public class OrderService {
         List<Order> orders = orderRepository.findByUserId(userId);
         return orderMapper.toDTOList(orders);
     }
-    public void createOrder(Integer userId, Integer menuItemId, String status, LocalDateTime orderDate) {
+    public void createOrder(Integer userId, Integer menuItemId, String status,
+                            LocalDateTime orderDate, double latitude, double longitude) {
 
-        orderRepository.saveOrder(userId, menuItemId, status, orderDate);
+        orderRepository.saveOrder(userId, menuItemId, status, orderDate, latitude, longitude);
     }
+
     @Transactional
     public OrderDTO updateOrderById(Integer orderId, Integer menuItemId, String status, LocalDateTime orderDate) {
         Order order = orderRepository.findById(Long.valueOf(orderId)).orElse(null);
@@ -46,6 +48,20 @@ public class OrderService {
             order.setMenuItem(menuItem);
             order.setStatus(status);
             order.setOrderDate(orderDate);
+
+            Order updatedOrder = orderRepository.save(order);
+            return orderMapper.toDTO(updatedOrder);
+        }
+        return null; // Return null if order or menuItem is not found
+    }
+
+    @Transactional
+    public OrderDTO updateOrderByLongLat(Integer orderId, double latitude, double longitude) {
+        Order order = orderRepository.findById(Long.valueOf(orderId)).orElse(null);
+
+        if (order != null) {
+            order.setLatitude(latitude);
+            order.setLongitude(longitude);
 
             Order updatedOrder = orderRepository.save(order);
             return orderMapper.toDTO(updatedOrder);

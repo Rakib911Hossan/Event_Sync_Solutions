@@ -43,6 +43,8 @@ public class HomeController {
     @FXML
     private Button allOrder;
     @FXML
+    private Button otherOrder;
+    @FXML
     private Button createOrder;
     @FXML
     private Button updateUserDashboard;
@@ -145,6 +147,9 @@ public class HomeController {
     // New method to get userId
     public Integer getUserId() {
         return loggedInUser != null ? loggedInUser.getId() : null;
+    }
+    public String getUserRole() {
+        return loggedInUser != null ? loggedInUser.getRole() : null;
     }
 
     // Button action handlers
@@ -268,7 +273,21 @@ public class HomeController {
     private void allOrder() {
         try {
             Stage stage = (Stage) allOrder.getScene().getWindow();
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com.Corporate.Event_Sync/allOrders.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com.Corporate.Event_Sync/universityOrders.fxml"));
+            fxmlLoader.setControllerFactory(EventSyncApplication.context::getBean);
+            Scene allOrder = new Scene(fxmlLoader.load());
+            stage.setScene(allOrder);
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void otherOrder() {
+        try {
+            Stage stage = (Stage) allOrder.getScene().getWindow();
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com.Corporate.Event_Sync/otherOrders.fxml"));
             fxmlLoader.setControllerFactory(EventSyncApplication.context::getBean);
             Scene allOrder = new Scene(fxmlLoader.load());
             stage.setScene(allOrder);

@@ -50,7 +50,7 @@
 
 
         <!-- Right Side Buttons -->
-        <VBox alignment="TOP_CENTER" layoutX="132.0" layoutY="187.0" prefHeight="259.0" prefWidth="114.0" spacing="15.0" AnchorPane.bottomAnchor="131.0" AnchorPane.rightAnchor="834.0" AnchorPane.topAnchor="187.0">
+        <VBox alignment="TOP_CENTER" layoutX="132.0" layoutY="187.0" prefHeight="312.0" prefWidth="186.0" spacing="15.0" AnchorPane.bottomAnchor="131.0" AnchorPane.rightAnchor="762.0" AnchorPane.topAnchor="187.0">
             <!-- User Details Button -->
             <Button fx:id="updateUserDashboard" onAction="#userDetails" prefHeight="28.0" prefWidth="105.0" text="Edit User" />
             <!-- Create Order Button -->
@@ -58,8 +58,9 @@
             <!-- Your Orders Button -->
             <Button fx:id="handleWeekDays" onAction="#handleWeekDays" text="WeekDays" />
             <Button fx:id="allUser" onAction="#allUser" prefHeight="28.0" prefWidth="99.0" text="All Users" />
-            <Button fx:id="allOrder" onAction="#allOrder" prefHeight="28.0" prefWidth="104.0" text="All Orders" />
             <Button fx:id="allMenuItems" onAction="#allMenuItems" prefHeight="28.0" prefWidth="117.0" text="Menu Items" />
+         <Button fx:id="otherOrder" onAction="#otherOrder" prefHeight="28.0" prefWidth="133.0" text="Other Orders" />
+            <Button fx:id="allOrder" onAction="#allOrder" prefHeight="28.0" prefWidth="160.0" text="University Orders" />
         </VBox>
 
         <!-- Exit Button -->

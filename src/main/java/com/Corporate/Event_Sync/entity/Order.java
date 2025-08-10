@@ -29,6 +29,9 @@ public class Order extends GenericEntity<Integer>{
     @JoinColumn(name = "menu_item_id", nullable = false)
     private MenuItem menuItem;
 
+    private double longitude;
+
+    private double latitude;
 
     // Getters and Setters
 }

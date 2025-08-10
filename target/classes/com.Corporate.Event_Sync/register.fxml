@@ -44,13 +44,17 @@
                 <FXCollections fx:factory="observableArrayList">
                     <String fx:value="ADMIN" />
                     <String fx:value="USER" />
+                    <String fx:value="STUDENT" />
+                    <String fx:value="TEACHER" />
+                    <String fx:value="STAFF" />
+                    <String fx:value="DELIVERY_MAN" />
                 </FXCollections>
             </items>
         </ComboBox>
 
         <!-- Department -->
-        <Label layoutX="356.0" layoutY="379.0" style="-fx-text-fill: white;" text="Department *" AnchorPane.leftAnchor="356.0" AnchorPane.topAnchor="379.0" />
-        <ComboBox fx:id="departmentCombobox" layoutX="503.0" layoutY="378.0" prefHeight="26.0" prefWidth="133.0" promptText="Select department" styleClass="input-field" AnchorPane.leftAnchor="503.0" AnchorPane.topAnchor="378.0">
+        <Label layoutX="356.0" layoutY="379.0" style="-fx-text-fill: white;" text="Department" AnchorPane.leftAnchor="356.0" AnchorPane.topAnchor="379.0" />
+        <ComboBox fx:id="departmentCombobox" layoutX="503.0" layoutY="378.0" prefHeight="26.0" prefWidth="133.0" promptText="University Staffs" styleClass="input-field" AnchorPane.leftAnchor="503.0" AnchorPane.topAnchor="378.0">
             <items>
                 <FXCollections fx:factory="observableArrayList">
                     <String fx:value="HR" />
@@ -58,13 +62,16 @@
                     <String fx:value="ACCOUNTS" />
                     <String fx:value="IT" />
                     <String fx:value="MARKETING" />
+                    <String fx:value="CSE" />
+                    <String fx:value="EEE" />
+                    <String fx:value="BBA" />
                 </FXCollections>
             </items>
         </ComboBox>
 
         <!-- Office ID -->
         <Label layoutX="356.0" layoutY="429.0" style="-fx-text-fill: white;" text="Office ID *" AnchorPane.leftAnchor="356.0" AnchorPane.topAnchor="429.0" />
-        <TextField fx:id="officeIdField" layoutX="476.0" layoutY="426.0" prefHeight="26.0" prefWidth="163.0" promptText="Enter office ID" styleClass="input-field" AnchorPane.leftAnchor="476.0" AnchorPane.topAnchor="426.0" />
+        <TextField fx:id="officeIdField" layoutX="476.0" layoutY="426.0" prefHeight="26.0" prefWidth="163.0" promptText="University Staffs" styleClass="input-field" AnchorPane.leftAnchor="476.0" AnchorPane.topAnchor="426.0" />
 
         <!-- Buttons -->
         <Button fx:id="registerButton" layoutX="460.0" layoutY="471.0" onAction="#handleRegister" prefHeight="26.0" prefWidth="90.0" styleClass="button" text="Register" AnchorPane.leftAnchor="460.0" AnchorPane.topAnchor="471.0" />

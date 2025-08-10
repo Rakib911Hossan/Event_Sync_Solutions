@@ -120,6 +120,18 @@ public class UserService {
         return userMapper.convertToUserDTO(user);
     }
 
+    public Boolean isStudentOrUserById(Integer userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("User with ID " + userId + " not found"));
+
+        String role = user.getRole();
+        if (role == null) return false;
+
+        // Check role ignoring case just to be safe
+        return role.equalsIgnoreCase("student") || role.equalsIgnoreCase("user");
+    }
+
+
     public void deactivateUser(Integer id) {
         User foundUser = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User not found"));

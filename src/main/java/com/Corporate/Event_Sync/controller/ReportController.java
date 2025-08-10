@@ -189,7 +189,7 @@ public class ReportController {
     private void allOrderDashboard() {
         try {
             Stage stage = (Stage) allOrderDashboard.getScene().getWindow();
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com.Corporate.Event_Sync/allOrders.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com.Corporate.Event_Sync/universityOrders.fxml"));
             fxmlLoader.setControllerFactory(EventSyncApplication.context::getBean);
             Scene loginScene = new Scene(fxmlLoader.load());
             stage.setScene(loginScene);
@@ -272,7 +272,7 @@ public class ReportController {
         }
 
         // Generate report with filteredOrders
-        String pdfPath = "/home/rakib/Downloads/rakib/SDP_2/Event_Sync/order_report.pdf";
+        String pdfPath = "/home/rakib/Downloads/BUBT_Semesters/SDP_2/Event_Sync/order_report.pdf";
         try (PdfWriter writer = new PdfWriter(new FileOutputStream(pdfPath));
              PdfDocument pdfDoc = new PdfDocument(writer);
              Document document = new Document(pdfDoc)) {
@@ -325,7 +325,7 @@ public class ReportController {
                         .setFontColor(ColorConstants.BLACK));
             }
 
-            String logoPath = "/home/rakib/Downloads/rakib/SDP_2/Event_Sync/Images/10466750.jpg"; // Provide your logo path
+            String logoPath = "/home/rakib/Downloads/BUBT_Semesters/SDP_2/Event_Sync/Images/10466750.jpg"; // Provide your logo path
             ImageData logo = ImageDataFactory.create(logoPath);
             Image logoImage = new Image(logo);
             logoImage.setHorizontalAlignment(HorizontalAlignment.CENTER);

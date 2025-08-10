@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS "user" (
                                       email VARCHAR(255) NOT NULL UNIQUE,
                                       address VARCHAR(255) NOT NULL,
                                       department VARCHAR(255),
-                                      role VARCHAR(50) NOT NULL CHECK (role IN ('ADMIN', 'USER')), -- Enum for roles
+                                      role VARCHAR(50) NOT NULL CHECK (role IN ('ADMIN', 'USER', 'STUDENT', 'TEACHER', 'STAFF', 'DELIVERY_MAN')), -- Enum for roles
                                       password VARCHAR(255) NOT NULL, -- Consider hashing this
                                       is_active BOOLEAN DEFAULT TRUE,
                                       office_id INT4, -- Foreign key reference might be added here later

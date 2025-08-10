@@ -3,8 +3,10 @@ package com.Corporate.Event_Sync.controller;
 import com.Corporate.Event_Sync.EventSyncApplication;
 import com.Corporate.Event_Sync.dto.MenuItemDto;
 import com.Corporate.Event_Sync.entity.Order;
+import com.Corporate.Event_Sync.service.locationService.SetLocation;
 import com.Corporate.Event_Sync.service.menuItemService.MenuItemListService;
 import com.Corporate.Event_Sync.service.orderService.OrderService;
+import com.Corporate.Event_Sync.service.userService.UserService;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleStringProperty;
@@ -18,10 +20,13 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import netscape.javascript.JSObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
@@ -43,11 +48,14 @@ public class CreateOrderController {
     @Autowired
     private MenuItemListService menuItemListService;
     @Autowired
+    private UserService userService;
+    @Autowired
     private ApplicationContext applicationContext;
     @Autowired
     private OrderService orderService;
 
     private Stage primaryStage;
+    @Autowired
     private HomeController homeController;
 
     public void setOrderService(OrderService orderService) {
@@ -66,6 +74,9 @@ public class CreateOrderController {
 
     @FXML
     private ComboBox<Integer> menuItemComboBox;
+
+    @FXML
+    private Button setLocations;
 
     @FXML
     private ComboBox<String> statusComboBox;
@@ -106,6 +117,9 @@ public class CreateOrderController {
     @FXML
     private TableColumn<Order, Void> deleteOrderColumn;
 
+    private SetLocation setLocation;
+    private double latitude;
+    private double longitude;
     @FXML
     public void initialize() {
         // Initialize other columns
@@ -115,6 +129,8 @@ public class CreateOrderController {
         categoryColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCategory()));
         timeColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getAvailableTime()));
         priceColumn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().getPrice()));
+
+            statusComboBox.setItems(FXCollections.observableArrayList("ORDERED", "PREPARED", "SERVED"));
 
         // For picColumn, display the image from URL
         previewImageColumn.setCellFactory(new Callback<TableColumn<MenuItemDto, Void>, TableCell<MenuItemDto, Void>>() {
@@ -147,6 +163,9 @@ public class CreateOrderController {
         });
 
         loadMenuItems();
+        // Assuming getUserRole() returns a String like "STUDENT", "USER", "ADMIN", etc.
+
+
     }
 
     private void loadMenuItems() {
@@ -162,6 +181,9 @@ public class CreateOrderController {
             e.printStackTrace();
             showErrorDialog("Failed to load menu items. Please try again later.");
         }
+        String role = homeController.getUserRole();
+        boolean visible = role.equalsIgnoreCase("STUDENT") || role.equalsIgnoreCase("USER");
+        setLocations.setVisible(visible);
     }
 
 
@@ -186,6 +208,40 @@ public class CreateOrderController {
         imageStage.show();
     }
 
+
+        @FXML
+        private void setLoction() {
+            Stage mapStage = new Stage();
+            mapStage.setTitle("Select Location");
+
+            WebView webView = new WebView();
+            WebEngine engine = webView.getEngine();
+
+            String localUrl = getClass().getResource("/com.Corporate.Event_Sync/map.html").toExternalForm();
+            engine.load(localUrl);
+
+            // Initialize SetLocation field here
+            setLocation = new SetLocation(mapStage, () -> {
+                // This runnable runs after lat/lon is set from JS
+                latitude = setLocation.getLatitude();
+                longitude = setLocation.getLongitude();
+                System.out.println("Coordinates updated: " + latitude + ", " + longitude);
+            });
+
+            engine.getLoadWorker().stateProperty().addListener((obs, oldState, newState) -> {
+                if (newState == javafx.concurrent.Worker.State.SUCCEEDED) {
+                    JSObject window = (JSObject) engine.executeScript("window");
+                    window.setMember("javaApp", setLocation);  // expose the field
+                }
+            });
+
+            Scene scene = new Scene(webView, 800, 600);
+            mapStage.setScene(scene);
+            mapStage.show();
+        }
+
+
+
     @FXML
     private void handleCreateOrder() {
         try {
@@ -204,8 +260,16 @@ public class CreateOrderController {
                 showErrorDialog("Date Error "+" Please select a valid date.");
                 return;
             }
+            boolean isStudentOrUser = userService.isStudentOrUserById(userId);
+            if(isStudentOrUser){
+                if (latitude == 0.00) {
+                    showErrorDialog("Kindly set your location please");
+                    return;
+                }
+            }
 
-            orderService.createOrder(userId, menuItemId, status, orderDateTime);
+
+            orderService.createOrder(userId, menuItemId, status, orderDateTime, latitude, longitude);
 
             // Show success message with an OK button
             showSuccessDialog("Order created successfully!");
@@ -248,7 +312,7 @@ public class CreateOrderController {
             currentStage.setScene(homeScene);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            e.  printStackTrace();
             messageLabel.setText("Error loading dashboard.");
         }
     }

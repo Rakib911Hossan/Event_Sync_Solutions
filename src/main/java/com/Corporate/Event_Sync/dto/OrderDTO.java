@@ -15,4 +15,6 @@ public class OrderDTO {
     private LocalDateTime orderDate;
     private String status;
     private String department;
+    private double longitude;
+    private double latitude;
 }

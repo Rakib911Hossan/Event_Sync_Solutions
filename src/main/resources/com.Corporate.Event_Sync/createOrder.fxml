@@ -11,22 +11,16 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="orderDashboard" prefHeight="680.0" prefWidth="1243.0" style="-fx-background-color: #2b2d42;" stylesheets="@style.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.Corporate.Event_Sync.controller.CreateOrderController">
+<AnchorPane fx:id="orderDashboard" prefHeight="680.0" prefWidth="1243.0" style="-fx-background-color: #2b2d42;" stylesheets="@style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.Corporate.Event_Sync.controller.CreateOrderController">
 
-    <fx:define>
-        <FXCollections fx:id="statusList" fx:factory="observableArrayList">
-            <String fx:value="ORDERED" />
-            <String fx:value="PREPARED" />
-            <String fx:value="SERVED" />
-        </FXCollections>
-    </fx:define>
+
     <children>
 
         <Label layoutX="34.0" layoutY="322.0" text="Menu Item:" />
         <ComboBox fx:id="menuItemComboBox" layoutX="152.0" layoutY="325.0" prefHeight="30.0" prefWidth="137.0" promptText="Menu Item" />
 
         <Label layoutX="34.0" layoutY="241.0" text="Status:" />
-        <ComboBox fx:id="statusComboBox" layoutX="138.0" layoutY="239.0" prefHeight="30.0" prefWidth="153.0" promptText="Status">
+        <ComboBox fx:id="statusComboBox" layoutX="136.0" layoutY="241.0" prefHeight="30.0" prefWidth="153.0" promptText="Status">
             <items>
                 <FXCollections fx:factory="observableArrayList">
                     <String fx:value="ORDERED" />
@@ -36,10 +30,11 @@
             </items>
         </ComboBox>
 
+
         <Label layoutX="34.0" layoutY="282.0" text="Date:" />
         <DatePicker fx:id="orderDatePicker" layoutX="136.0" layoutY="279.0" prefHeight="34.0" prefWidth="153.0" />
 
-        <Button layoutX="92.0" layoutY="374.0" onAction="#handleCreateOrder" text="Create Order" />
+        <Button layoutX="92.0" layoutY="425.0" onAction="#handleCreateOrder" text="Create Order" />
 
         <Label fx:id="messageLabel" layoutX="50.0" layoutY="300.0" textFill="RED" />
         <Button fx:id="navigateToHome" layoutX="150.0" layoutY="300.0" onAction="#navigateToHome" text="Go to Dashboard" visible="false" />
@@ -56,7 +51,7 @@
                 <TableColumn fx:id="previewImageColumn" prefWidth="108.0" text="Picture" />
             </columns>
         </TableView>
-        <Button layoutX="95.0" layoutY="424.0" onAction="#switchTohandleOrderList" text="Your Orders">
+        <Button layoutX="95.0" layoutY="475.0" onAction="#switchTohandleOrderList" text="Your Orders">
          <font>
             <Font size="10.0" />
          </font></Button>
@@ -66,5 +61,8 @@
         <Button layoutX="38.0" layoutY="64.0" onAction="#navigateToHome" text="Home" />
       <Label layoutX="646.0" layoutY="43.0" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #4caf50;" text="Menu Items" />
       <Label layoutX="64.0" layoutY="174.0" style="-fx-font-size: 25px; -fx-font-weight: bold; -fx-text-fill: #4caf50;" text="Create Order" />
+      <Button fx:id="setLocations" layoutX="95.0" layoutY="373.0" onAction="#setLoction" text="Set Location" />
+
+
     </children>
 </AnchorPane>

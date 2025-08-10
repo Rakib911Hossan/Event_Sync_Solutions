@@ -87,6 +87,9 @@ public class WeekDaysController {
 
     private List<String> selectedWeekDays = new ArrayList<>();
 
+    private double latitude;
+    private double longitude;
+
     @Autowired
     private DefaultWeekDaysMapper defaultWeekDaysMapper;
 
@@ -236,7 +239,8 @@ public class WeekDaysController {
         // Finalize the selection and update in the database
         if (!selectedWeekDays.isEmpty()) {
             int userId = homeController.getUserId(); // Example userId, replace as needed
-            defaultWeekDaysService.createWeekDays(userId, String.join(",", selectedWeekDays), true);
+            defaultWeekDaysService.createWeekDays(userId, String.join(",", selectedWeekDays), true,
+                    latitude, longitude);
 
             // Get the current day's name (e.g., "Monday", "Tuesday")
             String currentDay = java.time.LocalDate.now().getDayOfWeek().toString().toLowerCase();
@@ -271,8 +275,9 @@ public class WeekDaysController {
             );
 
             // Create orders using IDs from MenuItemDto
-            orderService.createOrder(userId, lunchMenuItem.getId(), "ORDERED", LocalDateTime.now());
-            orderService.createOrder(userId, snacksMenuItem.getId(), "ORDERED", LocalDateTime.now());
+            orderService.createOrder(userId, lunchMenuItem.getId(), "ORDERED", LocalDateTime.now(), latitude, longitude);
+            orderService.createOrder(userId, snacksMenuItem.getId(), "ORDERED", LocalDateTime.now(),  latitude, longitude);
+
         } else {
             throw new IllegalStateException("No lunch or snack items available for ordering.");
         }

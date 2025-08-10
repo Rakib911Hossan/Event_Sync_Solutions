@@ -29,7 +29,9 @@ public class DefaultWeekDaysService {
     private final OrderService orderService;
     private final DefaultWeekDaysMapper defaultWeekDaysMapper;
 
-    public void createWeekDays(Integer userId, String days, Boolean isWeekDays) {
+
+    public void createWeekDays(Integer userId, String days, Boolean isWeekDays,
+                               double latitude, double longitude) {
         if (!isWeekDays) {
             throw new IllegalArgumentException("Cannot create DefaultWeekDays as it is not a week day.");
         }
@@ -60,8 +62,8 @@ public class DefaultWeekDaysService {
                 );
 
                 // Create orders using IDs from MenuItemDto
-                orderService.createOrder(userId, lunchMenuItem.getId(), "ORDERED", LocalDateTime.now());
-                orderService.createOrder(userId, snacksMenuItem.getId(), "ORDERED", LocalDateTime.now());
+                orderService.createOrder(userId, lunchMenuItem.getId(), "ORDERED", LocalDateTime.now(), latitude, longitude);
+                orderService.createOrder(userId, snacksMenuItem.getId(), "ORDERED", LocalDateTime.now(), latitude, longitude);
             } else {
                 throw new IllegalStateException("No lunch or snack items available for ordering.");
             }

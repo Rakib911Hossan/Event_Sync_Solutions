@@ -19,7 +19,9 @@ public class OrderMapper {
                 order.getMenuItem().getPrice(),// menuItemId
                 order.getOrderDate(),        // orderDate
                 order.getStatus(),
-                order.getUser().getDepartment()// status
+                order.getUser().getDepartment(),
+                order.getLatitude(),
+                order.getLongitude()// status
         );
     }
     private List<OrderDTO> convertOrdersToDTO(List<Order> orders) {
@@ -31,7 +33,9 @@ public class OrderMapper {
                         order.getMenuItem().getPrice(),// Ensure this method is available in MenuItem
                         order.getOrderDate(),
                         order.getStatus(),
-                        order.getUser().getDepartment()))
+                        order.getUser().getDepartment(),
+                        order.getLatitude(),
+                        order.getLongitude()))
                 .toList();
     }
     // Convert a list of Order entities to a list of OrderDTOs

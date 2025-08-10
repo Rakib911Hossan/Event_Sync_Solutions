@@ -34,14 +34,18 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     @Modifying
     @Query("DELETE FROM Order o WHERE o.user.id IN (SELECT u.id FROM User u WHERE u.isActive = false)")
     void deleteOrdersByInactiveUsers();
+
     @Transactional
     @Modifying
-    @Query(value = "INSERT INTO orders (user_id, menu_item_id, status, order_date) VALUES (:userId, :menuItemId, :status, :orderDate)", nativeQuery = true)
+    @Query(value = "INSERT INTO orders (user_id, menu_item_id, status, order_date, latitude, longitude) " +
+            "VALUES (:userId, :menuItemId, :status, :orderDate, :latitude, :longitude)", nativeQuery = true)
     void saveOrder(
             @Param("userId") Integer userId,
             @Param("menuItemId") Integer menuItemId,
             @Param("status") String status,
-            @Param("orderDate") LocalDateTime orderDate);
+            @Param("orderDate") LocalDateTime orderDate,
+            @Param("latitude") double latitude,
+            @Param("longitude") double longitude);
 
     @Modifying
     @Query("UPDATE Order o SET o.orderDate = :orderDate, o.status = :status, o.menuItem = :menuItem WHERE o.id = :orderId")

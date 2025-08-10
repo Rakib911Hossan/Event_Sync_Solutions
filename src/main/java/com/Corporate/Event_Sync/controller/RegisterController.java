@@ -22,6 +22,8 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.List;
 
 @Component
 public class RegisterController {
@@ -57,8 +59,8 @@ public class RegisterController {
 
     @FXML
     public void initialize() {
-        departmentCombobox.setItems(FXCollections.observableArrayList("HR", "ADMINISTRATION", "ACCOUNTS", "IT", "MARKETING"));
-        roleComboBox.setItems(FXCollections.observableArrayList("ADMIN", "USER"));
+        departmentCombobox.setItems(FXCollections.observableArrayList("HR", "ADMINISTRATION", "ACCOUNTS", "IT", "MARKETING", "CSE", "EEE", "BBA"));
+        roleComboBox.setItems(FXCollections.observableArrayList("ADMIN", "USER", "STUDENT", "TEACHER", "STAFF", "DELIVERY_MAN"));
 
         Timeline clock = new Timeline(new KeyFrame(Duration.ZERO, e -> {
             LocalDateTime now = LocalDateTime.now();
@@ -79,22 +81,24 @@ public class RegisterController {
         String password = passwordField.getText();
         String selectedRole = roleComboBox.getValue();
         String officeIdText = officeIdField.getText(); // Get officeId as a String
+        List<String> rolesWithoutDepartment = Arrays.asList("ADMIN", "TEACHER", "STAFF");
+        boolean showDepartment = !rolesWithoutDepartment.contains(selectedRole);
+
 
         // Validate that all required fields are filled in
-        if (name.isEmpty() || email.isEmpty() || department.isEmpty() || password.isEmpty() || selectedRole == null || officeIdText.isEmpty()) {
-            showErrorDialog("All fields are required.");
-            return;
+        if (name.isEmpty() || email.isEmpty() || password.isEmpty() || selectedRole == null || !showDepartment ) {
+                if(department==null || officeIdText==null){
+                    showErrorDialog("All fields are required for University Staffs");
+                    return;
+            }
         }
 
-        Integer officeId = null;
 
-        // Validate that officeId is a valid integer
-        try {
-            officeId = Integer.valueOf(officeIdText); // Try to parse officeId as Integer
-        } catch (NumberFormatException e) {
-            showErrorDialog("Office ID must be a valid number.");
-            return;
-        }
+        Integer officeId=0;
+            if(officeIdText == null){
+                 officeId = 0;
+            }// Try to parse officeId as Integer
+
 
         User user = new User();
         user.setName(name);
@@ -104,7 +108,7 @@ public class RegisterController {
         user.setDepartment(department);
         user.setPassword(hashPassword(password)); // Ensure to hash the password before storing
         user.setRole(selectedRole);
-        user.setOfficeId(Integer.valueOf(officeIdText));
+        user.setOfficeId(officeId);
 
         // Register the user and capture the feedback message
         String registrationMessage = userService.registerUser(user);
