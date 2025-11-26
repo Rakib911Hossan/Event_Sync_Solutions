@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Leaflet Map</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        html, body, #map {
+            height: 100%;
+            margin: 0;
+        }
+    </style>
+
+    <!-- Leaflet CSS & JS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body>
+<div id="map"></div>
+
+<script>
+
+       var map = L.map('map').setView([23.8103, 90.4125], 13); // Default to Dhaka
+
+       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+           maxZoom: 19,
+       }).addTo(map);
+
+       var marker;
+
+       map.on('click', function(e) {
+           if (marker) {
+               map.removeLayer(marker);
+           }
+
+           const lat = e.latlng.lat.toFixed(5);
+           const lng = e.latlng.lng.toFixed(5);
+
+           // Create custom popup content with OK button
+           const popupContent = `
+               ✅ Location selected!<br>
+               Latitude: ${lat}<br>
+               Longitude: ${lng}<br><br>
+              <button onclick="handleOkClick('${lat}', '${lng}')">OK</button>
+           `;
+
+           marker = L.marker(e.latlng)
+               .addTo(map)
+               .bindPopup(popupContent)
+               .openPopup();
+       });
+
+       function handleOkClick(lat, lng) {
+           if (window.javaApp) {
+               window.javaApp.setLocation(lat, lng);
+           }
+       }
+</script>
+</body>
+</html>

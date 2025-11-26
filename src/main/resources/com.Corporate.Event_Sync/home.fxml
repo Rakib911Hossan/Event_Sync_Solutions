@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="680.0" prefWidth="1200.0" style="-fx-background-color: #1a1d2e;" stylesheets="@style.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.Corporate.Event_Sync.controller.HomeController">
+    <children>
+
+        <!-- Top Navigation Bar -->
+        <HBox alignment="CENTER_LEFT" layoutY="0.0" prefHeight="70.0" prefWidth="1200.0" spacing="20.0" style="-fx-background-color: #2b2d42; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 8, 0, 0, 2);">
+            <padding>
+                <Insets left="30.0" right="30.0" />
+            </padding>
+
+            <!-- Left side - Logo/Title -->
+            <HBox alignment="CENTER_LEFT" spacing="15.0" HBox.hgrow="ALWAYS">
+                <Label style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #4caf50;" text="Event Sync" />
+                <Label style="-fx-font-size: 14px; -fx-text-fill: #8d99ae;" text="|" />
+                <Label style="-fx-font-size: 16px; -fx-text-fill: #edf2f4;" text="Dashboard" />
+            </HBox>
+
+            <!-- Right side - Date/Time and Buttons -->
+            <HBox alignment="CENTER_RIGHT" spacing="15.0">
+                <Label fx:id="currentDateTimeLabel" style="-fx-text-fill: #8d99ae; -fx-font-size: 13px;" text="Date and Time" />
+                <Button fx:id="handleHome" onAction="#handleHome" style="-fx-background-color: transparent; -fx-text-fill: #4caf50; -fx-border-color: #4caf50; -fx-border-width: 1.5px; -fx-border-radius: 5; -fx-background-radius: 5; -fx-padding: 8px 20px; -fx-cursor: hand;" text="Home" />
+                <Button fx:id="logOut" onAction="#handleLogout" style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-border-radius: 5; -fx-background-radius: 5; -fx-padding: 8px 20px; -fx-cursor: hand;" text="Logout" />
+            </HBox>
+        </HBox>
+
+        <!-- Main Content Area -->
+        <HBox layoutX="30.0" layoutY="100.0" prefHeight="500.0" prefWidth="1140.0" spacing="25.0">
+
+            <!-- Left Panel - User Profile Card -->
+            <VBox prefWidth="380.0" spacing="15.0" style="-fx-background-color: #2b2d42; -fx-background-radius: 15; -fx-padding: 20px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 0, 3);">
+
+                <!-- Profile Header -->
+                <VBox alignment="TOP_CENTER" spacing="8.0">
+                    <ImageView fx:id="userImageView" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" style="-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 10, 0, 0, 2); -fx-background-radius: 50;" />
+                    <Label fx:id="nameLabel" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #edf2f4;" text="User Name" />
+                    <Label fx:id="departmentLabel" style="-fx-font-size: 13px; -fx-text-fill: #8d99ae;" text="Department" />
+                </VBox>
+
+                <!-- Divider -->
+                <VBox prefHeight="1.0" style="-fx-background-color: #4a4e69;" />
+
+                <!-- User Details -->
+                <VBox spacing="10.0">
+                    <Label style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #4caf50;" text="Profile Information" />
+
+                    <VBox spacing="8.0">
+                        <HBox spacing="10.0">
+                            <Label style="-fx-text-fill: #8d99ae; -fx-min-width: 75px;" text="Email:" />
+                            <Label fx:id="emailLabel" style="-fx-text-fill: #edf2f4; -fx-font-size: 13px;" text="user@email.com" wrapText="true" HBox.hgrow="ALWAYS" />
+                        </HBox>
+
+                        <HBox spacing="10.0">
+                            <Label style="-fx-text-fill: #8d99ae; -fx-min-width: 75px;" text="Phone:" />
+                            <Label fx:id="phoneLabel" style="-fx-text-fill: #edf2f4; -fx-font-size: 13px;" text="N/A" />
+                        </HBox>
+
+                        <HBox spacing="10.0">
+                            <Label style="-fx-text-fill: #8d99ae; -fx-min-width: 75px;" text="Office ID:" />
+                            <Label fx:id="officeIdLabel" style="-fx-text-fill: #edf2f4; -fx-font-size: 13px;" text="0" />
+                        </HBox>
+
+                        <HBox spacing="10.0">
+                            <Label style="-fx-text-fill: #8d99ae; -fx-min-width: 75px;" text="Address:" />
+                            <Label fx:id="addressLabel" style="-fx-text-fill: #edf2f4; -fx-font-size: 13px;" text="N/A" wrapText="true" HBox.hgrow="ALWAYS" />
+                        </HBox>
+                    </VBox>
+                </VBox>
+
+                <!-- Edit Profile Button -->
+                <Button fx:id="updateUserDashboard" onAction="#userDetails" prefWidth="340.0" style="-fx-background-color: #4caf50; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 10px; -fx-background-radius: 8; -fx-cursor: hand;" text="Edit Profile" />
+            </VBox>
+
+            <!-- Right Panel - Action Cards Grid -->
+            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" prefWidth="735.0" style="-fx-background: transparent; -fx-background-color: transparent;">
+                <VBox spacing="20.0">
+                    <Label style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #edf2f4;" text="Quick Actions" />
+
+                    <!-- Grid of Action Cards -->
+                    <GridPane hgap="15.0" prefWidth="700.0" vgap="15.0">
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="33.33" />
+                            <ColumnConstraints percentWidth="33.33" />
+                            <ColumnConstraints percentWidth="33.33" />
+                        </columnConstraints>
+
+                        <!-- Row 1 -->
+                        <VBox alignment="CENTER" spacing="10.0" style="-fx-background-color: linear-gradient(to bottom right, #667eea, #764ba2); -fx-background-radius: 12; -fx-padding: 20px; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(102,126,234,0.3), 8, 0, 0, 2);" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                            <Label style="-fx-font-size: 32px;" text="🍽️" />
+                            <Button fx:id="createOrder" onAction="#switchToCreateOrder" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-cursor: hand;" text="Create Order" />
+                        </VBox>
+
+                        <VBox alignment="CENTER" spacing="10.0" style="-fx-background-color: linear-gradient(to bottom right, #f093fb, #f5576c); -fx-background-radius: 12; -fx-padding: 20px; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(240,147,251,0.3), 8, 0, 0, 2);" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                            <Label style="-fx-font-size: 32px;" text="📅" />
+                            <Button fx:id="handleWeekDays" onAction="#handleWeekDays" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-cursor: hand;" text="Week Days" />
+                        </VBox>
+
+                        <VBox fx:id="allUserVBox" alignment="CENTER" spacing="10.0" style="-fx-background-color: linear-gradient(to bottom right, #4facfe, #00f2fe); -fx-background-radius: 12; -fx-padding: 20px; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(79,172,254,0.3), 8, 0, 0, 2);" GridPane.columnIndex="2" GridPane.rowIndex="0">
+                            <Label style="-fx-font-size: 32px;" text="👥" />
+                            <Button fx:id="allUser" onAction="#allUser" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-cursor: hand;" text="All Users" />
+                        </VBox>
+
+                        <VBox fx:id="universityOrderVBox" alignment="CENTER" spacing="10.0" style="-fx-background-color: linear-gradient(to bottom right, #a8edea, #fed6e3); -fx-background-radius: 12; -fx-padding: 20px; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(168,237,234,0.3), 8, 0, 0, 2);" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                            <Label style="-fx-font-size: 32px;" text="🏫" />
+                            <Button fx:id="allOrder" onAction="#allOrder" style="-fx-background-color: transparent; -fx-text-fill: #2b2d42; -fx-font-size: 14px; -fx-font-weight: bold; -fx-cursor: hand;" text="University Orders" />
+                        </VBox>
+
+                        <!-- Row 3 - Featured Card (Wider) -->
+                        <VBox fx:id="offerTokenVBox" alignment="CENTER" spacing="12.0" style="-fx-background-color: linear-gradient(to right, #FF6B35, #FF9800); -fx-background-radius: 12; -fx-padding: 25px; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(255,107,53,0.4), 12, 0, 0, 3);" GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="2">
+                            <Label style="-fx-font-size: 36px;" text="🎁" />
+                            <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: white;" text="Send Promotional Offers" />
+                            <Button fx:id="sendOfferToken" onAction="#handleSendOfferToken" style="-fx-background-color: white; -fx-text-fill: #FF6B35; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 10px 25px; -fx-background-radius: 20; -fx-cursor: hand;" text="Send Offer Tokens" />
+                        </VBox>
+      
+                        <VBox fx:id="otherOrderVBox" alignment="CENTER" spacing="10.0" style="-fx-background-color: linear-gradient(to bottom right, #30cfd0, #330867); -fx-background-radius: 12; -fx-padding: 20px; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(48,207,208,0.3), 8, 0, 0, 2);" GridPane.rowIndex="1">
+                            <Label style="-fx-font-size: 32px;" text="📦" />
+                            <Button fx:id="otherOrder" onAction="#otherOrder" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-cursor: hand;" text="Other Orders" />
+                        </VBox>
+            
+                        <!-- Row 2 -->
+                        <VBox fx:id="allMenuItemsVBox" alignment="CENTER" spacing="10.0" style="-fx-background-color: linear-gradient(to bottom right, #fa709a, #fee140); -fx-background-radius: 12; -fx-padding: 20px; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(250,112,154,0.3), 8, 0, 0, 2);" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                            <Label style="-fx-font-size: 32px;" text="🍔" />
+                            <Button fx:id="allMenuItems" onAction="#allMenuItems" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-cursor: hand;" text="Menu Items" />
+                        </VBox>
+                  <rowConstraints>
+                     <RowConstraints />
+                     <RowConstraints />
+                     <RowConstraints />
+                  </rowConstraints>
+                    </GridPane>
+                </VBox>
+            </ScrollPane>
+        </HBox>
+
+        <!-- Exit Button -->
+        <Button fx:id="exit" layoutX="30.0" layoutY="615.0" onAction="#handleExit" style="-fx-background-color: transparent; -fx-text-fill: #e74c3c; -fx-border-color: #e74c3c; -fx-border-width: 1.5px; -fx-border-radius: 5; -fx-background-radius: 5; -fx-padding: 8px 20px; -fx-cursor: hand;" text="Exit Application" />
+
+    </children>
+</AnchorPane>
