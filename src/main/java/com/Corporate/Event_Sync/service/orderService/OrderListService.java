@@ -3,7 +3,6 @@ package com.Corporate.Event_Sync.service.orderService;
 import com.Corporate.Event_Sync.entity.Order;
 import com.Corporate.Event_Sync.exceptions.NotFoundException;
 import com.Corporate.Event_Sync.repository.OrderRepository;
-import com.Corporate.Event_Sync.utils.Status;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +19,7 @@ public class OrderListService {
         return orderRepository.findAll();
     }
 
-    public List<Order> getOrdersByStatus(Status status) {
+    public List<Order> getOrdersByStatus(String status) {
         List<Order> orders = orderRepository.findOrdersByStatus(status);
 
         if (orders.isEmpty()) {
@@ -29,4 +28,7 @@ public class OrderListService {
 
         return orders;
     }
+
+
+
 }

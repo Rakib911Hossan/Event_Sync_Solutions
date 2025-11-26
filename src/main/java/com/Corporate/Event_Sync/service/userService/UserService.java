@@ -6,14 +6,19 @@ import com.Corporate.Event_Sync.dto.mapper.UserMapper;
 import com.Corporate.Event_Sync.entity.Order;
 import com.Corporate.Event_Sync.entity.User;
 import com.Corporate.Event_Sync.exceptions.ConflictException;
+import com.Corporate.Event_Sync.exceptions.IllegalStateException;
 import com.Corporate.Event_Sync.exceptions.NotFoundException;
 import com.Corporate.Event_Sync.repository.OrderRepository;
 import com.Corporate.Event_Sync.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+
 //@NoArgsConstructor
 @AllArgsConstructor
 @Service
@@ -43,21 +48,73 @@ public class UserService {
         }
     }
 
+    public void updatePassword(Integer userId, String newPassword) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("User with ID " + userId + " not found"));
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+    }
+
+    @Transactional // To ensure the update query executes in a transaction
+    public UserDTO updateUser(UserDTO userDTO) {
+        // Retrieve the existing user by ID
+        User existingUser = userRepository.findById(userDTO.getId())
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + userDTO.getId()));
+
+        // Set fields only if the corresponding value in userDTO is not null
+        String name = userDTO.getName() != null ? userDTO.getName() : existingUser.getName();
+        String phone = userDTO.getPhone() != null ? userDTO.getPhone() : existingUser.getPhone();
+        String email = userDTO.getEmail() != null ? userDTO.getEmail() : existingUser.getEmail();
+        String address = userDTO.getAddress() != null ? userDTO.getAddress() : existingUser.getAddress();
+        String department = userDTO.getDepartment() != null ? userDTO.getDepartment() : existingUser.getDepartment();
+        String role = userDTO.getRole() != null ? userDTO.getRole() : existingUser.getRole();
+        Boolean isActive = userDTO.getIsActive() != null ? userDTO.getIsActive() : existingUser.getIsActive();
+        Integer officeId = userDTO.getOfficeId() != null ? userDTO.getOfficeId() : existingUser.getOfficeId();
+        String userPic = userDTO.getUserPic() != null ? userDTO.getUserPic() : existingUser.getUserPic();
+        String passToken = userDTO.getPassToken() != null ? userDTO.getPassToken() : existingUser.getPassToken();
+        String discountToken = userDTO.getDiscountToken() ;
+        Integer discountAmount =userDTO.getDiscountAmount();
+        String userCategory = existingUser.getUserCategory();
+        // Perform the update query
+        userRepository.updateUserById(userDTO.getId(), name,phone, email,address, department, role, isActive, officeId,userPic,
+                passToken, discountToken, discountAmount);
+
+        // Schedule token removal after 1 minute
+        if (passToken != null) {
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    userRepository.updateUserById(userDTO.getId(), name, phone, email,
+                            address, department, role, isActive, officeId, userPic, null, discountToken, discountAmount);
+                }
+            }, 60000); // 1 minute = 60000 ms
+        }
+
+        return new UserDTO(userDTO.getId(), name, phone, email, address,
+                department, role, isActive, officeId, userPic, passToken, discountToken, discountAmount, userCategory);
+    }
+
+
     // Find user by email
 //    public Optional<User> findByEmail(String email) {
 //        return Optional.ofNullable(userRepository.findByEmail(email));
 //    }
 
-    // Authenticate user (login)
     public boolean authenticate(String email, String rawPassword) {
         User user = userRepository.findByEmail(email);
-        // Check for user existence
+        // Check if the user exists
         if (user == null) {
             throw new NotFoundException("User with email " + email + " not found");
         }
-        // Compare the raw password with the hashed password stored in the User entity
+        // Check if the user is active
+        if (!user.getIsActive()) {
+            throw new IllegalStateException("User account is inactive. Please contact with admin.");
+        }
+        // Compare the raw password with the hashed password
         return passwordEncoder.matches(rawPassword, user.getPassword());
     }
+
 
     public UserDTO findByEmail(String email) {
         User user = userRepository.findByEmail(email);
@@ -67,58 +124,63 @@ public class UserService {
             throw new NotFoundException("User with email " + email + " not found");
         }
 
-        // Force initialization of orders
         List<Order> orders = user.getOrders(); // This forces lazy loading of the orders collection
 
-        // Now convert User to UserDTO
         UserDTO userDTO = new UserDTO();
         userDTO.setId(user.getId());
         userDTO.setName(user.getName());
+        userDTO.setPhone(user.getPhone());
         userDTO.setEmail(user.getEmail());
+        userDTO.setAddress(user.getAddress());
         userDTO.setDepartment(user.getDepartment());
         userDTO.setRole(user.getRole());
         userDTO.setIsActive(user.getIsActive());
         userDTO.setOfficeId(user.getOfficeId());
+        userDTO.setUserPic(user.getUserPic());
+        userDTO.setPassToken(user.getPassToken());
+        userDTO.setDiscountToken(user.getDiscountToken());
 
         return userDTO;
     }
 
-    // Get user by ID
     public UserDTO getUserById(Integer userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User with ID " + userId + " not found"));
         return userMapper.convertToUserDTO(user);
     }
 
-    // Deactivate user account
+    public Boolean isStudentOrUserById(Integer userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("User with ID " + userId + " not found"));
+
+        String role = user.getRole();
+        if (role == null) return false;
+
+        // Check role ignoring case just to be safe
+        return role.equalsIgnoreCase("student") || role.equalsIgnoreCase("user");
+    }
+
+
     public void deactivateUser(Integer id) {
         User foundUser = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User not found"));
 
-        // Deactivate user
         foundUser.setIsActive(false);
         userRepository.save(foundUser);
 
-        // Delete orders for inactive users
         orderRepository.deleteOrdersByInactiveUsers();
     }
 
-    // Activate user account
-    // Get user by ID
     public User fetchUserById(Integer userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User with ID " + userId + " not found"));
     }
 
-    // Activate user account
     public void activateUser(Integer id) {
-        // Fetch the user by ID and throw NotFoundException if not found
         User foundUser = fetchUserById(id);
 
-        // Set user status to active
         foundUser.setIsActive(true);
 
-        // Save the updated user
         userRepository.save(foundUser);
     }
 
@@ -136,6 +198,9 @@ public class UserService {
     }
 
 
+    public void deleteUserById(Integer userId) {
+        userRepository.deleteById(userId);
+    }
 
 //    public UserDTO getUserWithOrdersById(Integer id) {
 //        UserDTO userDTO = userRepository.findUserWithOrdersById(id);

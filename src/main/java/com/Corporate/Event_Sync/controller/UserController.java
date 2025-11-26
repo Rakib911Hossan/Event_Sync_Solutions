@@ -18,9 +18,17 @@
 //
 //    // Register a new user
 //    @PostMapping("/register")
-//    public ResponseEntity<User> registerUser(@RequestBody User user) {
-//        User registeredUser = userService.registerUser(user);
+//    public ResponseEntity<String> registerUser(@RequestBody User user) {
+//        String registeredUser = userService.registerUser(user);
 //        return ResponseEntity.status(HttpStatus.CREATED).body(registeredUser);
+//    }
+//
+//    @PutMapping("/{id}")
+//    public ResponseEntity<UserDTO> updateUser(@PathVariable Integer id, @RequestBody UserDTO userDTO) {
+//        // Set the user ID from the path variable
+//        userDTO.setId(id);
+//        UserDTO updatedUser = userService.updateUser(userDTO);
+//        return ResponseEntity.ok(updatedUser);
 //    }
 //
 //    // Authenticate user (login)

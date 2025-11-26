@@ -1,0 +1,136 @@
+/* General Application Styling */
+.anchor-pane {
+    -fx-background-color: linear-gradient(to bottom right, #ffcc80, #ffab40, #ff7043, #ff5722);
+    -fx-padding: 10px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 8, 0.7, 3, 3);
+}
+
+/* Label Styling */
+.label {
+    -fx-text-fill: linear-gradient(to bottom right, #6d4c41, #8d6e63);
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-padding: 5px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.7), 4, 0.4, 1, 1);
+}
+
+/* Input Field Styling */
+.input-field, .text-field, .password-field {
+    -fx-background-color: rgba(255, 249, 196, 0.95);
+    -fx-border-color: linear-gradient(to bottom, #ff7043, #ffab40);
+    -fx-border-width: 2px;
+    -fx-border-radius: 8px;
+    -fx-padding: 4px;
+    -fx-font-size: 14px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 6, 0.3, 2, 2);
+}
+
+.text-field:focused, .password-field:focused {
+    -fx-border-color: #ff5722;
+    -fx-background-color: rgba(255, 249, 196, 1);
+    -fx-effect: dropshadow(gaussian, rgba(255, 87, 34, 0.6), 8, 0.5, 1, 1);
+}
+
+/* Button Styling */
+.button {
+    -fx-background-color: linear-gradient(to bottom right, #8bc34a, #689f38, #4caf50);
+    -fx-text-fill: #ffffff;
+    -fx-padding: 5px 10px;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-effect: dropshadow(gaussian, rgba(139, 195, 74, 0.4), 8, 0.4, 2, 2);
+    -fx-transition: all 0.3s ease-in-out;
+}
+
+.button:hover {
+    -fx-background-color: linear-gradient(to bottom right, #33691e, #558b2f, #9ccc65);
+    -fx-effect: dropshadow(gaussian, rgba(56, 142, 60, 0.7), 10, 0.6, 2, 2);
+    -fx-transform: scale(1.03);
+}
+
+.button:pressed {
+    -fx-background-color: #004d40;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.9), 4, 0.7, 1, 1);
+    -fx-translate-y: 2;
+}
+
+/* ComboBox Styling */
+.combo-box {
+    -fx-background-color: rgba(255, 249, 196, 0.95);
+    -fx-border-color: linear-gradient(to bottom, #ff5722, #ffcc80);
+    -fx-border-radius: 8px;
+    -fx-padding: 2px;
+    -fx-font-size: 12px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 6, 0.3, 2, 2);
+}
+
+.combo-box:hover, .combo-box:focused {
+    -fx-border-color: #ffab40;
+}
+
+/* TableView Styling */
+.table-view {
+    -fx-background-color: rgba(255, 249, 196, 0.9);
+    -fx-border-radius: 10px;
+    -fx-padding: 8px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 8, 0.5, 2, 2);
+}
+
+.table-view .column-header {
+    -fx-background-color: linear-gradient(to bottom, #ffab40, #ff7043);
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-padding: 5px;
+}
+
+.table-view .table-row-cell:filled:hover {
+    -fx-background-color: rgba(139, 195, 74, 0.4);
+    -fx-transform: scale(1.02);
+}
+
+/* DatePicker Styling */
+.date-picker {
+    -fx-background-color: rgba(255, 249, 196, 0.95);
+    -fx-border-color: linear-gradient(to bottom, #8bc34a, #ff5722);
+    -fx-border-radius: 8px;
+    -fx-padding: 2px;
+    -fx-font-size: 12px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 6, 0.3, 2, 2);
+}
+
+.date-picker:focused {
+    -fx-border-color: #ff7043;
+}
+
+/* Dialog Styling */
+.dialog-layout {
+    -fx-background-color: linear-gradient(to bottom, #ff7043, #ffcc80);
+    -fx-padding: 20px;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.7), 10, 0.6, 3, 3);
+}
+
+.dialog-label {
+    -fx-text-fill: linear-gradient(to bottom right, #ffffff, #ff7043);
+    -fx-font-size: 16px;
+    -fx-padding: 15px;
+}
+
+.dialog-button {
+    -fx-background-color: linear-gradient(to bottom right, #f57c00, #ef6c00);
+    -fx-text-fill: white;
+    -fx-padding: 4px 8px;
+    -fx-font-size: 14px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 6, 0.4, 2, 2);
+}
+
+.dialog-button:hover {
+    -fx-background-color: linear-gradient(to bottom right, #e65100, #bf360c);
+    -fx-transform: scale(1.03);
+}

@@ -14,7 +14,7 @@ public class SecurityConfig {
     }
         @Bean
         public String title() {
-            return "Event Sync Application"; // Set your desired title here
+            return "Event Sync. Solutions"; // Set your desired title here
         }
 }
 

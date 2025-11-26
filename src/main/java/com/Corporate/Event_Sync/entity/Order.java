@@ -1,6 +1,5 @@
 package com.Corporate.Event_Sync.entity;
 
-import com.Corporate.Event_Sync.utils.Status;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -22,14 +21,18 @@ public class Order extends GenericEntity<Integer>{
 
     private LocalDateTime orderDate; // Could use LocalDateTime or String depending on your preference
 
-    @Enumerated(EnumType.STRING)
-    private Status status; // Enum for status like ORDERED, PREPARED, SERVED
+    @Column(nullable = false)
+    private String status; // Enum for status like ORDERED, PREPARED, SERVED
 
-
-    @ManyToOne(fetch = FetchType.LAZY)
+//    @JsonIgnore
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "menu_item_id", nullable = false)
     private MenuItem menuItem;
 
+    private double longitude;
+
+    private double latitude;
+    private Integer price;
 
     // Getters and Setters
 }

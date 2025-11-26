@@ -1,0 +1,204 @@
+/* General Application Styling */
+.anchor-pane {
+    -fx-background-color: linear-gradient(to bottom right, #0f0c29, #301b3f, #421e65, #5c2a91, #c75bff);
+    -fx-padding: 10px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 8, 0.7, 3, 3);
+}
+
+/* Label Styling */
+.label {
+    -fx-text-fill: linear-gradient(to bottom right, #ffffff, #d1d1d1);
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-padding: 5px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.7), 4, 0.4, 1, 1);
+}
+
+.text-field, .password-field {
+    -fx-background-color: #4a4e69; /* Deep muted purple for inputs */
+    -fx-text-fill: #edf2f4; /* Crisp white text */
+    -fx-border-color: #8d99ae; /* Cool steel border */
+    -fx-border-width: 2px;
+    -fx-border-radius: 6px;
+    -fx-padding: 3px;
+    -fx-font-size: 14px;
+}
+
+.text-field:focused, .password-field:focused {
+    -fx-border-color: #9f50ff;
+    -fx-background-color: rgba(255, 255, 255, 1);
+    -fx-effect: dropshadow(gaussian, rgba(159, 80, 255, 0.6), 8, 0.5, 1, 1);
+}
+.text-field:hover, .password-field:focused {
+    -fx-border-color: #f59554;
+}
+/* Button Styling */
+.button {
+    -fx-background-color: linear-gradient(to bottom right, #bb6d37, #bb5b27, #e59062);
+    -fx-text-fill: #ffffff;
+    -fx-padding: 5px 10px;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-effect: dropshadow(gaussian, rgba(243, 239, 195, 0.4), 8, 0.4, 2, 2);
+    -fx-transition: all 0.3s ease-in-out;
+}
+
+.button:hover {
+    -fx-background-color: linear-gradient(to bottom right, #770c35, #730d4f, #6c0c46);
+    -fx-effect: dropshadow(gaussian, rgba(145, 54, 26, 0.7), 10, 0.6, 2, 2);
+    -fx-transform: scale(1.03);
+}
+
+.button:pressed {
+    -fx-background-color: #301b3f;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.9), 4, 0.7, 1, 1);
+    -fx-translate-y: 2;
+}
+
+/* ComboBox Styling */
+.combo-box {
+    -fx-background-color: #4a4e69; /* Matches input field background */
+    -fx-border-color: #8d99ae; /* Steel border */
+    -fx-border-width: 2px;
+    -fx-border-radius: 6px;
+    -fx-padding: 1px;
+    -fx-text-fill: #edf2f4; /* Sets general text color */
+    -fx-display-text-fill: #edf2f4; /* Ensures selected item text is white */
+}
+
+.combo-box .list-cell {
+    -fx-background-color: #4a4e69; /* Background for dropdown items */
+    -fx-text-fill: #edf2f4; /* Text color for dropdown items */
+}
+
+.combo-box .list-cell:filled:hover {
+    -fx-background-color: #8d99ae; /* Highlight color for hovered item */
+    -fx-text-fill: #2b2d42; /* Dark text for contrast on hover */
+}
+
+.combo-box:hover, .combo-box:focused {
+    -fx-border-color: #f59554;
+}
+
+/* TableView Styling */
+.table-view {
+    -fx-background-color: rgba(255, 255, 255, 0.9);
+    -fx-border-radius: 10px;
+    -fx-padding: 8px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 8, 0.5, 2, 2);
+}
+
+.table-view .column-header {
+    -fx-background-color: linear-gradient(to bottom, #5c2a91, #c75bff);
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-padding: 5px;
+}
+
+.table-view .table-row-cell:filled:hover {
+    -fx-background-color: rgba(92, 42, 145, 0.4);
+    -fx-transform: scale(1.02);
+}
+
+/* DatePicker Styling */
+.date-picker {
+    -fx-background-color: rgba(255, 255, 255, 0.95);
+    -fx-border-color: linear-gradient(to bottom, #9f50ff, #e75480);
+    -fx-border-radius: 8px;
+    -fx-padding: 2px;
+    -fx-font-size: 12px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 6, 0.3, 2, 2);
+}
+
+.date-picker:focused {
+    -fx-border-color: #c75bff;
+}
+
+/* Dialog Styling */
+.dialog-layout {
+    -fx-background-color: linear-gradient(to bottom, #2C3E50, #4CA1AF);
+    -fx-padding: 20px;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.7), 10, 0.6, 3, 3);
+}
+
+.dialog-label {
+    -fx-text-fill: linear-gradient(to bottom right, #ffffff, #c75bff);
+    -fx-font-size: 16px;
+    -fx-padding: 15px;
+}
+
+.dialog-button {
+    -fx-background-color: linear-gradient(to bottom right, #4CAF50, #2E7D32);
+    -fx-text-fill: white;
+    -fx-padding: 4px 8px;
+    -fx-font-size: 14px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 6, 0.4, 2, 2);
+}
+
+.dialog-button:hover {
+    -fx-background-color: linear-gradient(to bottom right, #45a049, #1B5E20);
+    -fx-transform: scale(1.03);
+}
+.label#dashboardLabel {
+    -fx-background-color: #2b2d42; /* Replace with your desired background color */
+    -fx-text-fill: #edf2f4; /* Adjust text color for better contrast */
+    -fx-padding: 10px; /* Add padding for better appearance */
+    -fx-border-radius: 8px; /* Optional: Rounded corners */
+    -fx-background-radius: 8px; /* Match border radius */
+    -fx-font-size: 24px; /* Optional: Adjust font size */
+    -fx-font-weight: bold; /* Optional: Make text bold */
+}
+#headerPane {
+    -fx-background-color: #2b2d42; /* Dark color for the header background */
+    -fx-padding: 10px; /* Optional: Adjust padding */
+}
+
+.label#dashboardLabel {
+    -fx-text-fill: #edf2f4; /* White text for contrast */
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+}
+.pane {
+    -fx-background-color: #4a4e69; /* Background color */
+    -fx-padding: 20px; /* Inner padding */
+    -fx-border-color: #cccccc; /* Border color */
+    -fx-border-width: 1px; /* Border thickness */
+    -fx-border-radius: 10px; /* Rounded corners */
+    -fx-effect: dropshadow(gaussian, rgba(200, 200, 200, 0.5), 10, 0.3, 0, 5); /* Drop shadow effect */
+}
+
+.pane .label {
+    -fx-font-size: 16px; /* Font size for all labels */
+    -fx-text-fill: #edf2f4; /* Default text color */
+}
+
+.pane .label.value-label {
+    -fx-text-fill: #edf2f4; /* Text color for value labels (e.g., name, phone) */
+}
+
+.pane .image-view {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 5, 0.3, 0, 3); /* Subtle shadow effect for the image */
+}
+.vbox {
+    -fx-background-color: #4a4e69;
+    -fx-padding: 20px;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 10px;
+    -fx-effect: dropshadow(gaussian, rgba(200,200,200,0.5), 10, 0.3, 0, 5);
+}
+
+.label {
+    -fx-font-size: 16px;
+    -fx-text-fill: #edf2f4;
+}
+
+#nameLabel, #phoneLabel, #emailLabel, #addressLabel, #departmentLabel, #officeIdLabel {
+    -fx-text-fill: #edf2f4;
+}
