@@ -1,56 +1,59 @@
 package com.Corporate.Event_Sync.entity;
 
-import com.Corporate.Event_Sync.utils.Role;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
-import java.util.Set;
+import java.util.List;
+
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Data
-@Table(name = "user", schema = "event_management")
-public class User implements Serializable {
-
-    private static final long serialVersionUID = 1L;
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Integer id;
+@Table(name = "user", schema = "public")
+public class User extends GenericEntity<Integer>{
 
     private String name;
+    private String phone;
     private String email;
+    private String address;
+
     private String department;
 
-    @Enumerated(EnumType.STRING)
-    private Role role; // Admin or User
+
+    private String role; // Enum for roles like ADMIN, USER
 
     private String password;
+    private String passToken;
+    private String discountToken;
+    private String userCategory;
+    private Integer discountAmount;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<LunchSchedule> lunchSchedules;
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<Order> orders; // One user can have multiple orders
+    private String userPic;
+//    @JsonIgnore
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<DefaultWeekDays> defaultWeekDays;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Order> orders;
+//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    private Set<LunchSchedule> lunchSchedules;
+//
+//
+//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    private Set<Feedback> feedbacks;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Feedback> feedbacks;
 
-
-    @Column(name = "is_active", nullable = false)
+    @Column(name = "is_active")
     private Boolean isActive;
 
-    @Column(name = "office_id", nullable = false)
-    private Integer office_id;
+    @Column(name = "office_id")
+    private Integer officeId;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonManagedReference
-    private DefaultWeekendEntity defaultWeekend;
+//    @OneToOne(mappedBy = "user",fetch = FetchType.LAZY)
+//    @JsonManagedReference
+//    private DefaultWeekendEntity defaultWeekend;
 
 }

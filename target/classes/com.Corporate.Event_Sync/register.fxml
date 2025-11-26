@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.collections.FXCollections?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="680.0" prefWidth="1100.0" style="-fx-background-color: #1a1d2e;" stylesheets="@style.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.Corporate.Event_Sync.controller.RegisterController">
+    <children>
+        <!-- Top Bar -->
+        <HBox alignment="CENTER_LEFT" prefHeight="60.0" prefWidth="1100.0" style="-fx-background-color: #2b2d42;">
+            <padding>
+                <Insets left="30.0" right="30.0" />
+            </padding>
+
+            <!-- Date/Time on Left -->
+            <Label fx:id="dateTimeLabel" style="-fx-text-fill: #8d99ae; -fx-font-size: 13px;" text="Date and Time" HBox.hgrow="ALWAYS" />
+        </HBox>
+
+        <!-- Main Registration Card -->
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" layoutX="250.0" layoutY="100.0" prefHeight="540.0" prefWidth="600.0" style="-fx-background: transparent; -fx-background-color: transparent;">
+            <VBox spacing="0.0" style="-fx-background-color: #2b2d42; -fx-background-radius: 15; -fx-padding: 40px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 20, 0, 0, 5);">
+
+                <!-- Header -->
+                <VBox alignment="CENTER" spacing="8.0">
+                    <Label style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #4caf50;" text="Create Account" />
+                    <Label style="-fx-font-size: 14px; -fx-text-fill: #8d99ae;" text="Join Event Sync today" />
+                </VBox>
+
+                <!-- Spacer -->
+                <VBox prefHeight="20.0" />
+
+                <!-- Form Fields -->
+                <VBox spacing="18.0">
+
+                    <!-- Name Field -->
+                    <VBox spacing="6.0">
+                        <Label style="-fx-text-fill: #edf2f4; -fx-font-size: 13px; -fx-font-weight: bold;" text="Full Name *" />
+                        <TextField fx:id="nameField" promptText="Enter your full name" style="-fx-background-color: #4a4e69; -fx-text-fill: white; -fx-prompt-text-fill: #8d99ae; -fx-border-color: #4a4e69; -fx-border-width: 1px; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 12px; -fx-font-size: 14px;" />
+                    </VBox>
+
+                    <!-- Email & Phone Row -->
+                    <HBox spacing="15.0">
+                        <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                            <Label style="-fx-text-fill: #edf2f4; -fx-font-size: 13px; -fx-font-weight: bold;" text="Email Address *" />
+                            <TextField fx:id="emailField" promptText="your.email@example.com" style="-fx-background-color: #4a4e69; -fx-text-fill: white; -fx-prompt-text-fill: #8d99ae; -fx-border-color: #4a4e69; -fx-border-width: 1px; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 12px; -fx-font-size: 14px;" HBox.hgrow="ALWAYS" />
+                        </VBox>
+
+                        <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                            <Label style="-fx-text-fill: #edf2f4; -fx-font-size: 13px; -fx-font-weight: bold;" text="Phone Number" />
+                            <TextField fx:id="phoneField" promptText="+880 1XXX-XXXXXX" style="-fx-background-color: #4a4e69; -fx-text-fill: white; -fx-prompt-text-fill: #8d99ae; -fx-border-color: #4a4e69; -fx-border-width: 1px; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 12px; -fx-font-size: 14px;" HBox.hgrow="ALWAYS" />
+                        </VBox>
+                    </HBox>
+
+                    <!-- Address Field -->
+                    <VBox spacing="6.0">
+                        <Label style="-fx-text-fill: #edf2f4; -fx-font-size: 13px; -fx-font-weight: bold;" text="Address" />
+                        <TextField fx:id="addressField" promptText="Enter your address" style="-fx-background-color: #4a4e69; -fx-text-fill: white; -fx-prompt-text-fill: #8d99ae; -fx-border-color: #4a4e69; -fx-border-width: 1px; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 12px; -fx-font-size: 14px;" />
+                    </VBox>
+
+                    <!-- Password Field -->
+                    <VBox spacing="6.0">
+                        <Label style="-fx-text-fill: #edf2f4; -fx-font-size: 13px; -fx-font-weight: bold;" text="Password *" />
+                        <PasswordField fx:id="passwordField" promptText="Create a strong password" style="-fx-background-color: #4a4e69; -fx-text-fill: white; -fx-prompt-text-fill: #8d99ae; -fx-border-color: #4a4e69; -fx-border-width: 1px; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 12px; -fx-font-size: 14px;" />
+                    </VBox>
+
+                    <!-- Role & Department Row -->
+                    <HBox spacing="15.0">
+                        <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                            <Label style="-fx-text-fill: #edf2f4; -fx-font-size: 13px; -fx-font-weight: bold;" text="Role *" />
+                            <ComboBox fx:id="roleComboBox" prefWidth="240.0" promptText="Select your role" style="-fx-background-color: #4a4e69; -fx-border-color: #4a4e69; -fx-border-width: 1px; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 8px; -fx-font-size: 14px;">
+                                <items>
+                                    <FXCollections fx:factory="observableArrayList">
+                                        <String fx:value="ADMIN" />
+                                        <String fx:value="USER" />
+                                        <String fx:value="STUDENT" />
+                                        <String fx:value="TEACHER" />
+                                        <String fx:value="STAFF" />
+                                        <String fx:value="DELIVERY_MAN" />
+                                    </FXCollections>
+                                </items>
+                            </ComboBox>
+                        </VBox>
+
+                        <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                            <Label style="-fx-text-fill: #edf2f4; -fx-font-size: 13px; -fx-font-weight: bold;" text="Department" />
+                            <ComboBox fx:id="departmentCombobox" prefWidth="240.0" promptText="Select department" style="-fx-background-color: #4a4e69; -fx-border-color: #4a4e69; -fx-border-width: 1px; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 8px; -fx-font-size: 14px;">
+                                <items>
+                                    <FXCollections fx:factory="observableArrayList">
+                                        <String fx:value="HR" />
+                                        <String fx:value="ADMINISTRATION" />
+                                        <String fx:value="ACCOUNTS" />
+                                        <String fx:value="IT" />
+                                        <String fx:value="MARKETING" />
+                                        <String fx:value="CSE" />
+                                        <String fx:value="EEE" />
+                                        <String fx:value="BBA" />
+                                    </FXCollections>
+                                </items>
+                            </ComboBox>
+                        </VBox>
+                    </HBox>
+
+                    <!-- Office ID Field -->
+                    <VBox spacing="6.0">
+                        <Label style="-fx-text-fill: #edf2f4; -fx-font-size: 13px; -fx-font-weight: bold;" text="Office ID " />
+                        <TextField fx:id="officeIdField" promptText="Enter your office ID" style="-fx-background-color: #4a4e69; -fx-text-fill: white; -fx-prompt-text-fill: #8d99ae; -fx-border-color: #4a4e69; -fx-border-width: 1px; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 12px; -fx-font-size: 14px;" />
+                    </VBox>
+
+                </VBox>
+
+                <!-- Spacer -->
+                <VBox prefHeight="25.0" />
+
+                <!-- Register Button -->
+                <Button fx:id="registerButton" maxWidth="Infinity" onAction="#handleRegister" prefHeight="45.0" style="-fx-background-color: #4caf50; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-background-radius: 10; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(76,175,80,0.4), 10, 0, 0, 4);" text="Create Account" />
+
+                <!-- Spacer -->
+                <VBox prefHeight="15.0" />
+
+                <!-- Home Button -->
+                <Button fx:id="home" maxWidth="Infinity" onAction="#handleHome" prefHeight="40.0" style="-fx-background-color: transparent; -fx-text-fill: #8d99ae; -fx-font-size: 14px; -fx-font-weight: bold; -fx-border-color: #4a4e69; -fx-border-width: 1.5px; -fx-border-radius: 10; -fx-background-radius: 10; -fx-cursor: hand;" text="Back to Home" />
+
+            </VBox>
+        </ScrollPane>
+
+        <!-- Exit Button (Bottom Left) -->
+        <Button fx:id="exitButton" layoutX="30.0" layoutY="625.0" onAction="#handleExit" style="-fx-background-color: #881204; -fx-text-fill: white; -fx-padding: 10px 25px; -fx-background-radius: 8; -fx-cursor: hand; -fx-font-weight: bold;" text="Exit" />
+      <Button fx:id="loginButton" layoutX="958.0" layoutY="14.0" onAction="#switchToLogin" style="-fx-background-color: #4caf50; -fx-text-fill: white; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 10px 30px; -fx-cursor: hand; -fx-font-weight: bold; -fx-font-size: 14px;" text="Login" />
+
+    </children>
+</AnchorPane>

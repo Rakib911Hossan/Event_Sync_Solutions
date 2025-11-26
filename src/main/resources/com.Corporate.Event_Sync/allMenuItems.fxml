@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.collections.FXCollections?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="695.0" prefWidth="1247.0" style="-fx-background-color: #2b2d42;" stylesheets="@style.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.Corporate.Event_Sync.controller.AllMenuItemsController">
+
+    <children>
+        <Label layoutX="23.0" layoutY="316.0" text="Category:" />
+        <ComboBox fx:id="catagoryComboBox" layoutX="154.0" layoutY="317.0" prefHeight="27.0" prefWidth="131.0" promptText="Category">
+            <items>
+                <FXCollections fx:factory="observableArrayList">
+                    <String fx:value="BREAKFAST" />
+                    <String fx:value="LUNCH" />
+                    <String fx:value="SNACKS" />
+                    <String fx:value="DINNER" />
+                </FXCollections>
+            </items>
+        </ComboBox>
+
+        <Label layoutX="23.0" layoutY="272.0" text="Description:" />
+        <TextField fx:id="descriptionTextField" layoutX="155.0" layoutY="274.0" prefHeight="26.0" prefWidth="131.0" promptText="Description" />
+
+        <Label layoutX="27.0" layoutY="234.0" text="Item Name:" />
+        <TextField fx:id="itemNameTextField" layoutX="155.0" layoutY="235.0" prefHeight="28.0" prefWidth="131.0" promptText="Item name" />
+        <TextField fx:id="itemImageTextField" editable="false" layoutX="170.0" layoutY="452.0" prefHeight="26.0" prefWidth="114.0" promptText="Item image" />
+
+        <Button layoutX="95.0" layoutY="516.0" onAction="#createItem" prefHeight="28.0" prefWidth="114.0" text="Create Item" />
+
+        <Label fx:id="messageLabel" layoutX="50.0" layoutY="300.0" textFill="RED" />
+
+        <Label layoutX="23.0" layoutY="361.0" text="Available Time:" />
+        <ComboBox fx:id="availableTimeComboBox" layoutX="180.0" layoutY="363.0" prefHeight="26.0" prefWidth="105.0" promptText="Available items">
+            <items>
+                <FXCollections fx:factory="observableArrayList">
+                    <String fx:value="08:00 - 10:00" />
+                    <String fx:value="12:00 - 14:00" />
+                    <String fx:value="15:00 - 16:00" />
+                    <String fx:value="18:00 - 20:00" />
+                </FXCollections>
+            </items>
+        </ComboBox>
+
+        <TableView fx:id="menuItemTable" layoutX="324.0" layoutY="102.0" prefHeight="518.0" prefWidth="881.0">
+            <columns>
+                <TableColumn fx:id="idColumn" prefWidth="40.0" text="ID" />
+                <TableColumn fx:id="nameColumn" prefWidth="136.0" text="Name" />
+                <TableColumn fx:id="descriptionColumn" prefWidth="283.0" text="Description" />
+                <TableColumn fx:id="categoryColumn" prefWidth="106.0" text="Category" />
+                <TableColumn fx:id="timeColumn" prefWidth="118.0" text="Time" />
+                <TableColumn fx:id="previewImageColumn" prefWidth="93.0" text="Picture" />
+                <TableColumn fx:id="deleteMenuColumn" prefWidth="92.0" text="Delete" />
+            </columns>
+        </TableView>
+
+        <Button fx:id="chooseImageButton" layoutX="27.0" layoutY="451.0" onAction="#chooseImage" prefHeight="28.0" prefWidth="131.0" text="Choose Image" />
+
+        <Button fx:id="goToDashboardButton" layoutX="54.0" layoutY="52.0" onAction="#handleHome" text="Back" />
+        <Button fx:id="logOut" layoutX="1123.0" layoutY="38.0" onAction="#handleLogout" text="Log Out" />
+        <Button layoutX="58.0" layoutY="592.0" onAction="#handleExit" text="Exit" />
+      <Label layoutX="642.0" layoutY="43.0" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #4caf50;" text="Menu Items" />
+      <Label layoutX="55.0" layoutY="167.0" style="-fx-font-size: 25px; -fx-font-weight: bold; -fx-text-fill: #4caf50;" text="Create Items" />
+      <Label layoutX="25.0" layoutY="408.0" text="Price:" />
+      <TextField fx:id="priceTextField" layoutX="157.0" layoutY="409.0" prefHeight="28.0" prefWidth="131.0" promptText="Price" />
+    </children>
+</AnchorPane>

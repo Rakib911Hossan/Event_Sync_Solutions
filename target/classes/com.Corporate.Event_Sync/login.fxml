@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="577.0" prefWidth="978.0" style="-fx-background-color: linear-gradient(to bottom, #094798, #0a1267);" stylesheets="@style.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.Corporate.Event_Sync.controller.LoginController">
+    <children>
+        <!-- Outer VBox for centered login area -->
+        <VBox alignment="CENTER" maxHeight="400.0" maxWidth="400.0" prefHeight="50.0" prefWidth="50.0" spacing="15.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <Label style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #3ac5ac;" text="User Login" />
+
+            <!-- Inner VBox with a larger white background area -->
+            <VBox alignment="CENTER_LEFT" maxWidth="360.0" prefHeight="151.0" prefWidth="360.0" spacing="12.0" style="-fx-background-radius: 25; -fx-background-color: #4a4e69; -fx-padding: 20px; -fx-effect: dropshadow(gaussian, rgba(200,200,200,0.5), 10, 0.3, 0, 5);">
+
+                <!-- Email Field -->
+                <HBox alignment="CENTER_LEFT" spacing="10.0">
+                    <Label style="-fx-font-size: 14px; " text="Email" />
+                    <TextField fx:id="emailField" prefHeight="16.0" prefWidth="230.0" promptText="Enter Email"  />
+                </HBox>
+
+                <!-- Password Field -->
+                <!-- Password Field -->
+                <HBox alignment="CENTER_LEFT" spacing="10.0">
+                    <Label style="-fx-font-size: 14px; " text="Password" />
+                    <PasswordField fx:id="passwordField" prefHeight="9.0" prefWidth="196.0" promptText="Enter Password" />
+                </HBox>
+
+                <!-- Forgot Password Link -->
+                <HBox alignment="CENTER_RIGHT">
+                    <Button fx:id="forgotPasswordButton" onAction="#handleForgotPassword"
+                            style="-fx-background-color: transparent; -fx-text-fill: #3ac5ac; -fx-underline: true; -fx-cursor: hand; -fx-font-size: 11px;"
+                            text="Forgot Password?" />
+                </HBox>
+            </VBox>
+
+            <!-- Login Button -->
+            <Button onAction="#handleLogin" prefHeight="28.0" prefWidth="82.0" style="-fx-cursor: hand;" text="Login" />
+
+            <!-- Register Button -->
+            <Button onAction="#goToRegister" prefHeight="28.0" prefWidth="95.0" style="-fx-cursor: hand;" text="Register" />
+
+            <!-- Error Message Label -->
+            <Label fx:id="messageLabel" style="-fx-font-size: 12px; -fx-text-fill: #e74c3c;" />
+        </VBox>
+      <Button layoutX="61.0" layoutY="496.0" onAction="#goToRegister" prefHeight="28.0" prefWidth="65.0" style="-fx-cursor: hand;" text="Exit" />
+      <Button layoutX="844.0" layoutY="43.0" onAction="#goToRegister" prefHeight="28.0" prefWidth="73.0" style="-fx-cursor: hand;" text="Home" />
+    </children>
+</AnchorPane>
