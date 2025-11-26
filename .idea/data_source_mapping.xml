@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourcePerFileMappings">
+    <file url="file://$PROJECT_DIR$/src/main/java/com/Corporate/Event_Sync/repository/OrderRepository.java" value="0c1ccebb-13f5-49e0-a1e6-c3d39d399c47" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/Corporate/Event_Sync/repository/UserRepository.java" value="baa887a6-b868-448c-89d2-7e6cf1d258df" />
+  </component>
+</project>

@@ -32,7 +32,11 @@ public class UserMapper {
                 user.getRole(),
                 user.getIsActive(),
                 user.getOfficeId(),
-                user.getUserPic()
+                user.getUserPic(),
+                user.getPassToken(),
+                user.getDiscountToken(),
+                user.getDiscountAmount(),
+                user.getUserCategory()
         );
     }
 }

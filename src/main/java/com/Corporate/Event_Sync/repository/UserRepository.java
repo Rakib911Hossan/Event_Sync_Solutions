@@ -18,8 +18,11 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
         @Modifying
         @Transactional
-        @Query(value = "UPDATE \"user\" SET name = :name, phone = :phone, email = :email, address = :address, department = :department, role = :role, is_active = :isActive, office_id = :officeId, user_pic = :userPic WHERE id = :id", nativeQuery = true)
-        void updateUserById(Integer id, String name, String phone, String email, String address, String department, String role, Boolean isActive, Integer officeId, String userPic);
+        @Query(value = "UPDATE \"user\" SET name = :name, phone = :phone, email = :email, address = :address, " +
+                "department = :department, role = :role, is_active = :isActive, office_id = :officeId, user_pic = :userPic, " +
+                "pass_token = :passToken, discount_token = :discountToken, discount_amount = :discountAmount WHERE id = :id", nativeQuery = true)
+        void updateUserById(Integer id, String name, String phone, String email, String address, String department, String role,
+                            Boolean isActive, Integer officeId, String userPic, String passToken, String discountToken, Integer discountAmount);
 }
 
 

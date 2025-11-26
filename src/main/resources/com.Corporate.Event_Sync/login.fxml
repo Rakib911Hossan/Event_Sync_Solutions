@@ -24,9 +24,17 @@
                 </HBox>
 
                 <!-- Password Field -->
+                <!-- Password Field -->
                 <HBox alignment="CENTER_LEFT" spacing="10.0">
                     <Label style="-fx-font-size: 14px; " text="Password" />
                     <PasswordField fx:id="passwordField" prefHeight="9.0" prefWidth="196.0" promptText="Enter Password" />
+                </HBox>
+
+                <!-- Forgot Password Link -->
+                <HBox alignment="CENTER_RIGHT">
+                    <Button fx:id="forgotPasswordButton" onAction="#handleForgotPassword"
+                            style="-fx-background-color: transparent; -fx-text-fill: #3ac5ac; -fx-underline: true; -fx-cursor: hand; -fx-font-size: 11px;"
+                            text="Forgot Password?" />
                 </HBox>
             </VBox>
 

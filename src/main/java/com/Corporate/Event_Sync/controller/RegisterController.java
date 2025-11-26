@@ -22,8 +22,6 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.List;
 
 @Component
 public class RegisterController {
@@ -57,10 +55,35 @@ public class RegisterController {
     @Autowired
     private ApplicationContext applicationContext;
 
+    // Add this to your initialize() method
     @FXML
     public void initialize() {
-        departmentCombobox.setItems(FXCollections.observableArrayList("HR", "ADMINISTRATION", "ACCOUNTS", "IT", "MARKETING", "CSE", "EEE", "BBA"));
-        roleComboBox.setItems(FXCollections.observableArrayList("ADMIN", "USER", "STUDENT", "TEACHER", "STAFF", "DELIVERY_MAN"));
+        departmentCombobox.setItems(FXCollections.observableArrayList(
+                "HR", "ADMINISTRATION", "ACCOUNTS", "IT", "MARKETING", "CSE", "EEE", "BBA"
+        ));
+        roleComboBox.setItems(FXCollections.observableArrayList(
+                "ADMIN", "USER", "STUDENT", "TEACHER", "STAFF", "DELIVERY_MAN"
+        ));
+
+        // Disable department field by default on form load
+        departmentCombobox.setDisable(true);
+        officeIdField.setDisable(true);
+
+        // Add listener to role selection to enable/disable department
+        roleComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                // Only TEACHER and STAFF can select department
+                if ("TEACHER".equals(newValue) || "STAFF".equals(newValue)) {
+                    departmentCombobox.setDisable(false);
+                    officeIdField.setDisable(false);
+                } else {
+                    // For all other roles (ADMIN, USER, STUDENT, DELIVERY_MAN), disable department
+                    departmentCombobox.setDisable(true);
+                    officeIdField.setDisable(true);
+                    departmentCombobox.setValue(null);
+                }
+            }
+        });
 
         Timeline clock = new Timeline(new KeyFrame(Duration.ZERO, e -> {
             LocalDateTime now = LocalDateTime.now();
@@ -80,45 +103,55 @@ public class RegisterController {
         String department = departmentCombobox.getValue();
         String password = passwordField.getText();
         String selectedRole = roleComboBox.getValue();
-        String officeIdText = officeIdField.getText(); // Get officeId as a String
-        List<String> rolesWithoutDepartment = Arrays.asList("ADMIN", "TEACHER", "STAFF");
-        boolean showDepartment = !rolesWithoutDepartment.contains(selectedRole);
+        String officeIdText = officeIdField.getText();
 
+        // Basic validation for all users
+        if (name.isEmpty() || email.isEmpty() || password.isEmpty() || selectedRole == null) {
+            showErrorDialog("Name, Email, Password, and Role are required fields");
+            return;
+        }
 
-        // Validate that all required fields are filled in
-        if (name.isEmpty() || email.isEmpty() || password.isEmpty() || selectedRole == null || !showDepartment ) {
-                if(department==null || officeIdText==null){
-                    showErrorDialog("All fields are required for University Staffs");
-                    return;
+        // Validate officeId for non-ADMIN roles
+        if ("TEACHER".equals(selectedRole) || "STAFF".equals(selectedRole)) {
+            if (officeIdText == null || officeIdText.isEmpty()) {
+                showErrorDialog("Office ID is required for " + selectedRole + " role");
+                return;
             }
         }
 
+        // Only TEACHER and STAFF can have department (optional for them)
+        // All other roles should not have department
 
-        Integer officeId=0;
-            if(officeIdText == null){
-                 officeId = 0;
-            }// Try to parse officeId as Integer
+        // Parse officeId
+        Integer officeId = 0;
+        if (officeIdText != null && !officeIdText.isEmpty()) {
+            try {
+                officeId = Integer.parseInt(officeIdText);
+            } catch (NumberFormatException e) {
+                showErrorDialog("Office ID must be a valid number");
+                return;
+            }
+        }
 
-
+        // Create and populate user object
         User user = new User();
         user.setName(name);
         user.setPhone(phone);
         user.setEmail(email);
         user.setAddress(address);
         user.setDepartment(department);
-        user.setPassword(hashPassword(password)); // Ensure to hash the password before storing
+        user.setPassword(hashPassword(password));
         user.setRole(selectedRole);
         user.setOfficeId(officeId);
 
-        // Register the user and capture the feedback message
+        // Register the user
         String registrationMessage = userService.registerUser(user);
-
 
         if ("Registration successful!".equals(registrationMessage)) {
             showSuccessDialog("Registration Successful!");
             switchToLogin();
         } else {
-            showErrorDialog("Registration failed: All fields are required");
+            showErrorDialog("Registration failed: " + registrationMessage);
         }
     }
 

@@ -1,4 +1,3 @@
-
 package com.Corporate.Event_Sync.controller;
 
 import com.Corporate.Event_Sync.EventSyncApplication;
@@ -6,9 +5,13 @@ import com.Corporate.Event_Sync.dto.MenuItemDto;
 import com.Corporate.Event_Sync.dto.OrderDTO;
 import com.Corporate.Event_Sync.dto.UserDTO;
 import com.Corporate.Event_Sync.dto.mapper.OrderMapper;
+import com.Corporate.Event_Sync.entity.Order;
+import com.Corporate.Event_Sync.entity.User;
 import com.Corporate.Event_Sync.service.menuItemService.MenuItemListService;
 import com.Corporate.Event_Sync.service.orderService.OrderListService;
 import com.Corporate.Event_Sync.service.orderService.OrderService;
+import com.Corporate.Event_Sync.service.userService.UserService;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -49,13 +52,21 @@ public class UniversityOrderController {
     private Stage primaryStage;
     @Autowired
     private OrderListService orderListService;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private HomeController homeController;
 
     public void setLoggedInUser(UserDTO userDTO) {
-        this.loggedInUser = userDTO;
+        this.loggedInUser = homeController.getLoggedInUser();
+        // Apply role-based UI restrictions after user is set
+        Platform.runLater(this::applyRoleBasedRestrictions);
     }
+
     public void setPrimaryStage(Stage primaryStage) {
         this.primaryStage = primaryStage;
     }
+
     @FXML
     private TextField nameField;
     @FXML
@@ -78,15 +89,40 @@ public class UniversityOrderController {
     private Button report;
 
     @FXML
-    private ComboBox<Integer> orderIdComboBox; // Combo box for order IDs
+    private ComboBox<Integer> orderIdComboBox;
     @FXML
-    private ComboBox<Integer> menuItemComboBox; // Combo box for menu item IDs
+    private ComboBox<Integer> menuItemComboBox;
     @FXML
-    private ComboBox<String> statusComboBox; // Combo box for order statuses
+    private ComboBox<String> statusComboBox;
     @FXML
-    private DatePicker orderDatePicker; // Date picker for order date
+    private DatePicker orderDatePicker;
+
+    @FXML
+    private Button updateButton;
+
+    @FXML
+    private VBox updateSection; // Container for the entire update section
+
+    @FXML
+    private Label orderIdLabel;
+    @FXML
+    private Label menuItemLabel;
+    @FXML
+    private Label statusLabel;
+    @FXML
+    private Label orderDateLabel;
 
     private CreateOrderController createOrderController;
+
+    /**
+     * Check if logged-in user is a DELIVERY_MAN
+     */
+    private boolean isDeliveryMan() {
+        if (homeController != null && homeController.getLoggedInUser() != null) {
+            return "DELIVERY_MAN".equalsIgnoreCase(homeController.getLoggedInUser().getRole());
+        }
+        return false;
+    }
 
     @FXML
     public void initialize() {
@@ -114,7 +150,7 @@ public class UniversityOrderController {
             }
         });
 
-        // Set up the delete column with buttons
+        // Set up the delete column with buttons (will be hidden for DELIVERY_MAN)
         deleteOrderColumn.setCellFactory(new Callback<>() {
             @Override
             public TableCell<OrderDTO, Void> call(TableColumn<OrderDTO, Void> param) {
@@ -123,15 +159,20 @@ public class UniversityOrderController {
 
                     {
                         btn.setOnAction(event -> {
+                            // Check role before allowing delete
+                            if (isDeliveryMan()) {
+                                showErrorDialog("You don't have permission to delete orders.");
+                                return;
+                            }
                             OrderDTO order = getTableView().getItems().get(getIndex());
-                            deleteOrder(order); // Call your delete method
+                            deleteOrder(order);
                         });
                     }
 
                     @Override
                     public void updateItem(Void item, boolean empty) {
                         super.updateItem(item, empty);
-                        if (empty) {
+                        if (empty || isDeliveryMan()) {
                             setGraphic(null);
                         } else {
                             setGraphic(btn);
@@ -144,118 +185,212 @@ public class UniversityOrderController {
         // Load orders into the table
         loadOrders();
         loadMenuItems();
+
+        // Check if user is already set (edge case)
+        if (homeController != null && homeController.getLoggedInUser() != null) {
+            Platform.runLater(this::applyRoleBasedRestrictions);
+        }
     }
 
-//    public void setCreateOrderController(CreateOrderController createOrderController) {
-//        this.createOrderController = createOrderController;
-//        loadOrders(); // Load orders once createOrderController is available
-//    }
+    /**
+     * Apply UI restrictions based on user role
+     */
+    private void applyRoleBasedRestrictions() {
+        System.out.println("Applying role-based restrictions. Is Delivery Man: " + isDeliveryMan());
+
+        if (isDeliveryMan()) {
+            // Option 1: Hide the entire update section container
+            if (updateSection != null) {
+                updateSection.setVisible(false);
+                updateSection.setManaged(false);
+                System.out.println("Update section hidden");
+            } else {
+                // Option 2: Hide individual components
+                hideUpdateComponents();
+            }
+
+            // Hide delete column
+            if (deleteOrderColumn != null) {
+                deleteOrderColumn.setVisible(false);
+                System.out.println("Delete column hidden");
+            }
+
+            // Refresh the table to update the delete column visibility
+            if (orderTable != null) {
+                orderTable.refresh();
+            }
+        }
+    }
+
+    /**
+     * Hide individual update components
+     */
+    private void hideUpdateComponents() {
+        // Hide ComboBoxes
+        if (orderIdComboBox != null) {
+            orderIdComboBox.setVisible(false);
+            orderIdComboBox.setManaged(false);
+        }
+        if (menuItemComboBox != null) {
+            menuItemComboBox.setVisible(false);
+            menuItemComboBox.setManaged(false);
+        }
+        if (statusComboBox != null) {
+            statusComboBox.setVisible(false);
+            statusComboBox.setManaged(false);
+        }
+
+        // Hide DatePicker
+        if (orderDatePicker != null) {
+            orderDatePicker.setVisible(false);
+            orderDatePicker.setManaged(false);
+        }
+
+        // Hide Update Button
+        if (updateButton != null) {
+            updateButton.setVisible(false);
+            updateButton.setManaged(false);
+        }
+
+        // Hide Report Button
+        if (report != null) {
+            report.setVisible(false);
+            report.setManaged(false);
+        }
+
+        // Hide Labels
+        if (orderIdLabel != null) {
+            orderIdLabel.setVisible(false);
+            orderIdLabel.setManaged(false);
+        }
+        if (menuItemLabel != null) {
+            menuItemLabel.setVisible(false);
+            menuItemLabel.setManaged(false);
+        }
+        if (statusLabel != null) {
+            statusLabel.setVisible(false);
+            statusLabel.setManaged(false);
+        }
+        if (orderDateLabel != null) {
+            orderDateLabel.setVisible(false);
+            orderDateLabel.setManaged(false);
+        }
+
+        System.out.println("Individual update components and report button hidden");
+    }
 
     private void loadOrders() {
         try {
-            List<OrderDTO> orderDTOs = orderMapper.toDTOList(orderListService.getAllOrders());
-            List<OrderDTO> ordersWithNoLocation = orderDTOs.stream()
-                    .filter(order -> order.getLatitude() == 0.0)
+            List<Order> allOrders = orderListService.getAllOrders();
+
+            // Filter orders: user role is ADMIN or TEACHER or STAFF
+            List<Order> teacherOrders = allOrders.stream()
+                    .filter(order -> {
+                        User user = order.getUser();
+                        return user != null && ("ADMIN".equals(user.getRole()) || "TEACHER".equals(user.getRole()) || "STAFF".equals(user.getRole()));
+                    })
                     .collect(Collectors.toList());
-            List<Integer> orderIds = ordersWithNoLocation.stream()
+
+            // Convert to DTO after filtering
+            List<OrderDTO> teacherOrderDTOs = orderMapper.toDTOList(teacherOrders);
+
+            List<Integer> orderIds = teacherOrderDTOs.stream()
                     .map(OrderDTO::getOrderId)
                     .collect(Collectors.toList());
 
-            orderIdComboBox.setItems(FXCollections.observableArrayList(orderIds));
+            if (orderIdComboBox != null) {
+                orderIdComboBox.setItems(FXCollections.observableArrayList(orderIds));
+            }
 
-            ObservableList<OrderDTO> orders = FXCollections.observableArrayList(ordersWithNoLocation);
+            ObservableList<OrderDTO> orders = FXCollections.observableArrayList(teacherOrderDTOs);
             orderTable.setItems(orders);
-
-            // Populate orderIdComboBox with order IDs, reversed
         } catch (Exception e) {
-            showErrorDialog("Error loading orders: " + e.getMessage());
+            showErrorDialog("Error loading teacher orders: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
     private void loadMenuItems() {
         try {
-            // Populate menuItemComboBox with available menu item IDs
             List<Integer> menuItemIds = menuItemListService.getAllMenuItems().stream()
                     .map(MenuItemDto::getId)
                     .collect(Collectors.toList());
-            menuItemComboBox.setItems(FXCollections.observableArrayList(menuItemIds));
+            if (menuItemComboBox != null) {
+                menuItemComboBox.setItems(FXCollections.observableArrayList(menuItemIds));
+            }
         } catch (Exception e) {
             showErrorDialog("Error loading menu items: " + e.getMessage());
         }
     }
 
-
     private void deleteOrder(OrderDTO order) {
+        // Double-check permission
+        if (isDeliveryMan()) {
+            showErrorDialog("You don't have permission to delete orders.");
+            return;
+        }
+
         showConfirmationDialog("Are you sure you want to delete order: " + order.getOrderId() + "?", () -> {
             orderService.deleteOrderById(Long.valueOf(order.getOrderId()));
             showSuccessDialog("Deleted order: " + order.getOrderId());
-            // Refresh the list after deletion
             loadOrders();
         });
     }
 
-    // Method to get selected order ID from orderIdComboBox
     public Integer getSelectedOrderId() {
-        return orderIdComboBox.getValue(); // Retrieve the selected order ID
+        return orderIdComboBox != null ? orderIdComboBox.getValue() : null;
     }
 
-    // Update method that uses the selected order ID
     @FXML
     private void updateOrder() {
+        // Check permission first
+        if (isDeliveryMan()) {
+            showErrorDialog("You don't have permission to update orders.");
+            return;
+        }
+
         try {
-            // Validate selected order
             Integer selectedOrderId = Math.toIntExact(getSelectedOrderId());
             if (selectedOrderId == null) {
                 showErrorDialog("Please select an order to update.");
-                return; // Exit if validation fails
+                return;
             }
 
-            // Validate menu item
             String menuItemValue = String.valueOf(menuItemComboBox.getValue());
             if (menuItemValue == null || menuItemValue.isEmpty()) {
                 showErrorDialog("Please select a menu item.");
-                return; // Exit if validation fails
+                return;
             }
             Integer menuItemId = Integer.valueOf(menuItemValue);
 
-            // Validate order date
             if (orderDatePicker.getValue() == null) {
                 showErrorDialog("Please select an order date.");
-                return; // Exit if validation fails
+                return;
             }
             String orderDate = String.valueOf(orderDatePicker.getValue().atStartOfDay());
 
-            // Validate status
             String status = statusComboBox.getValue();
             if (status == null || status.isEmpty()) {
                 showErrorDialog("Please select an order status.");
-                return; // Exit if validation fails
+                return;
             }
 
-            // Perform the update operation
             orderService.updateOrderById(selectedOrderId, menuItemId, status, LocalDateTime.parse(orderDate));
             showSuccessDialog("Order updated successfully.");
-            loadOrders(); // Refresh the order list after update
+            loadOrders();
 
         } catch (Exception e) {
-            // Handle unexpected errors
-            showErrorDialog("PLease fill the required fields ");
+            showErrorDialog("Please fill the required fields");
         }
     }
-
-
 
     @FXML
     private void navigateToHome() {
         try {
-
-
             Stage currentStage = (Stage) homeDashboard.getScene().getWindow();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com.Corporate.Event_Sync/home.fxml"));
             loader.setControllerFactory(EventSyncApplication.context::getBean);
-            // Load the main scene
             Scene homeScene = new Scene(loader.load());
-            // Get the HomeController instance and pass the updated user data
             HomeController homeController = loader.getController();
             if (homeController != null && homeController.getLoggedInUser() != null) {
                 homeController.setLoggedInUser(homeController.getLoggedInUser());
@@ -263,22 +398,20 @@ public class UniversityOrderController {
             currentStage.setScene(homeScene);
         } catch (Exception e) {
             e.printStackTrace();
-            showErrorDialog("Error generating report.");
+            showErrorDialog("Error navigating to home.");
         }
     }
 
     @FXML
     public void navigateToReport() {
         try {
-            // Retrieve the current stage from the scene
             Stage stage = (Stage) report.getScene().getWindow();
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com.Corporate.Event_Sync/reports.fxml"));
             fxmlLoader.setControllerFactory(EventSyncApplication.context::getBean);
             Scene updateUserScene = new Scene(fxmlLoader.load());
             stage.setScene(updateUserScene);
         } catch (IOException e) {
-            // Log or handle the error
-            e.printStackTrace();  // Or replace with more sophisticated error handling
+            e.printStackTrace();
         }
     }
 
@@ -295,7 +428,6 @@ public class UniversityOrderController {
         dialogStage.initOwner(report.getScene().getWindow());
         dialogStage.setTitle("Message");
 
-        // Dialog content
         Label messageLabel = new Label(message);
         messageLabel.setStyle("-fx-text-fill: #ffffff; -fx-font-size: 16px; -fx-padding: 20px;");
         Button okButton = new Button("OK");
@@ -321,8 +453,8 @@ public class UniversityOrderController {
         Button yesButton = new Button("Yes");
         yesButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-padding: 10px 20px; -fx-font-size: 14px;");
         yesButton.setOnAction(event -> {
-            dialogStage.close(); // Close the dialog
-            onConfirm.run();    // Execute the confirm action
+            dialogStage.close();
+            onConfirm.run();
         });
 
         Button noButton = new Button("No");
@@ -340,5 +472,4 @@ public class UniversityOrderController {
         dialogStage.setScene(dialogScene);
         dialogStage.show();
     }
-
 }

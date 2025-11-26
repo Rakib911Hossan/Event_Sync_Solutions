@@ -7,6 +7,7 @@ import com.Corporate.Event_Sync.dto.UserDTO;
 import com.Corporate.Event_Sync.dto.mapper.OrderMapper;
 import com.Corporate.Event_Sync.service.menuItemService.MenuItemListService;
 import com.Corporate.Event_Sync.service.orderService.OrderService;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -69,6 +70,10 @@ public class OrderListController {
     private TableColumn<OrderDTO, String> statusColumn;
     @FXML
     private TableColumn<OrderDTO, LocalDateTime> orderDateColumn;
+
+    @FXML
+    private TableColumn<OrderDTO, Integer> priceColumn;
+
     @FXML
     private TableColumn<OrderDTO, Void> deleteOrderColumn;
     @FXML
@@ -93,6 +98,9 @@ public class OrderListController {
 
         // Set up the order date column with formatting
         orderDateColumn.setCellValueFactory(new PropertyValueFactory<>("orderDate"));
+        priceColumn.setCellValueFactory(cellData ->
+                new ReadOnlyObjectWrapper<>(cellData.getValue().getPrice())
+        );
         orderDateColumn.setCellFactory(column -> new TableCell<OrderDTO, LocalDateTime>() {
             private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd   HH:mm:ss");
 

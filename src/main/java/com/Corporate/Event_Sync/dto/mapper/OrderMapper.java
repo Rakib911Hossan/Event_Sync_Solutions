@@ -16,7 +16,7 @@ public class OrderMapper {
                 order.getId(),              // orderId
                 order.getUser().getId(),     // userId
                 order.getMenuItem().getId(),
-                order.getMenuItem().getPrice(),// menuItemId
+                order.getPrice(),
                 order.getOrderDate(),        // orderDate
                 order.getStatus(),
                 order.getUser().getDepartment(),
@@ -30,7 +30,7 @@ public class OrderMapper {
                         order.getId(),
                         order.getUser().getId(),
                         order.getMenuItem().getId(),
-                        order.getMenuItem().getPrice(),// Ensure this method is available in MenuItem
+                        order.getPrice(),// Ensure this method is available in MenuItem
                         order.getOrderDate(),
                         order.getStatus(),
                         order.getUser().getDepartment(),

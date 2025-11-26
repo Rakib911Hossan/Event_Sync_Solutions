@@ -2,9 +2,11 @@ package com.Corporate.Event_Sync.controller;
 
 import com.Corporate.Event_Sync.EventSyncApplication;
 import com.Corporate.Event_Sync.dto.MenuItemDto;
+import com.Corporate.Event_Sync.entity.MenuItem;
 import com.Corporate.Event_Sync.entity.Order;
 import com.Corporate.Event_Sync.service.locationService.SetLocation;
 import com.Corporate.Event_Sync.service.menuItemService.MenuItemListService;
+import com.Corporate.Event_Sync.service.menuItemService.MenuItemService;
 import com.Corporate.Event_Sync.service.orderService.OrderService;
 import com.Corporate.Event_Sync.service.userService.UserService;
 import javafx.application.Platform;
@@ -23,7 +25,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import netscape.javascript.JSObject;
@@ -47,6 +48,8 @@ public class CreateOrderController {
 
     @Autowired
     private MenuItemListService menuItemListService;
+    @Autowired
+    private MenuItemService menuItemService;
     @Autowired
     private UserService userService;
     @Autowired
@@ -77,9 +80,6 @@ public class CreateOrderController {
 
     @FXML
     private Button setLocations;
-
-    @FXML
-    private ComboBox<String> statusComboBox;
 
     @FXML
     private DatePicker orderDatePicker;
@@ -117,6 +117,32 @@ public class CreateOrderController {
     @FXML
     private TableColumn<Order, Void> deleteOrderColumn;
 
+    @FXML
+    private TextField offerTokenField;
+
+    @FXML
+    private Button applyTokenButton;
+
+    @FXML
+    private Label tokenStatusLabel;
+
+    @FXML
+    private Label discountLabel;
+
+    @FXML
+    private ImageView selectedItemImageView;
+
+    @FXML
+    private Button enlargeImageButton;
+
+    @FXML
+    private Label imagePreviewLabel;
+
+    private Image currentPreviewImage = null;
+
+    private String appliedToken = null;
+    private int discountPercentage = 0;
+
     private SetLocation setLocation;
     private double latitude;
     private double longitude;
@@ -130,35 +156,44 @@ public class CreateOrderController {
         timeColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getAvailableTime()));
         priceColumn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().getPrice()));
 
-            statusComboBox.setItems(FXCollections.observableArrayList("ORDERED", "PREPARED", "SERVED"));
+//        // For picColumn, display the image from URL
+//        previewImageColumn.setCellFactory(new Callback<TableColumn<MenuItemDto, Void>, TableCell<MenuItemDto, Void>>() {
+//            @Override
+//            public TableCell<MenuItemDto, Void> call(TableColumn<MenuItemDto, Void> param) {
+//                return new TableCell<MenuItemDto, Void>() {
+//                    private final Button previewButton = new Button("Show");
+//
+//                    {
+//                        previewButton.setOnAction(event -> {
+//                            MenuItemDto menuItemDto = getTableView().getItems().get(getIndex());
+//                            String imagePath = menuItemDto.getItemPic();
+//                            if (imagePath != null && !imagePath.isEmpty()) {
+//                                displayImageInPreview(imagePath, menuItemDto.getItemName());
+//                            }
+//                        });
+//                    }
+//
+//                    @Override
+//                    public void updateItem(Void item, boolean empty) {
+//                        super.updateItem(item, empty);
+//                        if (empty) {
+//                            setGraphic(null);
+//                        } else {
+//                            setGraphic(previewButton);
+//                        }
+//                    }
+//                };
+//            }
+//        });
 
-        // For picColumn, display the image from URL
-        previewImageColumn.setCellFactory(new Callback<TableColumn<MenuItemDto, Void>, TableCell<MenuItemDto, Void>>() {
-            @Override
-            public TableCell<MenuItemDto, Void> call(TableColumn<MenuItemDto, Void> param) {
-                return new TableCell<MenuItemDto, Void>() {
-                    private final Button previewButton = new Button("Preview");
 
-                    {
-                        previewButton.setOnAction(event -> {
-                            MenuItemDto menuItemDto = getTableView().getItems().get(getIndex());
-                            String imagePath = menuItemDto.getItemPic();
-                            if (imagePath != null && !imagePath.isEmpty()) {
-                                showLargerImage(new Image("file:" + imagePath)); // Show the preview image
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void updateItem(Void item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (empty) {
-                            setGraphic(null);
-                        } else {
-                            setGraphic(previewButton);
-                        }
-                    }
-                };
+// ADD this at the end of initialize() method (after loadMenuItems()):
+        menuItemTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+                String imagePath = newSelection.getItemPic();
+                if (imagePath != null && !imagePath.isEmpty()) {
+                    displayImageInPreview(imagePath, newSelection.getItemName());
+                }
             }
         });
 
@@ -166,6 +201,27 @@ public class CreateOrderController {
         // Assuming getUserRole() returns a String like "STUDENT", "USER", "ADMIN", etc.
 
 
+    }
+
+    private void displayImageInPreview(String imagePath, String itemName) {
+        try {
+            currentPreviewImage = new Image("file:" + imagePath);
+            selectedItemImageView.setImage(currentPreviewImage);
+            imagePreviewLabel.setText("Preview: " + itemName);
+            enlargeImageButton.setVisible(true);
+        } catch (Exception e) {
+            selectedItemImageView.setImage(null);
+            imagePreviewLabel.setText("No image available");
+            enlargeImageButton.setVisible(false);
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleEnlargeImage() {
+        if (currentPreviewImage != null) {
+            showLargerImage(currentPreviewImage);
+        }
     }
 
     private void loadMenuItems() {
@@ -182,7 +238,7 @@ public class CreateOrderController {
             showErrorDialog("Failed to load menu items. Please try again later.");
         }
         String role = homeController.getUserRole();
-        boolean visible = role.equalsIgnoreCase("STUDENT") || role.equalsIgnoreCase("USER");
+        boolean visible = role.equalsIgnoreCase("STUDENT") || role.equalsIgnoreCase("USER") || role.equalsIgnoreCase("ADMIN");
         setLocations.setVisible(visible);
     }
 
@@ -246,43 +302,94 @@ public class CreateOrderController {
     private void handleCreateOrder() {
         try {
             Integer userId = homeController.getUserId();
-            Integer menuItemId = menuItemComboBox.getValue(); // Get the selected ID
+            Integer menuItemId = menuItemComboBox.getValue();
 
             if (menuItemId == null) {
-                showErrorDialog( "Selection Error "+" Please select a menu item ID.");
+                showErrorDialog("Please select a menu item ID.");
                 return;
             }
 
-            String status = statusComboBox.getValue();
             LocalDateTime orderDateTime = getOrderDateTime();
-
             if (orderDateTime == null) {
-                showErrorDialog("Date Error "+" Please select a valid date.");
+                showErrorDialog("Please select a valid date.");
                 return;
             }
+
             boolean isStudentOrUser = userService.isStudentOrUserById(userId);
-            if(isStudentOrUser){
-                if (latitude == 0.00) {
-                    showErrorDialog("Kindly set your location please");
-                    return;
-                }
+            if(isStudentOrUser && latitude == 0.00) {
+                showErrorDialog("Kindly set your location please");
+                return;
+            }
+            MenuItem item = menuItemService.getMenuItemById(menuItemId);
+            int price = item.getPrice();
+            // Create order with discount
+            Order order = orderService.saveOrder(userId, menuItemId, "ORDERED", orderDateTime, latitude, longitude, price);
+
+            // Apply discount if token is valid
+            if (appliedToken != null && discountPercentage > 0) {
+                double discountedPrice = order.getPrice() * (1 - discountPercentage / 100.0);
+                order.setPrice((int) discountedPrice);
+                orderService.updateOrder(order);
+
+                // Clear the token from user after use
+                var userDTO = userService.getUserById(userId);
+                userDTO.setDiscountToken(null);
+                userDTO.setDiscountAmount(null);
+                userService.updateUser(userDTO);
             }
 
+            showSuccessDialog("Order created successfully!" +
+                    (appliedToken != null ? " Discount applied!" : ""));
 
-            orderService.createOrder(userId, menuItemId, status, orderDateTime, latitude, longitude);
-
-            // Show success message with an OK button
-            showSuccessDialog("Order created successfully!");
-            // Show the button after successful order creation
-
-        } catch (NumberFormatException e) {
-            showErrorDialog("Invalid User ID.");
         } catch (Exception e) {
-            showErrorDialog( "Error creating order: ");
+            showErrorDialog("Error creating order");
         }
     }
 
+    @FXML
+    private void handleApplyToken() {
+        String token = offerTokenField.getText().trim();
+        Integer userId = homeController.getUserId();
 
+        if (token.isEmpty()) {
+            tokenStatusLabel.setText("Please enter a token");
+            tokenStatusLabel.setStyle("-fx-text-fill: #E74C3C;");
+            tokenStatusLabel.setVisible(true);
+            tokenStatusLabel.setManaged(true);
+            return;
+        }
+
+        try {
+            // Get user and validate token
+            var userDTO = userService.getUserById(userId);
+
+            if (userDTO.getDiscountToken() != null && userDTO.getDiscountToken().equals(token)) {
+                appliedToken = token;
+                discountPercentage = userDTO.getDiscountAmount();
+
+                tokenStatusLabel.setText("✓ Token applied successfully!");
+                tokenStatusLabel.setStyle("-fx-text-fill: #4CAF50;");
+                tokenStatusLabel.setVisible(true);
+                tokenStatusLabel.setManaged(true);
+
+                discountLabel.setText(String.format("💰 %d%% OFF Applied", discountPercentage));
+                discountLabel.setVisible(true);
+                discountLabel.setManaged(true);
+
+                offerTokenField.setDisable(true);
+                applyTokenButton.setDisable(true);
+            } else {
+                tokenStatusLabel.setText("✗ Invalid or expired token");
+                tokenStatusLabel.setStyle("-fx-text-fill: #E74C3C;");
+                tokenStatusLabel.setVisible(true);
+                tokenStatusLabel.setManaged(true);
+                discountLabel.setVisible(false);
+                discountLabel.setManaged(false);
+            }
+        } catch (Exception e) {
+            showErrorDialog("Error validating token");
+        }
+    }
 
     private LocalDateTime getOrderDateTime() {
         LocalDate orderDate = orderDatePicker.getValue();

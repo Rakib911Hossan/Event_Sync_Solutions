@@ -16,6 +16,10 @@ public class UserDTO {
     private Boolean isActive;
     private Integer officeId;
     private String userPic;
+    private String passToken;
+    private String discountToken;
+    private Integer discountAmount;
+    private String userCategory;
 
     // Optionally, you can also define a no-argument constructor
     public UserDTO() {}

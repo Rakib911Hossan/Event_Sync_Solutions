@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -22,6 +23,9 @@ public class LoginController {
 
     @FXML
     private TextField emailField;
+
+    @FXML
+    private Button forgotPasswordButton;
 
     @FXML
     private PasswordField passwordField;
@@ -80,7 +84,6 @@ public class LoginController {
             Scene registerScene = new Scene(root);
             Stage currentStage = (Stage) emailField.getScene().getWindow();
             currentStage.setScene(registerScene);
-//            currentStage.setTitle("Register");
             currentStage.show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -98,10 +101,25 @@ public class LoginController {
             Scene mainScene = new Scene(root);
             Stage currentStage = (Stage) emailField.getScene().getWindow();
             currentStage.setScene(mainScene);
-//            currentStage.setTitle("Main Application");
             currentStage.show();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleForgotPassword() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com.Corporate.Event_Sync/forgetPassword.fxml"));
+            loader.setControllerFactory(context::getBean);
+            Parent root = loader.load();
+            Scene forgotPasswordScene = new Scene(root);
+            Stage currentStage = (Stage) emailField.getScene().getWindow();
+            currentStage.setScene(forgotPasswordScene);
+            currentStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            messageLabel.setText("Failed to load the forgot password page.");
         }
     }
 }

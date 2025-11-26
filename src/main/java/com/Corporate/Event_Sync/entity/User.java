@@ -26,6 +26,10 @@ public class User extends GenericEntity<Integer>{
     private String role; // Enum for roles like ADMIN, USER
 
     private String password;
+    private String passToken;
+    private String discountToken;
+    private String userCategory;
+    private Integer discountAmount;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Order> orders; // One user can have multiple orders

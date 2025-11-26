@@ -272,7 +272,7 @@ public class ReportController {
         }
 
         // Generate report with filteredOrders
-        String pdfPath = "/home/rakib/Downloads/BUBT_Semesters/SDP_2/Event_Sync/order_report.pdf";
+        String pdfPath = "/home/rakib/Downloads/rakib/BUBT_Semesters/SDP_2/Event_Sync/order_report.pdf";
         try (PdfWriter writer = new PdfWriter(new FileOutputStream(pdfPath));
              PdfDocument pdfDoc = new PdfDocument(writer);
              Document document = new Document(pdfDoc)) {
@@ -325,7 +325,7 @@ public class ReportController {
                         .setFontColor(ColorConstants.BLACK));
             }
 
-            String logoPath = "/home/rakib/Downloads/BUBT_Semesters/SDP_2/Event_Sync/Images/10466750.jpg"; // Provide your logo path
+            String logoPath = "/home/rakib/Downloads/rakib/BUBT_Semesters/SDP_2/Event_Sync/Images/10466750.jpg"; // Provide your logo path
             ImageData logo = ImageDataFactory.create(logoPath);
             Image logoImage = new Image(logo);
             logoImage.setHorizontalAlignment(HorizontalAlignment.CENTER);
@@ -375,7 +375,7 @@ public class ReportController {
             for (OrderDTO order : filteredOrders) {
                 table.addCell(new com.itextpdf.layout.element.Cell().add(new Paragraph(String.valueOf(order.getOrderId()))).setTextAlignment(TextAlignment.CENTER).setFontColor(ColorConstants.WHITE));
                 table.addCell(new com.itextpdf.layout.element.Cell().add(new Paragraph(String.valueOf(order.getUserId()))).setTextAlignment(TextAlignment.CENTER).setFontColor(ColorConstants.WHITE));
-                table.addCell(new com.itextpdf.layout.element.Cell().add(new Paragraph(order.getDepartment())).setTextAlignment(TextAlignment.CENTER).setFontColor(ColorConstants.WHITE));
+                table.addCell(new Cell().add(new Paragraph(safeValue(order.getDepartment()))).setTextAlignment(TextAlignment.CENTER).setFontColor(ColorConstants.WHITE));
                 table.addCell(new com.itextpdf.layout.element.Cell().add(new Paragraph(String.valueOf(order.getMenuItemId()))).setTextAlignment(TextAlignment.CENTER).setFontColor(ColorConstants.WHITE));
                 table.addCell(new com.itextpdf.layout.element.Cell().add(new Paragraph(order.getStatus())).setTextAlignment(TextAlignment.CENTER).setFontColor(ColorConstants.WHITE));
                 table.addCell(new com.itextpdf.layout.element.Cell().add(new Paragraph(String.valueOf(order.getPrice()))).setTextAlignment(TextAlignment.CENTER).setFontColor(ColorConstants.WHITE));
@@ -444,6 +444,10 @@ public class ReportController {
             showErrorDialog("Error generating report.");
         }
     }
+    private String safeValue(Object value) {
+        return value != null ? String.valueOf(value) : "";
+    }
+
     private void showSuccessDialog(String message) {
         showDialog(message, "#4CAF50");
     }

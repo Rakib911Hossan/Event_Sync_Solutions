@@ -68,6 +68,23 @@ public class HomeController {
     @FXML
     private Label officeIdLabel;
 
+    @FXML
+    private Button sendOfferToken;
+
+    @FXML
+    private VBox offerTokenVBox;
+
+    @FXML
+    private VBox allUserVBox;
+
+    @FXML
+    private VBox allMenuItemsVBox;
+
+    @FXML
+    private VBox universityOrderVBox;
+
+    @FXML
+    private VBox otherOrderVBox;
 
     @FXML
     private Button allMenuItems;
@@ -112,22 +129,39 @@ public class HomeController {
 
         // Set the text for each label based on user data
         nameLabel.setText(userDTO.getName());
-
-        // Check if phone is null, and if so, set a default value or leave it empty
-        phoneLabel.setText(userDTO.getPhone() != null ? userDTO.getPhone() : "N/A"); // Or an empty string if preferred
-
+        phoneLabel.setText(userDTO.getPhone() != null ? userDTO.getPhone() : "N/A");
         emailLabel.setText(userDTO.getEmail());
-
-        // Check if address is null, and if so, set a default value or leave it empty
-        addressLabel.setText(userDTO.getAddress() != null ? userDTO.getAddress() : "N/A"); // Or an empty string if preferred
-
+        addressLabel.setText(userDTO.getAddress() != null ? userDTO.getAddress() : "N/A");
         departmentLabel.setText(userDTO.getDepartment());
         officeIdLabel.setText(String.valueOf(userDTO.getOfficeId()));
 
-//        updateUserDashboard.setVisible(!"USER".equals(userDTO.getRole()));
-        allUser.setVisible(!"USER".equals(userDTO.getRole()));
-        allOrder.setVisible(!"USER".equals(userDTO.getRole()));
-        allMenuItems.setVisible(!"USER".equals(userDTO.getRole()));
+        // Check if user is ADMIN
+        boolean isAdmin = "ADMIN".equals(userDTO.getRole());
+        boolean isDeliveryMan = "DELIVERY_MAN".equals(userDTO.getRole());
+
+        // Hide/show VBoxes and buttons based on role
+        // All Users
+        allUserVBox.setVisible(isAdmin);
+        allUserVBox.setManaged(isAdmin);
+
+        // All Menu Items
+        allMenuItemsVBox.setVisible(isAdmin);
+        allMenuItemsVBox.setManaged(isAdmin);
+
+        // University Orders
+        universityOrderVBox.setVisible(isAdmin || isDeliveryMan );
+
+        universityOrderVBox.setManaged(isAdmin || isDeliveryMan);
+
+        // Other Orders
+        otherOrderVBox.setVisible(isAdmin || isDeliveryMan );
+        otherOrderVBox.setManaged(isAdmin || isDeliveryMan);
+
+
+        // Offer Token
+        offerTokenVBox.setVisible(isAdmin);
+        offerTokenVBox.setManaged(isAdmin);
+
         updateImageView();
     }
     private void updateImageView() {
@@ -308,6 +342,26 @@ public class HomeController {
         } catch (IOException e) {
 
             e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleSendOfferToken() {
+        try {
+            Stage stage = (Stage) sendOfferToken.getScene().getWindow();
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com.Corporate.Event_Sync/sendOfferToken.fxml"));
+            fxmlLoader.setControllerFactory(EventSyncApplication.context::getBean);
+            Scene sendOfferScene = new Scene(fxmlLoader.load());
+
+            SendOfferTokenController sendOfferController = fxmlLoader.getController();
+            if (sendOfferController != null && loggedInUser != null) {
+                sendOfferController.setLoggedInUser(loggedInUser);
+            }
+
+            stage.setScene(sendOfferScene);
+        } catch (IOException e) {
+            e.printStackTrace();
+            showErrorDialog("Error loading Send Offer Token window.");
         }
     }
 

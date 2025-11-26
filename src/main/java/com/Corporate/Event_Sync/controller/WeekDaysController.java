@@ -40,59 +40,49 @@ public class WeekDaysController {
     private HomeController homeController;
     @Autowired
     private OrderService orderService;
-
     @Autowired
     private MenuItemRepository menuItemRepository;
-
-    @FXML
-    private TableView<DefaultWeekDaysDto> weekDaysTable;
-
-    @FXML
-    private TableColumn<DefaultWeekDaysDto, String> daysColumn;
-
-    @FXML
-    private TableColumn<DefaultWeekDaysDto, String> weekDaysColumn;
-
-    @FXML
-    private Label updateOrderLabel;
-
-    @FXML
-    private Label nameLabel;
-
-    @FXML
-    private Label phoneLabel;
-
-    @FXML
-    private Label departmentLabel;
-
-    @FXML
-    private Label officeIdLabel;
-
-    @FXML
-    private Label weekDaysLabel;
-
-    @FXML
-    private Button exitButton;
-
-    @FXML
-    private Button logOut;
-
-    @FXML
-    private Button userHome;
-
-    @FXML
-    private Button confirmButton;  // Add reference for the confirm button
-
-    private ObservableList<DefaultWeekDaysDto> weekDaysList;
-
-    private List<String> selectedWeekDays = new ArrayList<>();
-
-    private double latitude;
-    private double longitude;
-
     @Autowired
     private DefaultWeekDaysMapper defaultWeekDaysMapper;
 
+    @FXML
+    private TableView<DefaultWeekDaysDto> weekDaysTable;
+    @FXML
+    private TableColumn<DefaultWeekDaysDto, String> daysColumn;
+    @FXML
+    private TableColumn<DefaultWeekDaysDto, String> weekDaysColumn;
+    @FXML
+    private Label updateOrderLabel;
+    @FXML
+    private Label nameLabel;
+    @FXML
+    private Label phoneLabel;
+    @FXML
+    private Label weekDaysLabel;
+    @FXML
+    private Button exitButton;
+    @FXML
+    private Button logOut;
+    @FXML
+    private Button userHome;
+    @FXML
+    private Button confirmButton;
+    // Meal category checkboxes
+    @FXML
+    private CheckBox breakfastCheckBox;
+    @FXML
+    private CheckBox lunchCheckBox;
+    @FXML
+    private CheckBox snacksCheckBox;
+    @FXML
+    private CheckBox dinnerCheckBox;
+    @FXML
+    private Label selectedCategoriesLabel;
+
+    private ObservableList<DefaultWeekDaysDto> weekDaysList;
+    private List<String> selectedWeekDays = new ArrayList<>();
+    private double latitude;
+    private double longitude;
 
     @FXML
     private void initialize() {
@@ -104,9 +94,10 @@ public class WeekDaysController {
 
         nameLabel.setText(homeController.getLoggedInUser().getName());
         phoneLabel.setText(homeController.getLoggedInUser().getPhone());
-        departmentLabel.setText(homeController.getLoggedInUser().getDepartment());
-        officeIdLabel.setText(String.valueOf(homeController.getLoggedInUser().getOfficeId()));
         weekDaysLabel.setText(formattedDays);
+
+        // Setup meal category listeners
+        setupMealCategoryListeners();
 
         // Table column setup
         daysColumn.setCellValueFactory(new PropertyValueFactory<>("days"));
@@ -190,7 +181,7 @@ public class WeekDaysController {
             }
         });
 
-        // Initialize the days (if not already populated)
+        // Initialize the days
         weekDaysList = FXCollections.observableArrayList(
                 new DefaultWeekDaysDto(1, 1, "Monday", false),
                 new DefaultWeekDaysDto(2, 1, "Tuesday", false),
@@ -204,31 +195,58 @@ public class WeekDaysController {
         weekDaysTable.setItems(weekDaysList);
     }
 
+    private void setupMealCategoryListeners() {
+        breakfastCheckBox.setOnAction(e -> updateSelectedCategories());
+        lunchCheckBox.setOnAction(e -> updateSelectedCategories());
+        snacksCheckBox.setOnAction(e -> updateSelectedCategories());
+        dinnerCheckBox.setOnAction(e -> updateSelectedCategories());
+
+        // Initial update
+        updateSelectedCategories();
+    }
+
+    private void updateSelectedCategories() {
+        List<String> selected = new ArrayList<>();
+        if (breakfastCheckBox.isSelected()) selected.add("Breakfast");
+        if (lunchCheckBox.isSelected()) selected.add("Lunch");
+        if (snacksCheckBox.isSelected()) selected.add("Snacks");
+        if (dinnerCheckBox.isSelected()) selected.add("Dinner");
+
+        String displayText = selected.isEmpty() ? "None selected" : "Selected: " + String.join(", ", selected);
+        selectedCategoriesLabel.setText(displayText);
+    }
+
+    private List<String> getSelectedCategories() {
+        List<String> categories = new ArrayList<>();
+        if (breakfastCheckBox.isSelected()) categories.add(Category.BREAKFAST.name());
+        if (lunchCheckBox.isSelected()) categories.add(Category.LUNCH.name());
+        if (snacksCheckBox.isSelected()) categories.add(Category.SNACKS.name());
+        if (dinnerCheckBox.isSelected()) categories.add(Category.DINNER.name());
+        return categories;
+    }
+
     private List<String> extractDays(List<DefaultWeekDaysDto> weekDaysDtos) {
         return weekDaysDtos.stream()
                 .map(DefaultWeekDaysDto::getDays)
                 .toList();
     }
-    // Method to group the days into pairs with newline between them
+
     private String formatDaysInPairs(List<String> daysList) {
         StringBuilder formattedDays = new StringBuilder();
         List<String> allDays = new ArrayList<>();
 
-        // Split each day's string and add it to a flat list
         for (String days : daysList) {
-            allDays.addAll(List.of(days.split(","))); // Split the days by comma
+            allDays.addAll(List.of(days.split(",")));
         }
 
         int daysCount = allDays.size();
         for (int i = 0; i < allDays.size(); i++) {
             formattedDays.append(allDays.get(i));
-            // If it's not the last day in the pair, add a comma
             if (i % 2 == 0 && i + 1 < allDays.size()) {
                 formattedDays.append(" , ");
             }
-            // If it's the second day in the pair, add a newline character
             if (i % 2 != 0 && i + 1 < allDays.size()) {
-                formattedDays.append("\n\n"); // New line after each pair
+                formattedDays.append("\n\n");
             }
         }
         return daysCount + " days\n\n" + formattedDays.toString().trim();
@@ -236,53 +254,97 @@ public class WeekDaysController {
 
     @FXML
     private void handleConfirmAction() {
-        // Finalize the selection and update in the database
-        if (!selectedWeekDays.isEmpty()) {
-            int userId = homeController.getUserId(); // Example userId, replace as needed
-            defaultWeekDaysService.createWeekDays(userId, String.join(",", selectedWeekDays), true,
-                    latitude, longitude);
+        List<String> selectedCategories = getSelectedCategories();
 
-            // Get the current day's name (e.g., "Monday", "Tuesday")
-            String currentDay = java.time.LocalDate.now().getDayOfWeek().toString().toLowerCase();
+        if (selectedCategories.isEmpty()) {
+            showErrorDialog("Please select at least one meal category.");
+            return;
+        }
 
-            for (String day : selectedWeekDays) {
-                if (day.equalsIgnoreCase(currentDay)) {
-                    createOrder(userId);
-                    System.out.println("Order created for " + day + " as it matches the current day.");
-                } else {
-                    System.out.println("No order created for " + day + " as it does not match the current day.");
-                }
+        if (selectedWeekDays.isEmpty()) {
+            showErrorDialog("No weekdays selected.");
+            return;
+        }
+
+        int userId = homeController.getUserId();
+        defaultWeekDaysService.createWeekDays(userId, String.join(",", selectedWeekDays), true,
+                latitude, longitude, selectedCategories);
+
+//        String currentDay = java.time.LocalDate.now().getDayOfWeek().toString();
+//
+//        for (String day : selectedWeekDays) {
+//            if (day.equalsIgnoreCase(currentDay)) {
+//                createOrdersForCategories(userId, selectedCategories);
+//                System.out.println("Orders created for " + day + " with categories: " + selectedCategories);
+//                break;
+//            }
+//        }
+
+        showSuccessDialog("Weekdays and orders confirmed for selected meal categories.");
+    }
+
+    private Integer getRandomMenuItemIdByCategory(String category, Random random) {
+        int min, max;
+
+        switch (category.toUpperCase()) {
+            case "BREAKFAST":
+                min = 1;
+                max = 5;
+                break;
+            case "LUNCH":
+                min = 6;
+                max = 10;
+                break;
+            case "SNACKS":
+                min = 11;
+                max = 15;
+                break;
+            case "DINNER":
+                min = 16;
+                max = 20;
+                break;
+            default:
+                return null;
+        }
+
+        // Generate random ID within range (inclusive)
+        return min + random.nextInt(max - min + 1);
+    }
+    private void createOrdersForCategories(int userId, List<String> categories) {
+        Random random = new Random();
+
+        for (String category : categories) {
+            // Get random menu item ID based on category range
+            Integer menuItemId = getRandomMenuItemIdByCategory(category, random);
+
+            if (menuItemId == null) {
+                System.out.println("Warning: Invalid category: " + category);
+                continue;
             }
 
-            showSuccessDialog("Weekdays and orders confirmed.");
-        } else {
-            showErrorDialog("No weekdays selected.");
+            // Fetch the menu item by ID
+            MenuItem menuItem = menuItemRepository.findById(menuItemId).orElse(null);
+
+            if (menuItem == null) {
+                System.out.println("Warning: Menu item not found for ID: " + menuItemId);
+                continue;
+            }
+
+            MenuItemDto selectedItem = defaultWeekDaysMapper.mapToDto(menuItem);
+
+            orderService.createOrder(
+                    userId,
+                    selectedItem.getId(),
+                    "ORDERED",
+                    LocalDateTime.now(),
+                    latitude,
+                    longitude,
+                    selectedItem.getPrice()
+            );
+
+            System.out.println("Order created for category: " + category + " - Item ID: " + selectedItem.getId());
         }
     }
-
-
-    private void createOrder(int userId) {
-        List<MenuItem> lunchMenuItems = menuItemRepository.findByCategory(Category.LUNCH.name());
-        List<MenuItem> snackMenuItems = menuItemRepository.findByCategory(Category.SNACKS.name());
-
-        Random random = new Random();
-        if (!lunchMenuItems.isEmpty() && !snackMenuItems.isEmpty()) {
-            MenuItemDto lunchMenuItem = defaultWeekDaysMapper.mapToDto(
-                    lunchMenuItems.get(random.nextInt(lunchMenuItems.size()))
-            );
-            MenuItemDto snacksMenuItem = defaultWeekDaysMapper.mapToDto(
-                    snackMenuItems.get(random.nextInt(snackMenuItems.size()))
-            );
-
-            // Create orders using IDs from MenuItemDto
-            orderService.createOrder(userId, lunchMenuItem.getId(), "ORDERED", LocalDateTime.now(), latitude, longitude);
-            orderService.createOrder(userId, snacksMenuItem.getId(), "ORDERED", LocalDateTime.now(),  latitude, longitude);
-
-        } else {
-            throw new IllegalStateException("No lunch or snack items available for ordering.");
-        }
-    }
-
 
     @FXML
     private void navigateToMain() {
@@ -293,7 +355,6 @@ public class WeekDaysController {
             Scene loginScene = new Scene(fxmlLoader.load());
             showSuccessDialog("User logged out successfully and redirected to the home page");
             stage.setScene(loginScene);
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -301,25 +362,20 @@ public class WeekDaysController {
 
     @FXML
     private void handleBack() {
-            try {
-                Stage currentStage = (Stage) userHome.getScene().getWindow();
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com.Corporate.Event_Sync/home.fxml"));
-                loader.setControllerFactory(EventSyncApplication.context::getBean);
-                // Load the main scene
-                Scene homeScene = new Scene(loader.load());
-                // Get the HomeController instance and pass the updated user data
-                HomeController homeController = loader.getController();
-                if (homeController != null && homeController.getLoggedInUser() != null) {
-                    homeController.setLoggedInUser(homeController.getLoggedInUser());
-                }
-                currentStage.setScene(homeScene);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-
+        try {
+            Stage currentStage = (Stage) userHome.getScene().getWindow();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com.Corporate.Event_Sync/home.fxml"));
+            loader.setControllerFactory(EventSyncApplication.context::getBean);
+            Scene homeScene = new Scene(loader.load());
+            HomeController homeController = loader.getController();
+            if (homeController != null && homeController.getLoggedInUser() != null) {
+                homeController.setLoggedInUser(homeController.getLoggedInUser());
             }
+            currentStage.setScene(homeScene);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
+    }
 
     @FXML
     private void handleExitAction() {
@@ -340,7 +396,6 @@ public class WeekDaysController {
         dialogStage.initOwner(confirmButton.getScene().getWindow());
         dialogStage.setTitle("Message");
 
-        // Dialog content
         Label messageLabel = new Label(message);
         messageLabel.setStyle("-fx-text-fill: #ffffff; -fx-font-size: 16px; -fx-padding: 20px;");
         Button okButton = new Button("OK");

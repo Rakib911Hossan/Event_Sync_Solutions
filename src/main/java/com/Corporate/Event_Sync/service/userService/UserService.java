@@ -16,6 +16,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+
 //@NoArgsConstructor
 @AllArgsConstructor
 @Service
@@ -45,6 +48,14 @@ public class UserService {
         }
     }
 
+    public void updatePassword(Integer userId, String newPassword) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("User with ID " + userId + " not found"));
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+    }
+
     @Transactional // To ensure the update query executes in a transaction
     public UserDTO updateUser(UserDTO userDTO) {
         // Retrieve the existing user by ID
@@ -61,11 +72,27 @@ public class UserService {
         Boolean isActive = userDTO.getIsActive() != null ? userDTO.getIsActive() : existingUser.getIsActive();
         Integer officeId = userDTO.getOfficeId() != null ? userDTO.getOfficeId() : existingUser.getOfficeId();
         String userPic = userDTO.getUserPic() != null ? userDTO.getUserPic() : existingUser.getUserPic();
+        String passToken = userDTO.getPassToken() != null ? userDTO.getPassToken() : existingUser.getPassToken();
+        String discountToken = userDTO.getDiscountToken() ;
+        Integer discountAmount =userDTO.getDiscountAmount();
+        String userCategory = existingUser.getUserCategory();
         // Perform the update query
-        userRepository.updateUserById(userDTO.getId(), name,phone, email,address, department, role, isActive, officeId, userPic);
+        userRepository.updateUserById(userDTO.getId(), name,phone, email,address, department, role, isActive, officeId,userPic,
+                passToken, discountToken, discountAmount);
 
-        // Return the updated UserDTO with the values used in the update
-        return new UserDTO(userDTO.getId(), name,phone, email,address, department, role, isActive, officeId, userPic);
+        // Schedule token removal after 1 minute
+        if (passToken != null) {
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    userRepository.updateUserById(userDTO.getId(), name, phone, email,
+                            address, department, role, isActive, officeId, userPic, null, discountToken, discountAmount);
+                }
+            }, 60000); // 1 minute = 60000 ms
+        }
+
+        return new UserDTO(userDTO.getId(), name, phone, email, address,
+                department, role, isActive, officeId, userPic, passToken, discountToken, discountAmount, userCategory);
     }
 
 
@@ -110,6 +137,8 @@ public class UserService {
         userDTO.setIsActive(user.getIsActive());
         userDTO.setOfficeId(user.getOfficeId());
         userDTO.setUserPic(user.getUserPic());
+        userDTO.setPassToken(user.getPassToken());
+        userDTO.setDiscountToken(user.getDiscountToken());
 
         return userDTO;
     }

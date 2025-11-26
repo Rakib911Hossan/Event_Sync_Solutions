@@ -32,6 +32,7 @@ public class Order extends GenericEntity<Integer>{
     private double longitude;
 
     private double latitude;
+    private Integer price;
 
     // Getters and Setters
 }

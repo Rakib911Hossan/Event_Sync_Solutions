@@ -37,15 +37,16 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     @Transactional
     @Modifying
-    @Query(value = "INSERT INTO orders (user_id, menu_item_id, status, order_date, latitude, longitude) " +
-            "VALUES (:userId, :menuItemId, :status, :orderDate, :latitude, :longitude)", nativeQuery = true)
-    void saveOrder(
+    @Query(value = "INSERT INTO orders (user_id, menu_item_id, status, order_date, latitude, longitude, price) " +
+            "VALUES (:userId, :menuItemId, :status, :orderDate, :latitude, :longitude, :price)", nativeQuery = true)
+    int createOrder(
             @Param("userId") Integer userId,
             @Param("menuItemId") Integer menuItemId,
             @Param("status") String status,
             @Param("orderDate") LocalDateTime orderDate,
             @Param("latitude") double latitude,
-            @Param("longitude") double longitude);
+            @Param("longitude") double longitude,
+            @Param("price") Integer price);
 
     @Modifying
     @Query("UPDATE Order o SET o.orderDate = :orderDate, o.status = :status, o.menuItem = :menuItem WHERE o.id = :orderId")
@@ -59,6 +60,9 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     @Modifying
     @Query("DELETE FROM Order o WHERE o.user.id = :userId")
     void deleteByUserId(@Param("userId") Integer userId);
+
+    @Query("SELECT COUNT(o) FROM Order o WHERE o.user.id = :userId")
+    long countByUserId(@Param("userId") Integer userId);
 
 }
 

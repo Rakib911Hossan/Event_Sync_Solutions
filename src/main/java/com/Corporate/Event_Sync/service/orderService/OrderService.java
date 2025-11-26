@@ -4,6 +4,7 @@ import com.Corporate.Event_Sync.dto.OrderDTO;
 import com.Corporate.Event_Sync.dto.mapper.OrderMapper;
 import com.Corporate.Event_Sync.entity.MenuItem;
 import com.Corporate.Event_Sync.entity.Order;
+import com.Corporate.Event_Sync.entity.User;
 import com.Corporate.Event_Sync.repository.MenuItemRepository;
 import com.Corporate.Event_Sync.repository.OrderRepository;
 import com.Corporate.Event_Sync.repository.UserRepository;
@@ -16,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 @AllArgsConstructor
 @Service
 public class OrderService {
@@ -33,9 +33,76 @@ public class OrderService {
         return orderMapper.toDTOList(orders);
     }
     public void createOrder(Integer userId, Integer menuItemId, String status,
-                            LocalDateTime orderDate, double latitude, double longitude) {
+                            LocalDateTime orderDate, double latitude, double longitude, Integer price) {
 
-        orderRepository.saveOrder(userId, menuItemId, status, orderDate, latitude, longitude);
+        // Step 1: Create the order
+        orderRepository.createOrder(userId, menuItemId, status, orderDate, latitude, longitude, price);
+
+        // Step 2: Get total number of orders for the user
+        long orderCount = orderRepository.countByUserId(userId);
+
+        // Step 3: Find user
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
+
+        // Step 4: Update user category
+        if (orderCount >= 10) {
+            user.setUserCategory("PREMIUM");
+        } else if (orderCount >= 5) {
+            user.setUserCategory("REGULAR");
+        } else {
+            user.setUserCategory("NORMAL");
+        }
+
+        // Step 5: Save updated user
+        userRepository.save(user);
+    }
+    // In your repository - just use the inherited save method
+// No need for custom query
+
+    // In your service:
+    public Order saveOrder(Integer userId, Integer menuItemId, String status,
+                           LocalDateTime orderDate, double latitude,
+                           double longitude, Integer price) {
+        Order order = new Order();
+
+        // Set user
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        order.setUser(user);
+
+        // Set menu item
+        MenuItem menuItem = menuItemRepository.findById(menuItemId)
+                .orElseThrow(() -> new RuntimeException("MenuItem not found"));
+        order.setMenuItem(menuItem);
+
+        order.setStatus(status);
+        order.setOrderDate(orderDate);
+        order.setLatitude(latitude);
+        order.setLongitude(longitude);
+        order.setPrice(price);
+
+        Order savedOrder = orderRepository.save(order);
+
+        long orderCount = orderRepository.countByUserId(userId);
+
+        // Step 4: Update user category
+        if (orderCount >= 10) {
+            user.setUserCategory("PREMIUM");
+        } else if (orderCount >= 5) {
+            user.setUserCategory("REGULAR");
+        } else {
+            user.setUserCategory("NORMAL");
+        }
+
+        // Step 5: Save updated user
+        userRepository.save(user);
+
+        return savedOrder;
+    }
+    @Transactional
+    public void updateOrder(Order order) {
+        orderRepository.save(order);
     }
 
     @Transactional
@@ -73,8 +140,8 @@ public class OrderService {
         return orderRepository.findOrderDetailsByOrderId(id);
     }
 
-    public Optional<Order> getOrderById(Long orderId) {
-        return orderRepository.findById(orderId);
+    public Order getOrderById(Long orderId) {
+        return orderRepository.findById(orderId).orElseThrow();
     }
 
     public void deleteOrderById(Long orderId) {
